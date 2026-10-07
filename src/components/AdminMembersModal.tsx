@@ -32,6 +32,7 @@ import {
   cleanPhone,
   formatPhone,
   generateMatricula,
+  generateRandomPassword,
 } from '../utils/membersManager';
 
 interface AdminMembersModalProps {
@@ -144,7 +145,7 @@ export const AdminMembersModal: React.FC<AdminMembersModalProps> = ({
     setEditingId(null);
     setFormName('');
     setFormPhone('');
-    setFormPassword('123');
+    setFormPassword(generateRandomPassword());
     setFormPlan('ouro');
     setFormPaymentDate(today);
     setFormValidUntil(validUntilDefault);
@@ -564,21 +565,30 @@ export const AdminMembersModal: React.FC<AdminMembersModalProps> = ({
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {/* Senha */}
+                    {/* Senha Individual */}
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1">
-                        Senha de Acesso do Sócio
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-[11px] font-bold text-amber-400 uppercase">
+                          Senha Individual
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setFormPassword(generateRandomPassword())}
+                          className="text-[10px] text-amber-300 hover:text-amber-200 bg-amber-950/60 border border-amber-800/40 px-1.5 py-0.5 rounded cursor-pointer"
+                        >
+                          🎲 Gerar
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={formPassword}
                         onChange={(e) => setFormPassword(e.target.value)}
-                        placeholder="Ex: 123 ou senha criada"
+                        placeholder="Senha individual..."
                         required
-                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-mono focus:outline-none focus:border-red-500"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-mono focus:outline-none focus:border-amber-500"
                       />
                       <span className="text-[10px] text-slate-500 mt-0.5 block">
-                        O sócio usará esta senha para entrar.
+                        Senha única deste sócio.
                       </span>
                     </div>
 

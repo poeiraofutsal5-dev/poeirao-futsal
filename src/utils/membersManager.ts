@@ -22,7 +22,7 @@ export const INITIAL_MEMBERS: MemberItem[] = [
     matricula: 'POE-2026-0001',
     name: 'João Pedro da Silva',
     phone: '11999887766',
-    password: '123',
+    password: 'joao@pfc26',
     plan: 'ouro',
     status: 'active',
     createdAt: '01/01/2026',
@@ -34,7 +34,7 @@ export const INITIAL_MEMBERS: MemberItem[] = [
     matricula: 'POE-2026-0002',
     name: 'Carlos Eduardo Rocha',
     phone: '11988776655',
-    password: '123',
+    password: 'carlos@ouro77',
     plan: 'prata',
     status: 'active',
     createdAt: '15/01/2026',
@@ -46,7 +46,7 @@ export const INITIAL_MEMBERS: MemberItem[] = [
     matricula: 'POE-2026-0003',
     name: 'Supermercado Central (Apoiador)',
     phone: '11977665544',
-    password: '123',
+    password: 'super@central9',
     plan: 'patrocinador',
     status: 'active',
     createdAt: '20/01/2026',
@@ -54,6 +54,15 @@ export const INITIAL_MEMBERS: MemberItem[] = [
     lastPaymentDate: '20/04/2026',
   },
 ];
+
+export function generateRandomPassword(): string {
+  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let rand = '';
+  for (let i = 0; i < 4; i++) {
+    rand += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `Poeirao#${rand}`;
+}
 
 const STORAGE_KEY = 'poeirao_club_members_v1';
 const LOGGED_KEY = 'poeirao_logged_member_id';

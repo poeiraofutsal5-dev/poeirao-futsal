@@ -7,15 +7,17 @@ interface NavbarProps {
   onOpenAdminModal?: () => void;
   onNavigateToStore?: () => void;
   onNavigateToMemberPortal?: () => void;
+  onNavigateToHistory?: () => void;
   onNavigateToHome?: () => void;
   onNavigateToSection?: (sectionId: string) => void;
-  activePage?: 'home' | 'loja' | 'socio';
+  activePage?: 'home' | 'loja' | 'socio' | 'historia';
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenAdminModal,
   onNavigateToStore,
   onNavigateToMemberPortal,
+  onNavigateToHistory,
   onNavigateToHome,
   onNavigateToSection,
   activePage = 'home',
@@ -77,15 +79,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </button>
 
-          {/* MENU DESKTOP */}
-          <div className="hidden md:flex items-center gap-8">
-            <ul className="flex items-center gap-7">
+          {/* MENU DESKTOP REORGANIZADO E ELEGANTE */}
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
+            {/* GRUPO 1: LINKS DE NAVEGAÇÃO PRINCIPAL */}
+            <ul className="flex items-center gap-1.5 lg:gap-3 text-slate-700 font-semibold text-xs lg:text-sm">
               <li>
                 <button
                   type="button"
                   onClick={() => handleLinkClick('inicio')}
-                  className={`text-sm font-semibold transition-colors py-1 cursor-pointer ${
-                    activePage === 'home' ? 'text-red-600' : 'text-slate-700 hover:text-red-600'
+                  className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                    activePage === 'home'
+                      ? 'text-red-600 font-bold bg-red-50/80'
+                      : 'hover:text-red-600 hover:bg-slate-50'
                   }`}
                 >
                   Início
@@ -95,13 +100,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   type="button"
                   onClick={() => handleLinkClick('planos')}
-                  className="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg transition-colors cursor-pointer hover:text-red-600 hover:bg-slate-50"
                 >
                   Planos
                 </button>
               </li>
-
-              {/* LINK DA LOJA POEIRÃO */}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToHistory) {
+                      onNavigateToHistory();
+                    } else {
+                      window.location.hash = '#historia';
+                    }
+                  }}
+                  className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                    activePage === 'historia'
+                      ? 'text-red-600 font-bold bg-red-50/80'
+                      : 'hover:text-red-600 hover:bg-slate-50'
+                  }`}
+                >
+                  História do Poeirão
+                </button>
+              </li>
               <li>
                 <button
                   type="button"
@@ -112,84 +134,77 @@ export const Navbar: React.FC<NavbarProps> = ({
                       window.location.hash = '#loja-poeirao';
                     }
                   }}
-                  className={`text-sm font-semibold transition-colors py-1 cursor-pointer ${
-                    activePage === 'loja' ? 'text-red-600 font-bold' : 'text-slate-700 hover:text-red-600'
+                  className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                    activePage === 'loja'
+                      ? 'text-red-600 font-bold bg-red-50/80'
+                      : 'hover:text-red-600 hover:bg-slate-50'
                   }`}
                 >
                   Loja Poeirão
                 </button>
               </li>
-
-              {/* ABA PATROCINADORES */}
               <li>
                 <button
                   type="button"
                   onClick={() => handleLinkClick('patrocinadores')}
-                  className="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg transition-colors cursor-pointer hover:text-red-600 hover:bg-slate-50"
                 >
                   Patrocinadores
                 </button>
               </li>
-
-              {/* BOTÃO ÁREA DO SÓCIO (AO LADO DE PATROCINADORES E ANTES DE ÁREA RESTRITA) */}
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateToMemberPortal) {
-                      onNavigateToMemberPortal();
-                    } else {
-                      window.location.hash = '#socio';
-                    }
-                  }}
-                  className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold transition-all py-1.5 px-3 rounded-xl cursor-pointer ${
-                    activePage === 'socio'
-                      ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
-                      : 'text-slate-800 hover:text-red-600 hover:bg-slate-100 border border-slate-200'
-                  }`}
-                  title="Acesse sua Carteirinha Virtual Oficial"
-                >
-                  <CreditCard className="w-3.5 h-3.5 text-red-500" />
-                  <span>Área do Sócio</span>
-                </button>
-              </li>
-
-              {/* OPÇÃO ÁREA RESTRITA DISCRETA */}
-              {onOpenAdminModal && (
-                <li>
-                  <button
-                    type="button"
-                    onClick={onOpenAdminModal}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg transition-colors cursor-pointer group"
-                    title="Acesso com senha da diretoria"
-                  >
-                    <Lock className="w-3 h-3 text-slate-400 group-hover:text-red-600 transition-colors" />
-                    <span>Área Restrita</span>
-                  </button>
-                </li>
-              )}
             </ul>
 
-            {/* BOTÃO DESTACADO DO WHATSAPP NO CABEÇALHO */}
-            <a
-              href={SITE_CONFIG.whatsapp.linkDireto}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Tirar dúvidas no WhatsApp"
-              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 border border-emerald-500/30"
-            >
-              <MessageCircle className="w-4 h-4 fill-white" />
-              <span>Suporte WhatsApp</span>
-            </a>
+            {/* SEPARADOR VERTICAL SUTIL */}
+            <div className="h-5 w-px bg-slate-200"></div>
 
-            {/* BOTÃO CTA DESTAQUE PARA PLANOS */}
-            <button
-              type="button"
-              onClick={() => handleLinkClick('planos')}
-              className="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 cursor-pointer"
-            >
-              Seja Sócio
-            </button>
+            {/* GRUPO 2: BOTÕES DE AÇÃO DESTACADOS (SEM 'SEJA SÓCIO', COM VISUAL PROFISSIONAL) */}
+            <div className="flex items-center gap-2 lg:gap-3">
+              {/* BOTÃO ÁREA DO SÓCIO COM CARTEIRINHA */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (onNavigateToMemberPortal) {
+                    onNavigateToMemberPortal();
+                  } else {
+                    window.location.hash = '#socio';
+                  }
+                }}
+                className={`inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider py-2 px-3.5 rounded-xl transition-all cursor-pointer shadow-sm ${
+                  activePage === 'socio'
+                    ? 'bg-red-600 text-white shadow-red-600/30'
+                    : 'bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200/80'
+                }`}
+                title="Acesse sua Carteirinha Virtual Oficial"
+              >
+                <CreditCard className="w-3.5 h-3.5 text-red-600" />
+                <span>Área do Sócio</span>
+              </button>
+
+              {/* BOTÃO SUPORTE WHATSAPP */}
+              <a
+                href={SITE_CONFIG.whatsapp.linkDireto}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Tirar dúvidas no WhatsApp"
+                className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider px-3.5 py-2 rounded-xl shadow-sm hover:shadow transition-all border border-emerald-500/30"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                <span>WhatsApp</span>
+              </a>
+
+              {/* BOTÃO ÁREA RESTRITA DISCRETO */}
+              {onOpenAdminModal && (
+                <button
+                  type="button"
+                  onClick={onOpenAdminModal}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 px-2.5 py-2 rounded-xl transition-colors cursor-pointer group"
+                  title="Acesso com senha da diretoria"
+                >
+                  <Lock className="w-3.5 h-3.5 text-slate-400 group-hover:text-red-600 transition-colors" />
+                  <span className="hidden xl:inline">Diretoria</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* BOTÃO MOBILE MENU (HAMBÚRGUER) */}
@@ -234,6 +249,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="block w-full text-left py-3 text-base font-semibold text-slate-800 hover:text-red-600"
                 >
                   Planos
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onNavigateToHistory) {
+                      onNavigateToHistory();
+                    } else {
+                      window.location.hash = '#historia';
+                    }
+                  }}
+                  className={`block w-full text-left py-3 text-base font-semibold ${
+                    activePage === 'historia' ? 'text-red-600 font-bold' : 'text-slate-800 hover:text-red-600'
+                  }`}
+                >
+                  História do Poeirão
                 </button>
               </li>
               <li>
@@ -303,19 +336,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </ul>
             <div className="mt-4 pt-3 flex flex-col gap-2.5">
               <a
-                href="#planos"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow uppercase text-sm tracking-wider"
-              >
-                Escolher Meu Plano
-              </a>
-              <a
                 href={SITE_CONFIG.whatsapp.linkDireto}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow uppercase text-sm tracking-wider"
+                className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow uppercase text-xs tracking-wider"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-4 h-4" />
                 <span>Atendimento WhatsApp: {SITE_CONFIG.whatsapp.numeroFormatado}</span>
               </a>
             </div>

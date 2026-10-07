@@ -18,6 +18,8 @@ import {
   ShieldCheck,
   Shield,
   Key,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import {
   MemberItem,
@@ -61,11 +63,64 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
 
+  // Alteração de senha individual pelo próprio sócio logado
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [passwordChangeStatus, setPasswordChangeStatus] = useState<{
+    type: 'success' | 'error';
+    msg: string;
+  } | null>(null);
+
   // Modal da Diretoria (Exige senha padrão 22232425)
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
   // Sócio atualmente conectado
   const currentMember = members.find((m) => m.id === loggedId);
+
+  const handleUpdateOwnPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentMember) return;
+    setPasswordChangeStatus(null);
+
+    const cleanPass = newPasswordInput.trim();
+    if (cleanPass.length < 3) {
+      setPasswordChangeStatus({
+        type: 'error',
+        msg: 'A nova senha deve ter no mínimo 3 caracteres.',
+      });
+      return;
+    }
+    if (cleanPass !== confirmPasswordInput.trim()) {
+      setPasswordChangeStatus({
+        type: 'error',
+        msg: 'As senhas digitadas não coincidem. Digite a mesma senha nos dois campos.',
+      });
+      return;
+    }
+
+    try {
+      const updated: MemberItem = {
+        ...currentMember,
+        password: cleanPass,
+      };
+      await onSaveMember(updated);
+      setNewPasswordInput('');
+      setConfirmPasswordInput('');
+      setIsChangingPassword(false);
+      setPasswordChangeStatus({
+        type: 'success',
+        msg: 'Sua senha individual foi alterada com sucesso! Agora sua conta está protegida.',
+      });
+      setTimeout(() => setPasswordChangeStatus(null), 5000);
+    } catch {
+      setPasswordChangeStatus({
+        type: 'error',
+        msg: 'Erro ao salvar nova senha. Tente novamente.',
+      });
+    }
+  };
 
   const getStripeLink = (plan: MemberPlan) => {
     if (plan === 'ouro') return SITE_CONFIG.stripeLinks.ouro;
@@ -358,10 +413,124 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* 3. SEGURANÇA: ALTERAR SENHA INDIVIDUAL DO SÓCIO */}
+              <div className="bg-white rounded-3xl border border-slate-200/90 shadow-md p-6 sm:p-8">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 border border-amber-500/20">
+                      <Key className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-600">
+                        Privacidade & Proteção
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-black uppercase text-slate-900">
+                        Sua Senha Individual de Acesso
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Sua senha é pessoal e única. Apenas você deve ter acesso à sua carteirinha virtual e benefícios.
+                      </p>
+                    </div>
+                  </div>
+
+                  {!isChangingPassword && (
+                    <button
+                      type="button"
+                      onClick={() => setIsChangingPassword(true)}
+                      className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase py-2.5 px-4 rounded-xl shadow transition cursor-pointer"
+                    >
+                      <Lock className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Alterar Minha Senha</span>
+                    </button>
+                  )}
+                </div>
+
+                {passwordChangeStatus && (
+                  <div
+                    className={`mt-4 p-3.5 rounded-xl text-xs font-bold flex items-center gap-2.5 ${
+                      passwordChangeStatus.type === 'success'
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-red-50 text-red-700 border border-red-200'
+                    }`}
+                  >
+                    {passwordChangeStatus.type === 'success' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                    )}
+                    <span>{passwordChangeStatus.msg}</span>
+                  </div>
+                )}
+
+                {isChangingPassword && (
+                  <form onSubmit={handleUpdateOwnPassword} className="mt-5 pt-5 border-t border-slate-100 space-y-4 max-w-md animate-fade-in">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Nova Senha Individual
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          value={newPasswordInput}
+                          onChange={(e) => setNewPasswordInput(e.target.value)}
+                          placeholder="Digite sua nova senha pessoal..."
+                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-3 pr-10 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-red-600 focus:bg-white transition"
+                          required
+                          autoFocus
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                          title={showNewPassword ? 'Ocultar senha' : 'Ver senha'}
+                        >
+                          {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Confirmar Nova Senha
+                      </label>
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        value={confirmPasswordInput}
+                        onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                        placeholder="Repita a nova senha..."
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-red-600 focus:bg-white transition"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsChangingPassword(false);
+                          setNewPasswordInput('');
+                          setConfirmPasswordInput('');
+                          setPasswordChangeStatus(null);
+                        }}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl transition cursor-pointer"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase py-2.5 px-5 rounded-xl shadow transition cursor-pointer"
+                      >
+                        Salvar Nova Senha
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
             </div>
           ) : (
             /* ===================================================================== */
-            /* TELA EXCLUSIVA DE ENTRAR (LOGIN COM CELULAR + SENHA)                  */
+            /* TELA EXCLUSIVA DE ENTRAR (LOGIN COM CELULAR + SENHA INDIVIDUAL)       */
             /* ===================================================================== */
             <div className="max-w-md mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
               <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white p-6 sm:p-7 text-center">
@@ -372,7 +541,7 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
                   Acessar Carteirinha
                 </h3>
                 <p className="text-xs text-white/90 mt-1">
-                  Entre com o seu número de celular e a senha fornecida pela diretoria.
+                  Entre com o seu número de celular e a sua senha individual cadastrada.
                 </p>
               </div>
 
@@ -405,7 +574,7 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                      Senha de Acesso
+                      Senha Individual de Acesso
                     </label>
                     <div className="relative">
                       <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -413,7 +582,7 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
                         type="password"
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        placeholder="Digite sua senha..."
+                        placeholder="Digite sua senha individual..."
                         className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:bg-white transition"
                         required
                       />
@@ -430,20 +599,22 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
 
                 {/* INFORMAÇÕES DE CADASTRO E SUPORTE */}
                 <div className="mt-6 pt-5 border-t border-slate-100 text-center space-y-2">
-                  <p className="text-xs text-slate-500">
-                    Ainda não possui senha ou acabou de assinar?
+                  <p className="text-xs text-slate-500 font-semibold">
+                    Primeiro acesso ou esqueceu sua senha individual?
                   </p>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Assim que seu pagamento é aprovado no Stripe ou Pix, a diretoria cadastra seus dados e gera sua carteirinha oficial.
+                    Cada sócio possui uma senha individual exclusiva para que ninguém mais acesse sua conta. Solicite ou redefina sua senha com a diretoria:
                   </p>
                   <a
-                    href={SITE_CONFIG.whatsapp.linkDireto}
+                    href={`https://wa.me/55${SITE_CONFIG.whatsapp.numero}?text=${encodeURIComponent(
+                      'Olá! Gostaria de receber ou redefinir minha senha individual de acesso à Área do Sócio do Poeirão F.C.'
+                    )}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-700 pt-1"
                   >
                     <MessageCircle className="w-3.5 h-3.5 fill-emerald-600" />
-                    <span>Falar com a Diretoria no WhatsApp</span>
+                    <span>Solicitar Senha Individual no WhatsApp</span>
                   </a>
                 </div>
               </div>

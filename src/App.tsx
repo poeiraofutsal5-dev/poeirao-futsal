@@ -5,6 +5,7 @@ import { Plans } from './components/Plans';
 import { StoreSection } from './components/StoreSection';
 import { StorePage } from './components/StorePage';
 import { MemberPortalPage } from './components/MemberPortalPage';
+import { HistoryPage } from './components/HistoryPage';
 import { Sponsors } from './components/Sponsors';
 import { SupportBanner } from './components/SupportBanner';
 import { Footer } from './components/Footer';
@@ -24,6 +25,13 @@ import {
   MemberItem,
 } from './utils/membersManager';
 import {
+  SubCategoryItem,
+  getStoredSubCategories,
+  saveStoredSubCategories,
+  subscribeToSubCategories,
+  saveSubCategoriesToCloud,
+} from './utils/historyManager';
+import {
   subscribeToClubSettings,
   subscribeToSponsors,
   subscribeToStoreShirts,
@@ -42,19 +50,21 @@ export default function App() {
   const [shirts, setShirts] = useState<ShirtItem[]>(getStoredShirts);
   const [teamPhotos, setTeamPhotos] = useState<TeamPhotoItem[]>(getStoredTeamPhotos);
   const [members, setMembers] = useState<MemberItem[]>(getStoredMembers);
+  const [subCategories, setSubCategories] = useState<SubCategoryItem[]>(getStoredSubCategories);
   const [storeOrdersEnabled, setStoreOrdersEnabled] = useState<boolean>(() => {
     const saved = localStorage.getItem('poeirao_store_orders_enabled');
     return saved !== null ? saved === 'true' : true;
   });
-  const [adminInitialTab, setAdminInitialTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members'>('store');
+  const [adminInitialTab, setAdminInitialTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history'>('store');
   
-  // Controle de visualização: 'home' (página inicial), 'loja' (loja poeirão) ou 'socio' (área do sócio torcedor)
-  const [viewMode, setViewMode] = useState<'home' | 'loja' | 'socio'>(() => {
+  // Controle de visualização: 'home' (página inicial), 'loja' (loja poeirão), 'socio' (área do sócio) ou 'historia' (história do poeirão)
+  const [viewMode, setViewMode] = useState<'home' | 'loja' | 'socio' | 'historia'>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.has('plano') || searchParams.has('plan') || searchParams.get('status') === 'sucesso') {
       return 'socio';
     }
     const cleanHash = window.location.hash.split('?')[0];
+    if (cleanHash === '#historia' || cleanHash === '#historia-do-poeirao' || cleanHash === '#historia-poeirao') return 'historia';
     if (cleanHash === '#loja') return 'loja';
     if (cleanHash === '#socio' || cleanHash === '#area-do-socio' || cleanHash === '#carteirinha') return 'socio';
     return 'home';
@@ -69,7 +79,10 @@ export default function App() {
         return;
       }
       const cleanHash = window.location.hash.split('?')[0];
-      if (cleanHash === '#loja') {
+      if (cleanHash === '#historia' || cleanHash === '#historia-do-poeirao' || cleanHash === '#historia-poeirao') {
+        setViewMode('historia');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (cleanHash === '#loja') {
         setViewMode('loja');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (cleanHash === '#socio' || cleanHash === '#area-do-socio' || cleanHash === '#carteirinha') {
@@ -138,6 +151,14 @@ export default function App() {
       } catch {}
     });
 
+    // 5. Sincroniza categorias e histórias do clube em tempo real
+    const unsubHistory = subscribeToSubCategories((cloudCats) => {
+      setSubCategories(cloudCats);
+      try {
+        localStorage.setItem('poeirao_history_categories_v1', JSON.stringify(cloudCats));
+      } catch {}
+    });
+
     return () => {
       window.removeEventListener('hashchange', handleHash);
       unsubSponsors();
@@ -145,6 +166,7 @@ export default function App() {
       unsubStore();
       unsubTeamPhotos();
       unsubMembers();
+      unsubHistory();
     };
   }, []);
 
@@ -157,6 +179,12 @@ export default function App() {
   const handleNavigateToMemberPortal = () => {
     setViewMode('socio');
     window.location.hash = '#socio';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateToHistory = () => {
+    setViewMode('historia');
+    window.location.hash = '#historia';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -201,6 +229,12 @@ export default function App() {
     await saveTeamPhotosToCloud(updatedPhotos);
   };
 
+  const handleUpdateSubCategories = async (updatedCategories: SubCategoryItem[]) => {
+    setSubCategories(updatedCategories);
+    saveStoredSubCategories(updatedCategories);
+    await saveSubCategoriesToCloud(updatedCategories);
+  };
+
   const handleToggleStoreOrders = async (enabled: boolean) => {
     setStoreOrdersEnabled(enabled);
     try {
@@ -219,12 +253,29 @@ export default function App() {
         }}
         onNavigateToStore={handleNavigateToStore}
         onNavigateToMemberPortal={handleNavigateToMemberPortal}
+        onNavigateToHistory={handleNavigateToHistory}
         onNavigateToHome={handleBackToHome}
         onNavigateToSection={handleNavigateToSection}
         activePage={viewMode}
       />
 
-      {viewMode === 'loja' ? (
+      {viewMode === 'historia' ? (
+        /* ========================================================================= */
+        /* ABA EXCLUSIVA DEDICADA À HISTÓRIA DO POEIRÃO & CATEGORIAS (SUB-11 AO MASTER) */
+        /* ========================================================================= */
+        <main className="flex-1 pt-20">
+          <HistoryPage
+            onBack={handleBackToHome}
+            onOpenAdmin={(tab) => {
+              setAdminInitialTab(tab || 'history');
+              setIsAdminModalOpen(true);
+            }}
+            onNavigateToPlans={() => handleNavigateToSection('planos')}
+            subCategories={subCategories}
+            onUpdateSubCategories={handleUpdateSubCategories}
+          />
+        </main>
+      ) : viewMode === 'loja' ? (
         /* ========================================================================= */
         /* ABA EXCLUSIVA DEDICADA À LOJA POEIRÃO (PRODUTOS, CAMISAS E ACESSÓRIOS)    */
         /* ========================================================================= */
@@ -297,6 +348,8 @@ export default function App() {
         onUpdateTeamPhotos={handleUpdateTeamPhotos}
         members={members}
         onUpdateMembers={(updatedMembers) => setMembers(updatedMembers)}
+        subCategories={subCategories}
+        onUpdateSubCategories={handleUpdateSubCategories}
         initialTab={adminInitialTab}
         storeOrdersEnabled={storeOrdersEnabled}
         onToggleStoreOrders={handleToggleStoreOrders}

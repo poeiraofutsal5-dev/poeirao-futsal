@@ -51,6 +51,11 @@
               </button>
             </li>
             <li>
+              <button type="button" id="nav-btn-historia" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
+                História do Poeirão
+              </button>
+            </li>
+            <li>
               <button type="button" id="nav-btn-store" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
                 Loja Poeirão
               </button>
@@ -97,6 +102,7 @@
         <div class="flex flex-col gap-3">
           <button type="button" id="m-btn-inicio" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Início</button>
           <button type="button" id="m-btn-planos" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Planos</button>
+          <button type="button" id="m-btn-historia" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">História do Poeirão</button>
           <button type="button" id="m-btn-store" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Loja Poeirão</button>
           <button type="button" id="m-btn-sponsors" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Patrocinadores</button>
           <button type="button" id="m-btn-socio" class="text-left font-bold text-red-600 py-1.5 flex items-center justify-between">
@@ -472,6 +478,77 @@
     </section>
 
   </div> <!-- FIM DO #home-view -->
+
+
+  <!-- ========================================================================= -->
+  <!-- 6.5. PÁGINA EXCLUSIVA DA HISTÓRIA DO POEIRÃO (HISTORIA VIEW)               -->
+  <!-- ========================================================================= -->
+  <div id="historia-view" class="hidden flex-1 flex flex-col pt-20 bg-slate-950 text-slate-100">
+    <div class="bg-slate-900/90 border-b border-slate-800 py-3.5 px-4 sm:px-6 sticky top-16 z-20 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <button
+          type="button"
+          id="historia-btn-back"
+          class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-300 hover:text-white bg-slate-950 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl transition cursor-pointer"
+        >
+          <span>← Voltar ao Início</span>
+        </button>
+        <span class="text-xs text-red-500 font-black uppercase tracking-wider flex items-center gap-1.5">
+          <span>🛡️</span> Projeto Social & Esportivo Poeirão F.C.
+        </span>
+      </div>
+    </div>
+
+    <!-- CABEÇALHO DO PROJETO COM MAIS DE 70 CRIANÇAS -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 border-b border-slate-800 py-12 sm:py-16 px-4 sm:px-6">
+      <div class="max-w-5xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 bg-red-950/80 border border-red-600/30 text-red-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider mb-5">
+          <span>✨</span> História do Poeirão • Projeto Social & Esportivo
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase mb-6 leading-tight">
+          Mais que um time, <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-600 to-amber-500">
+            uma paixão que transforma vidas
+          </span>
+        </h1>
+        <div class="max-w-3xl mx-auto bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8 backdrop-blur-sm text-left sm:text-center shadow-xl mb-8">
+          <p class="text-base sm:text-lg text-slate-200 leading-relaxed font-normal">
+            Nosso projeto acolhe <strong class="text-white font-bold">mais de 70 crianças e jovens</strong> da nossa comunidade, garantindo inclusão social, educação, disciplina e cidadania através do futebol e do futsal.
+          </p>
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed mt-3 font-normal">
+            Nossos atletas <strong class="text-red-400 font-semibold">não apenas viajam a Bahia inteira, mas também fora do estado</strong> para disputar campeonatos com raça e dedicação. 
+            Uma trajetória de amor ao escudo <strong class="text-white font-bold">desde os pequenos do Sub-11 até a tradição e respeito da categoria Master</strong>.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+          <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-center">
+            <div class="text-2xl font-black text-white">+70</div>
+            <div class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">Crianças Atendidas</div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-center">
+            <div class="text-2xl font-black text-white">Bahia & Além</div>
+            <div class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">Viagens & Torneios</div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-center">
+            <div class="text-2xl font-black text-white">Campo & Futsal</div>
+            <div class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">Duas Modalidades</div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-center">
+            <div class="text-2xl font-black text-white">Sub-11 a Master</div>
+            <div class="text-[11px] text-slate-400 font-bold uppercase mt-0.5">7 Categorias</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS DE CADA SUB CATEGORIA COM FOTO E HISTÓRIA EM BAIXO -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-12 w-full">
+      <div id="historia-cards-container" class="space-y-12">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </main>
+  </div>
 
 
   <!-- ========================================================================= -->
@@ -1422,10 +1499,11 @@
     let loggedMemberId = localStorage.getItem('poeirao_standalone_logged_mem') || null;
     let isCardFlipped = false;
 
-    // SISTEMA DE TROCA DE ABAS (HOME vs LOJA vs ÁREA DO SÓCIO)
+    // SISTEMA DE TROCA DE ABAS (HOME vs LOJA vs ÁREA DO SÓCIO vs HISTÓRIA)
     const homeView = document.getElementById('home-view');
     const storeView = document.getElementById('store-view');
     const socioView = document.getElementById('socio-view');
+    const historiaView = document.getElementById('historia-view');
     const mobileMenu = document.getElementById('mobile-menu');
 
     function closeMobileMenu() {
@@ -1433,9 +1511,10 @@
     }
 
     function showHomeView(targetSectionId = null) {
-      storeView.classList.add('hidden');
-      socioView.classList.add('hidden');
-      homeView.classList.remove('hidden');
+      if (storeView) storeView.classList.add('hidden');
+      if (socioView) socioView.classList.add('hidden');
+      if (historiaView) historiaView.classList.add('hidden');
+      if (homeView) homeView.classList.remove('hidden');
       closeMobileMenu();
 
       if (targetSectionId) {
@@ -1451,22 +1530,127 @@
     }
 
     function showStoreView() {
-      homeView.classList.add('hidden');
-      socioView.classList.add('hidden');
-      storeView.classList.remove('hidden');
+      if (homeView) homeView.classList.add('hidden');
+      if (socioView) socioView.classList.add('hidden');
+      if (historiaView) historiaView.classList.add('hidden');
+      if (storeView) storeView.classList.remove('hidden');
       closeMobileMenu();
       window.location.hash = '#loja';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function showSocioView() {
-      homeView.classList.add('hidden');
-      storeView.classList.add('hidden');
-      socioView.classList.remove('hidden');
+      if (homeView) homeView.classList.add('hidden');
+      if (storeView) storeView.classList.add('hidden');
+      if (historiaView) historiaView.classList.add('hidden');
+      if (socioView) socioView.classList.remove('hidden');
       closeMobileMenu();
       window.location.hash = '#socio';
       window.scrollTo({ top: 0, behavior: 'smooth' });
       renderSocioPortal();
+    }
+
+    function showHistoriaView() {
+      if (homeView) homeView.classList.add('hidden');
+      if (storeView) storeView.classList.add('hidden');
+      if (socioView) socioView.classList.add('hidden');
+      if (historiaView) historiaView.classList.remove('hidden');
+      closeMobileMenu();
+      window.location.hash = '#historia';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderHistoriaCategories();
+    }
+
+    const HISTORIA_SUBS = [
+      {
+        id: 'sub11',
+        name: 'Sub-11',
+        fullName: 'Categoria Sub-11 • A Sementinha do Poeirão',
+        tagline: 'Futebol de Campo & Futsal • Base Inicial',
+        img: '/foto-time-1.png',
+        desc: 'O início de tudo para nossos pequenos craques. Na categoria Sub-11, mais do que ensinar os fundamentos do futebol e futsal, ensinamos união, disciplina, respeito e amor às cores do Poeirão. É nessa fase que mais de 20 garotos dão os primeiros passos com a camisa do clube, viajando com frio na barriga, olhos brilhando e muita vontade de vencer por nossa terra.'
+      },
+      {
+        id: 'sub13',
+        name: 'Sub-13',
+        fullName: 'Categoria Sub-13 • Formação e Garra',
+        tagline: 'Futebol & Futsal • Formação Tática',
+        img: '/foto-time-2.png',
+        desc: 'A fase do amadurecimento tático e coletivo. A garotada do Sub-13 disputa torneios e copas em diversos municípios da Bahia e fronteiras interestaduais. No campo de terra batida ou nas quadras de futsal, o Sub-13 representa a superação diária de quem enfrenta longas viagens para honrar o escudo e buscar um futuro melhor através do esporte.'
+      },
+      {
+        id: 'sub15',
+        name: 'Sub-15',
+        fullName: 'Categoria Sub-15 • Competitividade e Conquistas',
+        tagline: 'Futebol & Futsal • Rendimento Juvenil',
+        img: '/foto-time-3.png',
+        desc: 'Com técnica apurada e espírito guerreiro, o Sub-15 é destaque frequente em copas regionais e interestaduais. Nossos jovens enfrentam equipes tradicionais de todo o estado, mostrando a raça do interior baiano. Muitos desses garotos já despontam em avaliações e peneiras, carregando com bravura a bandeira do Poeirão.'
+      },
+      {
+        id: 'sub17',
+        name: 'Sub-17',
+        fullName: 'Categoria Sub-17 • Rumo ao Alto Rendimento',
+        tagline: 'Futebol & Futsal • Transição Pré-Profissional',
+        img: '/foto-time-1.png',
+        desc: 'Juventude, intensidade e disciplina máxima. No Sub-17, os atletas consolidam sua formação esportiva e cidadã. Representando o Poeirão em campeonatos de alto nível na Bahia e fora do estado, a equipe é sinônimo de resiliência e união, servindo de inspiração para as crianças menores da escolinha.'
+      },
+      {
+        id: 'sub20',
+        name: 'Sub-20',
+        fullName: 'Categoria Sub-20 • Juniores e Força Jovem',
+        tagline: 'Futebol de Campo • Ponte para o Titular',
+        img: '/foto-time-2.png',
+        desc: 'Ponte direta para o time principal. Os jovens do Sub-20 atuam com maturidade, unindo a velocidade da juventude à experiência adquirida em anos de projeto. Uma categoria forjada nas viagens mais difíceis, nos campos mais pesados e nas maiores vitórias da história do nosso clube.'
+      },
+      {
+        id: 'principal',
+        name: 'Quadro Principal',
+        fullName: 'Quadro Principal • A Força Máxima do Poeirão',
+        tagline: 'Futebol Amador de Alto Nível • Elite do Clube',
+        img: '/foto-time-3.png',
+        desc: 'O time que arrasta multidões e faz o coração da torcida pulsar forte. O elenco principal do Poeirão é o espelho de todo o trabalho social: formado tanto por atletas que cresceram na base quanto por referências locais, jogando com a alma em cada dividida nos principais campeonatos da região.'
+      },
+      {
+        id: 'master',
+        name: 'Master (+35)',
+        fullName: 'Categoria Master • A Raiz e a Tradição Viva',
+        tagline: 'Futebol Veterano • Pioneiros do Clube',
+        img: '/foto-time-1.png',
+        desc: 'Onde tudo começou e onde a paixão nunca envelhece. A categoria Master reúne os pioneiros que fundaram e mantiveram vivo o Poeirão através das décadas. Mostrando que o futebol é companheirismo e saúde para a vida toda, os veteranos continuam viajando, disputando clássicos e ensinando aos mais jovens o verdadeiro significado de ser Poeirão.'
+      }
+    ];
+
+    function renderHistoriaCategories() {
+      const container = document.getElementById('historia-cards-container');
+      if (!container) return;
+      container.innerHTML = HISTORIA_SUBS.map(cat => `
+        <article class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl hover:border-slate-700 transition">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
+            <div class="lg:col-span-5 relative bg-slate-950 flex items-center justify-center min-h-[260px] overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800">
+              <img src="${cat.img}" alt="${cat.fullName}" class="w-full h-full object-cover max-h-[380px]" onerror="this.src='/foto-time-1.png'" />
+              <div class="absolute top-4 left-4 bg-red-600 text-white text-[11px] font-black uppercase px-3 py-1 rounded shadow">
+                ${cat.name}
+              </div>
+            </div>
+            <div class="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <span class="text-xs font-bold text-red-500 uppercase tracking-widest block mb-1">
+                  ${cat.tagline}
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-4">
+                  ${cat.fullName}
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line font-normal">
+                  ${cat.desc}
+                </p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex items-center gap-2">
+                <span>🏆</span> Competições em toda a Bahia & Futsal Regional
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join('');
     }
 
     // EVENTOS DE NAVEGAÇÃO DO TOPO E DO RODAPÉ
@@ -1477,6 +1661,8 @@
 
     document.getElementById('nav-btn-inicio').addEventListener('click', () => showHomeView('inicio'));
     document.getElementById('nav-btn-planos').addEventListener('click', () => showHomeView('planos'));
+    const navBtnHist = document.getElementById('nav-btn-historia');
+    if (navBtnHist) navBtnHist.addEventListener('click', () => showHistoriaView());
     document.getElementById('nav-btn-store').addEventListener('click', () => showStoreView());
     document.getElementById('nav-btn-sponsors').addEventListener('click', () => showHomeView('patrocinadores'));
     document.getElementById('nav-btn-socio').addEventListener('click', () => showSocioView());
@@ -1486,10 +1672,12 @@
     document.getElementById('hero-btn-planos').addEventListener('click', () => showHomeView('planos'));
     document.getElementById('banner-btn-store').addEventListener('click', () => showStoreView());
 
-    // BOTÕES DE VOLTAR NA LOJA E SÓCIO
+    // BOTÕES DE VOLTAR NA LOJA, SÓCIO E HISTÓRIA
     document.getElementById('store-btn-back').addEventListener('click', () => showHomeView('inicio'));
     document.getElementById('store-btn-back-bottom').addEventListener('click', () => showHomeView('inicio'));
     document.getElementById('socio-btn-back').addEventListener('click', () => showHomeView('inicio'));
+    const histBtnBack = document.getElementById('historia-btn-back');
+    if (histBtnBack) histBtnBack.addEventListener('click', () => showHomeView('inicio'));
 
     // FOOTER LINKS
     document.getElementById('footer-link-inicio').addEventListener('click', () => showHomeView('inicio'));
@@ -1503,12 +1691,16 @@
     });
     document.getElementById('m-btn-inicio').addEventListener('click', () => showHomeView('inicio'));
     document.getElementById('m-btn-planos').addEventListener('click', () => showHomeView('planos'));
+    const mBtnHist = document.getElementById('m-btn-historia');
+    if (mBtnHist) mBtnHist.addEventListener('click', () => showHistoriaView());
     document.getElementById('m-btn-store').addEventListener('click', () => showStoreView());
     document.getElementById('m-btn-sponsors').addEventListener('click', () => showHomeView('patrocinadores'));
     document.getElementById('m-btn-socio').addEventListener('click', () => showSocioView());
 
     // HISTÓRICO DE HASH NA URL
-    if (window.location.hash === '#loja') {
+    if (window.location.hash === '#historia') {
+      showHistoriaView();
+    } else if (window.location.hash === '#loja') {
       showStoreView();
     } else if (window.location.hash === '#socio') {
       showSocioView();
@@ -1517,7 +1709,9 @@
     }
 
     window.addEventListener('hashchange', () => {
-      if (window.location.hash === '#loja') {
+      if (window.location.hash === '#historia') {
+        showHistoriaView();
+      } else if (window.location.hash === '#loja') {
         showStoreView();
       } else if (window.location.hash === '#socio') {
         showSocioView();

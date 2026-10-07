@@ -109,6 +109,16 @@ export const Footer: React.FC<FooterProps> = () => {
                 </a>
               </li>
               <li>
+                <a href="#historia" className="hover:text-red-400 transition-colors font-medium">
+                  História do Poeirão
+                </a>
+              </li>
+              <li>
+                <a href="#loja" className="hover:text-red-400 transition-colors">
+                  Loja Poeirão
+                </a>
+              </li>
+              <li>
                 <a href="#patrocinadores" className="hover:text-red-400 transition-colors">
                   Patrocinadores Oficiais
                 </a>

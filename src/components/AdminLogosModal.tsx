@@ -17,6 +17,8 @@ import {
   Plus,
   Trash2,
   Camera,
+  Key,
+  RefreshCw,
 } from 'lucide-react';
 import escudoOficialImg from '../assets/escudo-oficial.png';
 import jpxWhiteLogoImg from '../assets/patrocinador-jpx-studio-white.png';
@@ -44,7 +46,14 @@ import {
   formatPhone,
   cleanPhone,
   generateMatricula,
+  generateRandomPassword,
 } from '../utils/membersManager';
+import {
+  SubCategoryItem,
+  getStoredSubCategories,
+  saveStoredSubCategories,
+  saveSubCategoriesToCloud,
+} from '../utils/historyManager';
 import {
   saveClubSettingsToCloud,
   saveSponsorsToCloud,
@@ -70,7 +79,9 @@ interface AdminLogosModalProps {
   onUpdateTeamPhotos?: (photos: TeamPhotoItem[]) => void;
   members?: MemberItem[];
   onUpdateMembers?: (members: MemberItem[]) => void;
-  initialTab?: 'escudo_jpx' | 'sponsors' | 'store' | 'members';
+  subCategories?: SubCategoryItem[];
+  onUpdateSubCategories?: (categories: SubCategoryItem[]) => void;
+  initialTab?: 'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history';
   storeOrdersEnabled?: boolean;
   onToggleStoreOrders?: (enabled: boolean) => void;
 }
@@ -90,6 +101,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   onUpdateTeamPhotos,
   members: propMembers,
   onUpdateMembers,
+  subCategories: propSubCategories,
+  onUpdateSubCategories,
   initialTab = 'store',
   storeOrdersEnabled = true,
   onToggleStoreOrders,
@@ -99,7 +112,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members'>(
+  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history'>(
     (initialTab as any) === 'team_photos' ? 'store' : (initialTab || 'store')
   );
 
@@ -125,6 +138,10 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [localMembers, setLocalMembers] = useState<MemberItem[]>(getStoredMembers);
   const members = propMembers || localMembers;
 
+  // Lista de categorias da história do clube
+  const [localCategories, setLocalCategories] = useState<SubCategoryItem[]>(getStoredSubCategories);
+  const categories = propSubCategories || localCategories;
+
   useEffect(() => {
     if (propShirts) setLocalShirts(propShirts);
   }, [propShirts]);
@@ -147,6 +164,11 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [newMemPhone, setNewMemPhone] = useState('');
   const [newMemPlan, setNewMemPlan] = useState<MemberPlan>('ouro');
   const [newMemStatus, setNewMemStatus] = useState<'active' | 'pending'>('active');
+  const [newMemPassword, setNewMemPassword] = useState('');
+  const [showNewMemPassword, setShowNewMemPassword] = useState(false);
+  const [visibleMemberPasswords, setVisibleMemberPasswords] = useState<Record<string, boolean>>({});
+  const [editingPasswordMemId, setEditingPasswordMemId] = useState<string | null>(null);
+  const [editingPasswordValue, setEditingPasswordValue] = useState('');
   const [isAddingMember, setIsAddingMember] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<{ id: string; name: string } | null>(null);
 
@@ -162,16 +184,18 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const targetTypeRef = useRef<'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo'>('escudo');
+  const targetTypeRef = useRef<'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category'>('escudo');
   const targetSponsorIdRef = useRef<string>('');
   const targetShirtIdRef = useRef<string>('');
   const targetPhotoIdRef = useRef<string>('');
+  const targetCategoryIdRef = useRef<string>('');
 
   useEffect(() => {
     if (isOpen) {
       setLocalSponsors(getStoredSponsors());
       setLocalShirts(getStoredShirts());
       setLocalTeamPhotos(getStoredTeamPhotos());
+      setLocalCategories(getStoredSubCategories());
       setEscudoPreview(localStorage.getItem('poeirao_asset_escudo') || escudoOficialImg);
       setJpxFooterPreview(
         localStorage.getItem('poeirao_asset_jpx_footer') ||
@@ -204,7 +228,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   };
 
   const triggerUpload = (
-    type: 'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo',
+    type: 'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category',
     id?: string
   ) => {
     targetTypeRef.current = type;
@@ -214,6 +238,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       targetShirtIdRef.current = id || '';
     } else if (type === 'team_photo') {
       targetPhotoIdRef.current = id || '';
+    } else if (type === 'sub_category') {
+      targetCategoryIdRef.current = id || '';
     }
     fileInputRef.current?.click();
   };
@@ -224,7 +250,10 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
     setIsProcessing(true);
     try {
-      const isPhoto = targetTypeRef.current === 'shirt' || targetTypeRef.current === 'team_photo';
+      const isPhoto =
+        targetTypeRef.current === 'shirt' ||
+        targetTypeRef.current === 'team_photo' ||
+        targetTypeRef.current === 'sub_category';
       const dataUrl = await compressImage(file, isPhoto ? 700 : 500, isPhoto ? 'image/jpeg' : 'auto');
       if (!dataUrl) {
         throw new Error('Falha ao converter imagem');
@@ -291,6 +320,20 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
         setSuccessMessage('Foto oficial do time atualizada e sincronizada com sucesso!');
         setTimeout(() => setSuccessMessage(null), 3500);
+      } else if (targetTypeRef.current === 'sub_category') {
+        const catId = targetCategoryIdRef.current;
+        const updated = categories.map((cat) =>
+          cat.id === catId ? { ...cat, imageSrc: dataUrl } : cat
+        );
+        setLocalCategories(updated);
+        saveStoredSubCategories(updated);
+        if (onUpdateSubCategories) {
+          onUpdateSubCategories(updated);
+        } else {
+          await saveSubCategoriesToCloud(updated);
+        }
+        setSuccessMessage('Foto da categoria atualizada e salva com sucesso!');
+        setTimeout(() => setSuccessMessage(null), 3500);
       } else {
         const id = targetSponsorIdRef.current;
         const targetSponsor = sponsors.find((s) => s.id === id);
@@ -333,6 +376,26 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         fileInputRef.current.value = '';
       }
     }
+  };
+
+  const handleUpdateCategoryText = async (
+    catId: string,
+    fullName: string,
+    tagline: string,
+    description: string
+  ) => {
+    const updated = categories.map((cat) =>
+      cat.id === catId ? { ...cat, fullName, tagline, description } : cat
+    );
+    setLocalCategories(updated);
+    saveStoredSubCategories(updated);
+    if (onUpdateSubCategories) {
+      onUpdateSubCategories(updated);
+    } else {
+      await saveSubCategoriesToCloud(updated);
+    }
+    setSuccessMessage('História da categoria salva com sucesso!');
+    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   const handleResetJpxLogo = async () => {
@@ -680,6 +743,23 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
+  const handleGenerateNewPassword = () => {
+    const generated = generateRandomPassword();
+    setNewMemPassword(generated);
+    setShowNewMemPassword(true);
+  };
+
+  const handleOpenAddMember = () => {
+    setNewMemName('');
+    setNewMemPhone('');
+    setNewMemPlan('ouro');
+    setNewMemStatus('active');
+    const autoPass = generateRandomPassword();
+    setNewMemPassword(autoPass);
+    setShowNewMemPassword(true);
+    setIsAddingMember(true);
+  };
+
   const handleCreateMember = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMemName.trim()) {
@@ -689,6 +769,11 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     const clean = cleanPhone(newMemPhone);
     if (clean.length < 10) {
       alert('Digite um celular válido com DDD.');
+      return;
+    }
+    const pass = newMemPassword.trim();
+    if (!pass || pass.length < 3) {
+      alert('Defina uma senha individual de acesso com no mínimo 3 caracteres.');
       return;
     }
 
@@ -701,7 +786,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       matricula: newMatricula,
       name: newMemName.trim(),
       phone: clean,
-      password: '123',
+      password: pass,
       plan: newMemPlan,
       status: newMemStatus,
       createdAt: today,
@@ -717,9 +802,28 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
     setNewMemName('');
     setNewMemPhone('');
+    setNewMemPassword('');
     setIsAddingMember(false);
-    setSuccessMessage(`Sócio ${newMember.name} cadastrado com sucesso!`);
-    setTimeout(() => setSuccessMessage(null), 3000);
+    setSuccessMessage(`Sócio ${newMember.name} cadastrado com sucesso com senha individual única!`);
+    setTimeout(() => setSuccessMessage(null), 3500);
+  };
+
+  const handleSaveMemberPassword = async (id: string, newPass: string) => {
+    if (!newPass.trim() || newPass.trim().length < 3) {
+      alert('A senha individual deve ter no mínimo 3 caracteres.');
+      return;
+    }
+    const updated = members.map((m) =>
+      m.id === id ? { ...m, password: newPass.trim() } : m
+    );
+    setLocalMembers(updated);
+    if (onUpdateMembers) onUpdateMembers(updated);
+    saveStoredMembers(updated);
+    await saveMembersToCloud(updated);
+    setEditingPasswordMemId(null);
+    setEditingPasswordValue('');
+    setSuccessMessage('Senha individual do sócio atualizada com sucesso!');
+    setTimeout(() => setSuccessMessage(null), 3500);
   };
 
   const countWithLogo = sponsors.filter((s) => Boolean(s.logoSrc)).length;
@@ -872,6 +976,19 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                 >
                   <span className="text-sm">💳</span>
                   <span>Sócios Torcedores ({members.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('history')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
+                    activeTab === 'history'
+                      ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
+                      : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>📜 Gerenciar Categorias (Admin) ({categories.length})</span>
                 </button>
               </div>
 
@@ -1511,7 +1628,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => setIsAddingMember(!isAddingMember)}
+                      onClick={() => {
+                        if (!isAddingMember) {
+                          handleOpenAddMember();
+                        } else {
+                          setIsAddingMember(false);
+                        }
+                      }}
                       className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black uppercase py-2 px-3.5 rounded-xl shadow transition cursor-pointer"
                     >
                       <Plus className="w-4 h-4" />
@@ -1519,15 +1642,21 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                     </button>
                   </div>
 
-                  {/* FORMULÁRIO DE ADIÇÃO MANUAL PELA DIRETORIA */}
+                  {/* FORMULÁRIO DE ADIÇÃO MANUAL PELA DIRETORIA COM SENHA INDIVIDUAL */}
                   {isAddingMember && (
                     <form
                       onSubmit={handleCreateMember}
                       className="bg-slate-950 border border-red-500/40 rounded-2xl p-5 space-y-4 animate-fade-in"
                     >
-                      <h5 className="text-xs font-black text-red-500 uppercase tracking-wider">
-                        Cadastrar Novo Sócio Torcedor (Pela Diretoria)
-                      </h5>
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h5 className="text-xs font-black text-red-500 uppercase tracking-wider flex items-center gap-2">
+                          <Plus className="w-4 h-4" />
+                          <span>Cadastrar Novo Sócio Torcedor (Pela Diretoria)</span>
+                        </h5>
+                        <span className="text-[10px] text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2 py-0.5 rounded-full">
+                          🔒 Senha Individual Obrigatória
+                        </span>
+                      </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
@@ -1556,6 +1685,47 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                             className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 font-mono"
                             required
                           />
+                        </div>
+
+                        {/* CAMPO DE SENHA INDIVIDUAL EXCLUSIVA */}
+                        <div className="sm:col-span-2 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                          <div className="flex items-center justify-between mb-1">
+                            <label className="text-[10px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                              <Key className="w-3.5 h-3.5 text-amber-400" />
+                              <span>Senha de Acesso Individual (Pessoal e Única)</span>
+                            </label>
+                            <button
+                              type="button"
+                              onClick={handleGenerateNewPassword}
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-300 hover:text-amber-200 bg-amber-950/60 hover:bg-amber-900/60 border border-amber-800/50 px-2 py-0.5 rounded cursor-pointer transition"
+                              title="Gerar uma nova senha segura aleatória"
+                            >
+                              <RefreshCw className="w-2.5 h-2.5" />
+                              <span>🎲 Gerar Senha</span>
+                            </button>
+                          </div>
+
+                          <div className="relative">
+                            <input
+                              type={showNewMemPassword ? 'text' : 'password'}
+                              value={newMemPassword}
+                              onChange={(e) => setNewMemPassword(e.target.value)}
+                              placeholder="Digite ou gere a senha individual deste sócio..."
+                              className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 font-mono"
+                              required
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowNewMemPassword(!showNewMemPassword)}
+                              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+                              title={showNewMemPassword ? 'Ocultar senha' : 'Ver senha'}
+                            >
+                              {showNewMemPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <p className="text-[10px] text-slate-400 mt-1">
+                            Cada sócio deve ter sua própria senha para evitar que qualquer pessoa acesse a conta de outros.
+                          </p>
                         </div>
 
                         <div>
@@ -1677,6 +1847,86 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                                   <span className="text-slate-600">•</span>
                                   <span className="text-[11px] text-slate-500">Validade: {mem.validUntil}</span>
                                 </div>
+
+                                {/* SENHA INDIVIDUAL DO SÓCIO COM CONTROLE E EDIÇÃO */}
+                                <div className="mt-2 flex flex-wrap items-center gap-2">
+                                  {editingPasswordMemId === mem.id ? (
+                                    <div className="flex items-center gap-1.5 bg-slate-900 border border-amber-500/60 p-1.5 rounded-xl">
+                                      <span className="text-[10px] text-amber-400 font-bold pl-1">Nova senha:</span>
+                                      <input
+                                        type="text"
+                                        value={editingPasswordValue}
+                                        onChange={(e) => setEditingPasswordValue(e.target.value)}
+                                        placeholder="Digite a senha..."
+                                        className="bg-slate-950 border border-slate-700 text-xs text-white px-2 py-0.5 rounded-lg w-32 font-mono outline-none focus:border-amber-400"
+                                        autoFocus
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingPasswordValue(generateRandomPassword())}
+                                        className="text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 px-1.5 py-0.5 rounded border border-slate-700"
+                                        title="Gerar senha aleatória"
+                                      >
+                                        🎲
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleSaveMemberPassword(mem.id, editingPasswordValue)}
+                                        className="text-[10px] font-black bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg uppercase transition"
+                                      >
+                                        Salvar
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setEditingPasswordMemId(null);
+                                          setEditingPasswordValue('');
+                                        }}
+                                        className="text-[10px] text-slate-400 hover:text-white px-1 py-1"
+                                      >
+                                        ✕
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="inline-flex items-center gap-2 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl text-xs">
+                                      <span className="text-amber-400 flex items-center gap-1 font-bold text-[11px]">
+                                        <Key className="w-3 h-3 text-amber-400" />
+                                        <span>Senha Individual:</span>
+                                      </span>
+                                      <span className="font-mono text-slate-200 text-xs bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                        {visibleMemberPasswords[mem.id] ? mem.password : '••••••••'}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setVisibleMemberPasswords((prev) => ({
+                                            ...prev,
+                                            [mem.id]: !prev[mem.id],
+                                          }))
+                                        }
+                                        className="text-slate-400 hover:text-white p-0.5 rounded transition"
+                                        title={visibleMemberPasswords[mem.id] ? 'Ocultar senha' : 'Ver senha individual'}
+                                      >
+                                        {visibleMemberPasswords[mem.id] ? (
+                                          <EyeOff className="w-3 h-3" />
+                                        ) : (
+                                          <Eye className="w-3 h-3" />
+                                        )}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setEditingPasswordMemId(mem.id);
+                                          setEditingPasswordValue(mem.password);
+                                        }}
+                                        className="text-[10px] font-bold text-amber-400 hover:text-amber-300 hover:underline pl-1 cursor-pointer"
+                                        title="Alterar a senha individual deste sócio"
+                                      >
+                                        Alterar
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
 
@@ -1684,11 +1934,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                             <div className="flex flex-wrap items-center gap-2">
                               {/* Botão WhatsApp */}
                               <a
-                                href={`https://wa.me/55${cleanPhone(mem.phone)}`}
+                                href={`https://wa.me/55${cleanPhone(mem.phone)}?text=${encodeURIComponent(
+                                  `Olá, ${mem.name}! Aqui é da diretoria do Poeirão F.C.\n\nSeu acesso à Área do Sócio está ativo!\n📋 Matrícula: ${mem.matricula}\n📱 Celular: ${formatPhone(mem.phone)}\n🔑 Sua Senha Individual: ${mem.password}\n\nAcesse sua Carteirinha Virtual Oficial no site oficial!`
+                                )}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-400 border border-emerald-800/50 p-2 rounded-xl text-xs transition"
-                                title="Falar no WhatsApp"
+                                title="Enviar credenciais de acesso no WhatsApp"
                               >
                                 💬 WhatsApp
                               </a>
@@ -1740,6 +1992,126 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                           </div>
                         );
                       })}
+                  </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* ABA 5: HISTÓRIA & CATEGORIAS (SUB-11 AO MASTER)                   */}
+              {/* ================================================================= */}
+              {activeTab === 'history' && (
+                <div className="space-y-6">
+                  <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-red-500" />
+                          Fotos & Histórias das Categorias (Sub-11 ao Master)
+                        </h4>
+                        <p className="text-xs text-slate-400 mt-1">
+                          Altere as fotos de cada categoria e edite as histórias das viagens e campeonatos pela Bahia e fora do estado.
+                        </p>
+                      </div>
+                      <span className="text-xs font-bold text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl self-start sm:self-auto">
+                        7 Categorias Ativas
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {categories.map((cat) => (
+                      <div
+                        key={cat.id}
+                        className="bg-slate-900 border border-slate-800 rounded-2xl p-5 hover:border-slate-700 transition"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                          {/* Foto da Categoria */}
+                          <div className="md:col-span-4 flex flex-col gap-2">
+                            <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+                              <img
+                                src={cat.imageSrc || '/foto-time-1.png'}
+                                alt={cat.fullName}
+                                className="w-full h-full object-cover"
+                              />
+                              <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow">
+                                {cat.categoryName}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => triggerUpload('sub_category', cat.id)}
+                              disabled={isProcessing}
+                              className="w-full inline-flex items-center justify-center gap-2 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white text-xs font-bold py-2.5 px-3 rounded-xl border border-red-500/40 transition active:scale-95 cursor-pointer disabled:opacity-50 shadow-sm"
+                            >
+                              <Camera className="w-4 h-4" />
+                              <span>{isProcessing ? 'Enviando Foto...' : 'Alterar Foto Desta Sub'}</span>
+                            </button>
+                          </div>
+
+                          {/* Textos da Categoria */}
+                          <div className="md:col-span-8 space-y-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">
+                                  Título da Categoria
+                                </label>
+                                <input
+                                  type="text"
+                                  defaultValue={cat.fullName}
+                                  id={`input-cat-name-${cat.id}`}
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500 font-bold"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">
+                                  Subtítulo / Modalidades
+                                </label>
+                                <input
+                                  type="text"
+                                  defaultValue={cat.tagline}
+                                  id={`input-cat-tagline-${cat.id}`}
+                                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500"
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">
+                                História e Trajetória da Sub
+                              </label>
+                              <textarea
+                                rows={4}
+                                defaultValue={cat.description}
+                                id={`input-cat-desc-${cat.id}`}
+                                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-red-500 leading-relaxed resize-y"
+                                placeholder="Conte a história das viagens, treinos e campeonatos..."
+                              />
+                            </div>
+
+                            <div className="flex justify-end">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const nameEl = document.getElementById(`input-cat-name-${cat.id}`) as HTMLInputElement;
+                                  const tagEl = document.getElementById(`input-cat-tagline-${cat.id}`) as HTMLInputElement;
+                                  const descEl = document.getElementById(`input-cat-desc-${cat.id}`) as HTMLTextAreaElement;
+                                  handleUpdateCategoryText(
+                                    cat.id,
+                                    nameEl ? nameEl.value : cat.fullName,
+                                    tagEl ? tagEl.value : cat.tagline,
+                                    descEl ? descEl.value : cat.description
+                                  );
+                                }}
+                                className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow active:scale-95 cursor-pointer"
+                              >
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                <span>Salvar Texto da {cat.categoryName}</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
