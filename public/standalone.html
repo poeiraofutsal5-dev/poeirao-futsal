@@ -516,8 +516,63 @@
       </div>
     </section>
 
+    <!-- ENSAIO OFICIAL DO MANTO (3 FOTOS DO TIME ESTILO IMAGEM 1, 2 E 3) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4 w-full">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-red-500 block mb-1">
+            📸 Editorial & Lookbook Oficial
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+            Ensaio Oficial do Manto 2026
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Confira os atletas do Poeirão F.C. e os detalhes do uniforme oficial tricolor.
+          </p>
+        </div>
+        <button
+          type="button"
+          onclick="openAdminModal('store')"
+          class="text-xs font-bold text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/80 border border-red-900/50 px-3.5 py-1.5 rounded-xl transition cursor-pointer self-start sm:self-auto"
+        >
+          Trocar Fotos na Área Restrita
+        </button>
+      </div>
+
+      <div id="store-team-photos-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-stretch">
+        <!-- Renderizado dinamicamente via Firestore/JS -->
+      </div>
+    </section>
+
+    <!-- BARRA DE CATEGORIAS E BUSCA -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 w-full">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-xl">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          <div>
+            <span class="text-[11px] font-black uppercase text-red-500 tracking-wider block">Catálogo Oficial</span>
+            <h3 class="text-lg font-black text-white uppercase">Escolha seu Manto & Acessórios</h3>
+          </div>
+          <div class="relative w-full md:w-72">
+            <input
+              type="text"
+              id="store-search-input"
+              placeholder="Buscar por produto..."
+              class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-3 pr-8 py-2 text-xs text-white focus:outline-none focus:border-red-500 transition"
+            />
+          </div>
+        </div>
+
+        <div id="store-category-filters" class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+          <button type="button" class="btn-store-cat bg-red-600 text-white text-xs font-black px-3.5 py-2 rounded-xl transition cursor-pointer" data-cat="all">Todos os Itens</button>
+          <button type="button" class="btn-store-cat bg-slate-950 text-slate-400 hover:text-white border border-slate-800 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer" data-cat="camisas">Camisas de Jogo</button>
+          <button type="button" class="btn-store-cat bg-slate-950 text-slate-400 hover:text-white border border-slate-800 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer" data-cat="treino">Treino & Agasalhos</button>
+          <button type="button" class="btn-store-cat bg-slate-950 text-slate-400 hover:text-white border border-slate-800 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer" data-cat="acessorios">Acessórios & Bonés</button>
+        </div>
+      </div>
+    </div>
+
     <!-- PRODUTOS / CAMISAS NA LOJA -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
       <div id="store-shirts-grid">
         <!-- Renderizado dinamicamente via Firestore -->
       </div>
@@ -990,29 +1045,52 @@
           </button>
         </div>
 
-        <!-- ABA 1: GERENCIAR LOJA POEIRÃO -->
-        <div id="tab-content-store" class="space-y-4">
-          <!-- CONTROLE PEDIR NO ZAP EM TODOS OS PRODUTOS -->
+        <!-- ABA 1: GERENCIAR LOJA POEIRÃO & FOTOS DO TIME (LOOKBOOK) -->
+        <div id="tab-content-store" class="space-y-6">
+          <!-- SEÇÃO FOTOS OFICIAIS DO TIME (3 FOTOS) -->
+          <div class="bg-gradient-to-b from-[#11192b] to-[#0a0f1b] border-2 border-red-900/50 rounded-2xl p-4 sm:p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div>
+                <h5 class="text-xs sm:text-sm font-black text-white uppercase flex items-center gap-2">
+                  <span>📸</span> Fotos Oficiais do Time & Lookbook (3 Fotos)
+                </h5>
+                <p class="text-xs text-slate-300 mt-0.5">Altere as 3 fotos do topo da loja (Imagens 1, 2 e 3), títulos, legendas e selos. Sincroniza em tempo real.</p>
+              </div>
+              <button type="button" id="btn-copy-photo3-subtitle" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-bold px-3 py-1.5 rounded-xl transition cursor-pointer shrink-0">
+                ✨ Copiar Legenda da Foto 3 p/ Todas
+              </button>
+            </div>
+            <div id="admin-team-photos-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Gerado via JavaScript -->
+            </div>
+          </div>
+
+          <!-- CONTROLE GERAL PEDIR NO ZAP EM TODOS OS PRODUTOS (EMERGÊNCIA) -->
           <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
             <div>
               <div class="flex items-center gap-2">
-                <h5 class="text-xs sm:text-sm font-black text-white uppercase">Botão "Pedir no Zap" em todos os produtos:</h5>
+                <h5 class="text-xs sm:text-sm font-black text-white uppercase">Pausa Geral da Loja (Emergência):</h5>
                 <span id="badge-orders-status" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full border"></span>
               </div>
-              <p class="text-xs text-slate-400 mt-1">Desative quando estiver sem estoque para os clientes não mandarem mensagens no WhatsApp.</p>
+              <p class="text-xs text-slate-400 mt-1">Pausa geral de emergência. Cada produto abaixo também possui seu controle individual de estoque.</p>
             </div>
             <button type="button" id="btn-toggle-orders-status" class="text-xs font-black uppercase px-4 py-2.5 rounded-xl border transition cursor-pointer shadow">
               Alternar Status
             </button>
           </div>
 
-          <div class="flex items-center justify-between">
-            <p class="text-xs text-slate-400">Edite as camisas e produtos da loja. As mudanças sincronizam em tempo real.</p>
-            <button id="btn-add-shirt" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
+            <div>
+              <h5 class="text-xs sm:text-sm font-black text-white uppercase flex items-center gap-2">
+                <span>👕</span> Catálogo de Produtos da Loja Oficial
+              </h5>
+              <p class="text-xs text-slate-400">Cada item possui controle próprio de estoque no WhatsApp e personalização de Nome/Número.</p>
+            </div>
+            <button id="btn-add-shirt" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer shrink-0">
               + Adicionar Produto
             </button>
           </div>
-          <div id="admin-shirts-list" class="space-y-3">
+          <div id="admin-shirts-list" class="space-y-4">
             <!-- Gerado via JavaScript -->
           </div>
         </div>
@@ -1208,17 +1286,95 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // PRODUTO INICIAL DA LOJA (1 CAMISA OFICIAL POR PADRÃO)
+    // PRODUTOS INICIAIS DA LOJA OFICIAL POEIRÃO F.C.
     const INITIAL_SHIRTS = [
       {
         id: 'shirt_oficial_2026',
         name: 'Camisa Oficial 2026 - Poeirão F.C.',
+        category: 'camisas',
+        categoryLabel: 'Camisa de Jogo',
         price: 'R$ 89,90',
-        badge: 'Oficial 2026',
+        originalPrice: 'R$ 119,90',
+        imageSrc: './foto-time-1.png',
+        badge: 'Lançamento 2026',
+        description: 'Camisa oficial de jogo em tecido Dry-Fit e poliéster de alta tecnologia, escudo oficial em alta definição e acabamento tricolor premium.',
+        sizes: ['P', 'M', 'G', 'GG', 'XGG'],
+        inStock: true,
+        fabricDetails: '100% Poliéster Dry-Fit • Proteção UV • Costura Reforçada',
+        allowCustomization: true
+      },
+      {
+        id: 'shirt_reserva_2026',
+        name: 'Manto Reserva Branco 2026',
+        category: 'camisas',
+        categoryLabel: 'Camisa de Jogo',
+        price: 'R$ 89,90',
+        originalPrice: 'R$ 119,90',
+        imageSrc: './foto-time-2.png',
+        badge: 'Edição Especial',
+        description: 'Segundo uniforme oficial na cor branca clássica com faixas em vermelho e preto e gola tricolor trabalhada.',
+        sizes: ['P', 'M', 'G', 'GG'],
+        inStock: true,
+        fabricDetails: 'Tecido Dry-Fit Ventilado • Secagem Rápida',
+        allowCustomization: true
+      },
+      {
+        id: 'agasalho_treino_2026',
+        name: 'Camisa de Treino & Pré-Jogo',
+        category: 'treino',
+        categoryLabel: 'Treino & Agasalhos',
+        price: 'R$ 79,90',
+        imageSrc: './foto-time-3.png',
+        badge: 'Linha Atleta',
+        description: 'Modelo leve para aquecimento e treinos diários dos atletas do Poeirão F.C.',
+        sizes: ['P', 'M', 'G', 'GG'],
+        inStock: true,
+        fabricDetails: 'Microfibra Respirável • Logo JPX e Patrocinadores',
+        allowCustomization: true
+      },
+      {
+        id: 'bone_tricolor_2026',
+        name: 'Boné Aba Curva Oficial Poeirão',
+        category: 'acessorios',
+        categoryLabel: 'Acessórios & Bonés',
+        price: 'R$ 49,90',
         imageSrc: '',
-        description: 'Camisa oficial de jogo em tecido Dry-Fit e poliéster com acabamento premium.'
+        badge: 'Mais Vendido',
+        description: 'Boné estruturado com escudo bordado em relevo 3D e fecho ajustável de metal.',
+        sizes: ['Único'],
+        inStock: true,
+        fabricDetails: 'Sarja 100% Algodão Premium • Fecho Ajustável',
+        allowCustomization: false
       }
     ];
+
+    // 3 FOTOS OFICIAIS DO TIME (LOOKBOOK) COM A MESMA LEGENDA SOLICITADA PELO USUÁRIO
+    const INITIAL_TEAM_PHOTOS = [
+      {
+        id: 'photo_1_elenco',
+        title: 'Ensaio Oficial do Elenco',
+        subtitle: 'Postura, garra e identidade visual que representam nossa terra',
+        badge: 'LANÇAMENTO 2026',
+        imageSrc: './foto-time-1.png'
+      },
+      {
+        id: 'photo_2_manto',
+        title: 'O Manto em Campo',
+        subtitle: 'Postura, garra e identidade visual que representam nossa terra',
+        badge: 'ENSAIO EXCLUSIVO',
+        imageSrc: './foto-time-2.png'
+      },
+      {
+        id: 'photo_3_detalhes',
+        title: 'Detalhes do Escudo & Tecido',
+        subtitle: 'Postura, garra e identidade visual que representam nossa terra',
+        badge: 'QUALIDADE PREMIUM',
+        imageSrc: './foto-time-3.png'
+      }
+    ];
+
+    let currentShirts = [...INITIAL_SHIRTS];
+    let currentTeamPhotos = [...INITIAL_TEAM_PHOTOS];
 
     // 25 VAGAS DE PATROCINADORES
     const INITIAL_SPONSORS = [
@@ -1233,7 +1389,6 @@
       }))
     ];
 
-    let currentShirts = [...INITIAL_SHIRTS];
     let currentSponsors = [...INITIAL_SPONSORS];
     const WHATSAPP_NUMERO = '5577981677054';
 
@@ -1373,7 +1528,7 @@
     });
 
     // COMPRESSOR DE IMAGENS
-    function compressImage(file, maxDim = 500) {
+    function compressImage(file, maxDim = 600, preferredFormat = 'auto') {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1388,8 +1543,18 @@
             }
             canvas.width = w; canvas.height = h;
             const ctx = canvas.getContext('2d');
+            const isPng = file.type === 'image/png' && preferredFormat !== 'image/jpeg';
+            const useFormat = preferredFormat === 'auto' ? (isPng ? 'image/png' : 'image/jpeg') : preferredFormat;
+            if (useFormat === 'image/jpeg') {
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, w, h);
+            }
             ctx.drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL('image/png', 0.9));
+            try {
+              resolve(canvas.toDataURL(useFormat, 0.82));
+            } catch {
+              resolve(canvas.toDataURL('image/jpeg', 0.8));
+            }
           };
           img.onerror = () => resolve('');
           img.src = e.target.result;
@@ -1411,51 +1576,283 @@
       ? localStorage.getItem('poeirao_standalone_store_orders') === 'true' 
       : true;
 
-    // RENDERIZAR CAMISAS NA ABA DEDICADA DA LOJA
-    function renderStoreShirts(shirts) {
-      const grid = document.getElementById('store-shirts-grid');
+    // CONTROLE DE CATEGORIAS E BUSCA NA LOJA
+    let storeActiveCat = 'all';
+    let storeSearchQuery = '';
+
+    // RENDERIZAR FOTOS OFICIAIS DO TIME (LOOKBOOK DA LOJA)
+    function renderStoreTeamPhotos(photos) {
+      const grid = document.getElementById('store-team-photos-grid');
+      if (!grid) return;
       grid.innerHTML = '';
 
-      // Banner de aviso caso os pedidos estejam desativados
-      const noticeId = 'store-orders-disabled-banner';
-      let notice = document.getElementById(noticeId);
-      if (!storeOrdersEnabled) {
-        if (!notice) {
-          notice = document.createElement('div');
-          notice.id = noticeId;
-          notice.className = "mb-8 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-4 sm:p-5 flex items-start gap-3";
-          notice.innerHTML = `
-            <span class="text-xl">⚠️</span>
-            <div>
-              <h4 class="text-sm font-black text-amber-300 uppercase tracking-wide">Pedidos pelo WhatsApp Temporariamente Pausados</h4>
-              <p class="text-xs text-amber-200/90 mt-1 leading-relaxed">No momento nossos produtos estão aguardando reposição de estoque. Os pedidos via WhatsApp foram pausados pela diretoria para não acumular mensagens. Assim que novas unidades chegarem, as vendas serão reativadas imediatamente!</p>
+      photos.forEach((photo, idx) => {
+        const div = document.createElement('div');
+        div.className = "group relative bg-[#0e1422] border-2 border-red-950/60 hover:border-red-600/70 rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-end min-h-[380px] sm:min-h-[440px]";
+
+        div.innerHTML = `
+          ${photo.imageSrc ? `
+            <div class="absolute inset-0 w-full h-full overflow-hidden">
+              <img src="${photo.imageSrc}" alt="${photo.title}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity"></div>
             </div>
-          `;
-          grid.parentNode.insertBefore(notice, grid);
-        }
-      } else {
-        if (notice) notice.remove();
-      }
+          ` : `
+            <div class="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-[#11192b] via-[#0a0f1b] to-[#080c14]">
+              <span class="text-5xl mb-3">👕</span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1 rounded-full mb-2">
+                Foto #${idx + 1} • Ensaio 2026
+              </span>
+              <p class="text-xs text-slate-400 text-center max-w-xs">Adicione fotos do time na Área Restrita.</p>
+            </div>
+          `}
+          <div class="relative z-10 p-6 space-y-2 bg-gradient-to-t from-black via-black/85 to-transparent">
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2.5 py-0.5 rounded-full inline-block">
+              ${photo.badge || `ENSAIO 2026 • FOTO ${idx + 1}`}
+            </span>
+            <h3 class="text-lg sm:text-xl font-black text-white uppercase tracking-tight group-hover:text-red-400 transition-colors">
+              ${photo.title}
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              ${photo.subtitle}
+            </p>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
 
-      if (shirts.length === 1) {
-        grid.className = "max-w-md mx-auto grid grid-cols-1 gap-6 sm:gap-8";
-      } else if (shirts.length === 2) {
-        grid.className = "max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8";
-      } else {
-        grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8";
-      }
+    // RENDERIZAR FOTOS DO TIME NO PAINEL ADMIN
+    function renderAdminTeamPhotos(photos) {
+      const list = document.getElementById('admin-team-photos-list');
+      if (!list) return;
+      list.innerHTML = '';
 
-      shirts.forEach(sh => {
+      photos.forEach((photo, idx) => {
         const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-red-500/50 transition-all shadow-xl flex flex-col justify-between group";
-
-        const buyMsg = encodeURIComponent(`Olá! Gostaria de comprar o produto oficial "${sh.name}" do Poeirão F.C. no valor de ${sh.price}.`);
-        const buyUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${buyMsg}`;
+        card.className = "bg-slate-950/90 border border-slate-800 rounded-2xl p-3.5 space-y-3 flex flex-col justify-between";
 
         card.innerHTML = `
           <div>
-            <div class="relative h-64 sm:h-72 bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center p-6 border-b border-slate-800">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2 py-0.5 rounded-md">
+                Foto #${idx + 1}
+              </span>
+              <span class="text-[10px] text-slate-400 font-bold">Imagem ${idx + 1}</span>
+            </div>
+
+            <div class="relative w-full h-32 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center mb-2.5">
+              ${photo.imageSrc 
+                ? `<img src="${photo.imageSrc}" class="w-full h-full object-cover">` 
+                : `<span class="text-3xl text-slate-600">📷</span>`
+              }
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-2.5">
+              <label class="flex-1 text-center cursor-pointer bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition">
+                <span>${photo.imageSrc ? 'Trocar Foto' : 'Subir Imagem'}</span>
+                <input type="file" accept="image/*" class="team-photo-file-input hidden" data-id="${photo.id}">
+              </label>
+              ${photo.imageSrc ? `<button type="button" class="btn-remove-team-photo text-[11px] text-slate-400 hover:text-red-400 px-2 py-1.5 rounded-lg border border-slate-800" data-id="${photo.id}">Remover</button>` : ''}
+            </div>
+
+            <div class="space-y-2">
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-0.5">Título da Foto:</label>
+                <input type="text" value="${photo.title}" data-id="${photo.id}" class="team-photo-title-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white font-bold focus:outline-none focus:border-red-500">
+              </div>
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-0.5">Legenda / Subtítulo:</label>
+                <textarea rows="2" data-id="${photo.id}" class="team-photo-sub-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-red-500 resize-none leading-relaxed">${photo.subtitle}</textarea>
+              </div>
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-0.5">Selo / Badge:</label>
+                <input type="text" value="${photo.badge || ''}" data-id="${photo.id}" class="team-photo-badge-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-amber-300 font-bold focus:outline-none focus:border-red-500">
+              </div>
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      // Upload de foto do time
+      list.querySelectorAll('.team-photo-file-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const id = e.target.getAttribute('data-id');
+          const dataUrl = await compressImage(file, 800);
+          if (!dataUrl) return;
+
+          currentTeamPhotos = currentTeamPhotos.map(p => p.id === id ? { ...p, imageSrc: dataUrl } : p);
+          renderStoreTeamPhotos(currentTeamPhotos);
+          renderAdminTeamPhotos(currentTeamPhotos);
+
+          await setDoc(doc(db, 'settings', 'team_gallery'), {
+            items: currentTeamPhotos,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Foto do time atualizada em todos os aparelhos!');
+        });
+      });
+
+      // Título
+      list.querySelectorAll('.team-photo-title-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentTeamPhotos = currentTeamPhotos.map(p => p.id === id ? { ...p, title: val } : p);
+          renderStoreTeamPhotos(currentTeamPhotos);
+          await setDoc(doc(db, 'settings', 'team_gallery'), { items: currentTeamPhotos, updatedAt: serverTimestamp() });
+          showToast('Título atualizado!');
+        });
+      });
+
+      // Subtítulo
+      list.querySelectorAll('.team-photo-sub-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentTeamPhotos = currentTeamPhotos.map(p => p.id === id ? { ...p, subtitle: val } : p);
+          renderStoreTeamPhotos(currentTeamPhotos);
+          await setDoc(doc(db, 'settings', 'team_gallery'), { items: currentTeamPhotos, updatedAt: serverTimestamp() });
+          showToast('Legenda atualizada!');
+        });
+      });
+
+      // Badge
+      list.querySelectorAll('.team-photo-badge-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentTeamPhotos = currentTeamPhotos.map(p => p.id === id ? { ...p, badge: val } : p);
+          renderStoreTeamPhotos(currentTeamPhotos);
+          await setDoc(doc(db, 'settings', 'team_gallery'), { items: currentTeamPhotos, updatedAt: serverTimestamp() });
+          showToast('Selo atualizado!');
+        });
+      });
+
+      // Remover foto
+      list.querySelectorAll('.btn-remove-team-photo').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          currentTeamPhotos = currentTeamPhotos.map(p => p.id === id ? { ...p, imageSrc: '' } : p);
+          renderStoreTeamPhotos(currentTeamPhotos);
+          renderAdminTeamPhotos(currentTeamPhotos);
+          await setDoc(doc(db, 'settings', 'team_gallery'), { items: currentTeamPhotos, updatedAt: serverTimestamp() });
+          showToast('Foto removida.');
+        });
+      });
+    }
+
+    // Botão para copiar a legenda da foto 3 para todas as fotos
+    const btnCopySub3 = document.getElementById('btn-copy-photo3-subtitle');
+    if (btnCopySub3) {
+      btnCopySub3.addEventListener('click', async () => {
+        const p3 = currentTeamPhotos.find(p => p.id === 'photo_3_detalhes') || currentTeamPhotos[2];
+        const targetSub = p3 ? p3.subtitle : 'Postura, garra e identidade visual que representam nossa terra';
+        currentTeamPhotos = currentTeamPhotos.map(p => ({ ...p, subtitle: targetSub }));
+        renderStoreTeamPhotos(currentTeamPhotos);
+        renderAdminTeamPhotos(currentTeamPhotos);
+        await setDoc(doc(db, 'settings', 'team_gallery'), { items: currentTeamPhotos, updatedAt: serverTimestamp() });
+        showToast('Legenda da Foto 3 copiada para todas!');
+      });
+    }
+
+    // Configuração dos filtros de categoria na loja
+    document.querySelectorAll('.btn-store-cat').forEach(btn => {
+      btn.addEventListener('click', () => {
+        storeActiveCat = btn.getAttribute('data-cat') || 'all';
+        document.querySelectorAll('.btn-store-cat').forEach(b => {
+          if (b.getAttribute('data-cat') === storeActiveCat) {
+            b.className = "btn-store-cat bg-red-600 text-white text-xs font-black px-3.5 py-2 rounded-xl transition cursor-pointer";
+          } else {
+            b.className = "btn-store-cat bg-slate-950 text-slate-400 hover:text-white border border-slate-800 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer";
+          }
+        });
+        renderStoreShirts(currentShirts);
+      });
+    });
+
+    // Busca na loja
+    const storeSearchInput = document.getElementById('store-search-input');
+    if (storeSearchInput) {
+      storeSearchInput.addEventListener('input', (e) => {
+        storeSearchQuery = e.target.value.toLowerCase().trim();
+        renderStoreShirts(currentShirts);
+      });
+    }
+
+    // Armazenamento local das personalizações e tamanhos selecionados na sessão
+    const standaloneSelectedSizes = {};
+    const standaloneCustomNames = {};
+    const standaloneCustomNums = {};
+
+    // RENDERIZAR CAMISAS NA ABA DEDICADA DA LOJA
+    function renderStoreShirts(shirts) {
+      const grid = document.getElementById('store-shirts-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      // Filtra por categoria e busca
+      const filtered = shirts.filter(sh => {
+        const matchesCat = storeActiveCat === 'all'
+          ? true
+          : storeActiveCat === 'camisas'
+          ? !sh.category || sh.category === 'camisas' || sh.category.includes('Jogo')
+          : sh.category === storeActiveCat;
+
+        const matchesSearch = !storeSearchQuery ||
+          sh.name.toLowerCase().includes(storeSearchQuery) ||
+          (sh.description && sh.description.toLowerCase().includes(storeSearchQuery)) ||
+          (sh.badge && sh.badge.toLowerCase().includes(storeSearchQuery));
+
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.className = "max-w-md mx-auto text-center py-12 bg-slate-900/60 border border-slate-800 rounded-3xl p-8";
+        grid.innerHTML = `
+          <span class="text-4xl block mb-2">🛍️</span>
+          <h4 class="text-base font-bold text-white uppercase">Nenhum produto encontrado</h4>
+          <p class="text-xs text-slate-400 mt-1">Tente selecionar outra categoria ou limpar o campo de busca.</p>
+        `;
+        return;
+      }
+
+      grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8";
+
+      filtered.forEach(sh => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-red-500/50 transition-all shadow-xl flex flex-col justify-between group";
+
+        const currentSize = standaloneSelectedSizes[sh.id] || (sh.sizes && sh.sizes[0]) || 'M';
+        const isItemAvailable = sh.inStock !== false && storeOrdersEnabled !== false;
+        const allowCustom = sh.allowCustomization !== false;
+        const customName = (standaloneCustomNames[sh.id] || '').trim().toUpperCase();
+        const customNum = (standaloneCustomNums[sh.id] || '').trim();
+
+        // Constrói mensagem para o WhatsApp
+        let buyMsg = `Olá! Gostaria de comprar o produto oficial "${sh.name}" do Poeirão F.C. no valor de ${sh.price} (Tamanho: ${currentSize}`;
+        if (allowCustom && (customName || customNum)) {
+          buyMsg += `, Personalização: Nome: ${customName || 'Sem nome'}, Número: ${customNum || 'Sem número'}`;
+        }
+        buyMsg += `). Como faço para combinar entrega e pagamento?`;
+        const buyUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(buyMsg)}`;
+
+        const reserveMsg = `Olá! Gostaria de reservar uma unidade do produto "${sh.name}" do Poeirão F.C. (Tamanho: ${currentSize}) assim que o novo lote chegar ao estoque.`;
+        const reserveUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(reserveMsg)}`;
+
+        card.innerHTML = `
+          <div>
+            <div class="relative h-64 sm:h-72 bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center p-6 border-b border-slate-800 overflow-hidden">
               ${sh.badge ? `<span class="absolute top-4 left-4 z-10 bg-red-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">${sh.badge}</span>` : ''}
+              
+              <span class="absolute top-4 right-4 z-10 text-[10px] font-black uppercase px-2.5 py-1 rounded-full border shadow-sm ${
+                isItemAvailable ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-red-500/20 text-red-300 border-red-500/40'
+              }">
+                ${isItemAvailable ? '🟢 Em Estoque' : '🔴 Esgotado'}
+              </span>
+
               ${sh.imageSrc 
                 ? `<img src="${sh.imageSrc}" alt="${sh.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">`
                 : `<div class="text-center p-4">
@@ -1463,37 +1860,92 @@
                      <p class="text-xs font-bold text-slate-400 mt-2">Camisa Oficial Poeirão F.C.</p>
                    </div>`
               }
-              <div class="absolute bottom-3 right-3 text-[11px] font-bold text-slate-400 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-lg">
-                Dry-Fit e Poliéster
+              <div class="absolute bottom-3 right-3 text-[10px] font-bold text-slate-400 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-lg">
+                ${sh.categoryLabel || 'Produto Oficial'}
               </div>
             </div>
 
-            <div class="p-6">
-              <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors">${sh.name}</h3>
-              <p class="text-xs text-slate-400 mt-2 leading-relaxed">${sh.description || 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit e poliéster de alta durabilidade.'}</p>
+            <div class="p-6 space-y-3">
+              <div>
+                <span class="text-[10px] font-black uppercase text-red-400 tracking-wider block mb-1">
+                  ${sh.categoryLabel || 'Poeirão F.C.'}
+                </span>
+                <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase">${sh.name}</h3>
+                <p class="text-xs text-slate-300 mt-1 leading-relaxed">${sh.description || 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit e poliéster de alta durabilidade.'}</p>
+              </div>
+
+              <div class="text-[11px] font-semibold text-emerald-400 bg-emerald-950/30 border border-emerald-900/40 px-2.5 py-1.5 rounded-xl">
+                ✓ ${sh.fabricDetails || 'Tecido Dry-Fit • Proteção UV • Costura Reforçada'}
+              </div>
+
+              <!-- SELETOR DE TAMANHO -->
+              <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Tamanho:</label>
+                <div class="flex flex-wrap gap-1.5">
+                  ${(sh.sizes || ['P', 'M', 'G', 'GG', 'XGG']).map(sz => `
+                    <button type="button" class="btn-select-size w-8 h-8 rounded-lg text-xs font-black transition cursor-pointer ${
+                      currentSize === sz ? 'bg-red-600 text-white shadow-md ring-2 ring-red-500' : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                    }" data-id="${sh.id}" data-size="${sz}">${sz}</button>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- PERSONALIZAÇÃO DE NOME E NÚMERO (SE PERMITIDO) -->
+              ${allowCustom ? `
+                <div class="pt-2 border-t border-slate-800/80 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-black uppercase text-slate-300 flex items-center gap-1">
+                      <span>✍️</span> Personalização Oficial (Costas)
+                    </span>
+                    <span class="text-[9px] text-amber-400 font-bold">Opcional</span>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <div class="col-span-2">
+                      <input type="text" placeholder="Nome: SILVA" value="${customName}" maxlength="15" class="input-custom-name w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white uppercase font-bold focus:outline-none focus:border-red-500" data-id="${sh.id}">
+                    </div>
+                    <div>
+                      <input type="text" placeholder="Nº 10" value="${customNum}" maxlength="3" class="input-custom-num w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-amber-400 font-black text-center focus:outline-none focus:border-red-500" data-id="${sh.id}">
+                    </div>
+                  </div>
+                  ${(customName || customNum) ? `
+                    <div class="text-[10px] text-slate-300 bg-black/40 border border-slate-800 rounded-lg px-2 py-1 flex items-center justify-between font-mono">
+                      <span class="text-slate-400">Prévia:</span>
+                      <span class="font-bold text-white uppercase">${customName || 'NOME'} • #${customNum || '10'}</span>
+                    </div>
+                  ` : ''}
+                </div>
+              ` : ''}
             </div>
           </div>
 
           <div class="p-6 pt-0">
-            <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-4">
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4">
               <div>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Preço</span>
-                <span class="text-2xl font-black text-emerald-400 tracking-tight">${sh.price}</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Preço Torcedor</span>
+                <div class="flex items-baseline gap-1.5">
+                  <span class="text-2xl font-black text-emerald-400 tracking-tight">${sh.price}</span>
+                  ${sh.originalPrice ? `<span class="text-xs text-slate-500 line-through">${sh.originalPrice}</span>` : ''}
+                </div>
               </div>
 
-              ${storeOrdersEnabled ? `
+              ${isItemAvailable ? `
                 <a
                   href="${buyUrl}"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-4 sm:px-5 py-3 rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                  class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-4 py-3 rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
                 >
-                  <span>Pedir no Zap</span>
+                  <span>Pedir no Zap (${currentSize})</span>
                   <span>→</span>
                 </a>
               ` : `
-                <div class="inline-flex items-center gap-1.5 bg-slate-950 text-slate-400 font-bold text-xs sm:text-sm px-4 py-3 rounded-xl border border-slate-800 opacity-80 cursor-not-allowed select-none">
-                  <span>Esgotado</span>
+                <div class="text-right">
+                  <div class="inline-flex items-center gap-1.5 bg-slate-950 text-slate-400 font-bold text-xs px-3 py-2 rounded-xl border border-slate-800 opacity-80 cursor-not-allowed select-none mb-1">
+                    <span>Esgotado</span>
+                  </div>
+                  <a href="${reserveUrl}" target="_blank" rel="noopener noreferrer" class="block text-[11px] font-bold text-emerald-400 hover:underline">
+                    Reservar no Zap
+                  </a>
                 </div>
               `}
             </div>
@@ -1501,81 +1953,192 @@
         `;
         grid.appendChild(card);
       });
-    }
 
-    // RENDERIZAR PATROCINADORES NO SITE (CARDS BRANCOS E ELEGANTES COMO NO REACT)
-    function renderPublicSponsors(sponsors) {
-      const grid = document.getElementById('sponsors-grid');
-      grid.innerHTML = '';
+      // Listeners de tamanho
+      grid.querySelectorAll('.btn-select-size').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.target.getAttribute('data-id');
+          const sz = e.target.getAttribute('data-size');
+          standaloneSelectedSizes[id] = sz;
+          renderStoreShirts(currentShirts);
+        });
+      });
 
-      sponsors.forEach(s => {
-        const div = document.createElement('div');
-        div.className = "group relative bg-white rounded-2xl border border-slate-200/90 hover:border-red-500/50 p-4 transition-all duration-300 hover:shadow-lg flex flex-col items-center justify-center min-h-[145px] text-center";
+      // Listeners de personalização
+      grid.querySelectorAll('.input-custom-name').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const id = e.target.getAttribute('data-id');
+          standaloneCustomNames[id] = e.target.value;
+          // Re-render debounce
+          clearTimeout(window._customDebounce);
+          window._customDebounce = setTimeout(() => renderStoreShirts(currentShirts), 700);
+        });
+      });
 
-        if (s.logoSrc) {
-          div.innerHTML = `
-            <div class="h-16 w-full flex items-center justify-center p-1">
-              <img src="${s.logoSrc}" alt="${s.name}" class="max-h-full max-w-full object-contain filter group-hover:scale-105 transition-transform duration-300">
-            </div>
-            <p class="text-xs font-bold text-slate-900 mt-2 truncate w-full px-1">${s.name}</p>
-            <span class="text-[10px] text-red-600 font-extrabold uppercase tracking-wider mt-0.5">Patrocinador Oficial</span>
-          `;
-        } else {
-          div.innerHTML = `
-            <div class="w-8 h-8 rounded-full bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-bold mb-1.5">
-              #${s.order}
-            </div>
-            <p class="text-[11px] font-black text-slate-500 uppercase tracking-tight">Divulgue sua marca</p>
-            <span class="text-[9px] text-slate-400 mt-0.5">Espaço Disponível</span>
-          `;
-        }
-        grid.appendChild(div);
+      grid.querySelectorAll('.input-custom-num').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const id = e.target.getAttribute('data-id');
+          standaloneCustomNums[id] = e.target.value.replace(/\D/g, '').slice(0, 3);
+          clearTimeout(window._customDebounce);
+          window._customDebounce = setTimeout(() => renderStoreShirts(currentShirts), 700);
+        });
       });
     }
 
-    // RENDERIZAR ITENS NO PAINEL ADMIN
+    // RENDERIZAR ITENS NO PAINEL ADMIN (COM CONTROLE INDIVIDUAL DE WHATSAPP E CAMPOS DETALHADOS)
     function renderAdminShirts(shirts) {
       const list = document.getElementById('admin-shirts-list');
+      if (!list) return;
       list.innerHTML = '';
 
-      shirts.forEach(sh => {
+      shirts.forEach((sh, idx) => {
         const item = document.createElement('div');
-        item.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3";
+        const isItemInStock = sh.inStock !== false;
+        const isCustomAllowed = sh.allowCustomization !== false;
+
+        item.className = `bg-slate-950 border rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl ${
+          isItemInStock ? 'border-slate-800' : 'border-red-950/70 bg-red-950/10'
+        }`;
 
         item.innerHTML = `
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-16 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center p-1 overflow-hidden shrink-0">
-              ${sh.imageSrc 
-                ? `<img src="${sh.imageSrc}" class="max-h-full max-w-full object-contain">`
-                : `<span class="text-2xl">👕</span>`
-              }
+          <!-- LINHA SUPERIOR COM BOTÃO DE ESTOQUE INDIVIDUAL E PERSONALIZAÇÃO -->
+          <div class="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black uppercase text-red-400 bg-red-950/60 border border-red-900/40 px-2 py-0.5 rounded-md">
+                Item #${idx + 1}
+              </span>
+              <span class="text-xs font-black text-white truncate max-w-[180px] sm:max-w-xs">${sh.name}</span>
             </div>
-            <div class="flex-1 flex flex-wrap gap-2">
-              <label class="cursor-pointer bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
-                <span>${sh.imageSrc ? 'Trocar Foto' : 'Enviar Foto'}</span>
-                <input type="file" accept="image/*" class="shirt-file-input hidden" data-id="${sh.id}">
-              </label>
-              ${sh.imageSrc ? `<button class="btn-remove-shirt-photo text-xs text-slate-400 hover:text-white px-2 py-1.5 rounded-lg border border-slate-800" data-id="${sh.id}">Remover Foto</button>` : ''}
-              <button class="btn-delete-shirt text-xs text-red-400 hover:text-red-300 ml-auto" data-id="${sh.id}">Excluir</button>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <!-- BOTÃO DE ESTOQUE INDIVIDUAL (CORREÇÃO DO BUG) -->
+              <button
+                type="button"
+                class="btn-toggle-shirt-stock text-[11px] font-black uppercase px-3 py-1.5 rounded-xl border transition cursor-pointer shadow-sm ${
+                  isItemInStock ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-red-500/20 text-red-300 border-red-500/40'
+                }"
+                data-id="${sh.id}"
+                title="Ativar/Desativar botão de WhatsApp apenas para este produto"
+              >
+                ${isItemInStock ? '🟢 Pedir no Zap: ATIVO' : '🔴 Esgotado / Pausado'}
+              </button>
+
+              <!-- BOTÃO DE PERSONALIZAÇÃO -->
+              <button
+                type="button"
+                class="btn-toggle-shirt-custom text-[11px] font-black uppercase px-2.5 py-1.5 rounded-xl border transition cursor-pointer ${
+                  isCustomAllowed ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'
+                }"
+                data-id="${sh.id}"
+              >
+                ${isCustomAllowed ? '✍️ Personalização: SIM' : '✍️ Personalização: NÃO'}
+              </button>
+
+              <!-- EXCLUIR PRODUTO -->
+              <button class="btn-delete-shirt text-xs text-red-400 hover:text-red-300 bg-red-950/40 border border-red-900/50 py-1.5 px-2.5 rounded-xl transition" data-id="${sh.id}">
+                Excluir
+              </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Nome do Produto ou Camisa:</label>
-              <input type="text" value="${sh.name}" data-id="${sh.id}" class="shirt-name-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-red-500">
+          <!-- MEIO: FOTO E CAMPOS DETALHADOS -->
+          <div class="flex flex-col md:flex-row gap-4 items-start">
+            <div class="flex flex-col items-center gap-2 w-full md:w-32 shrink-0">
+              <div class="w-24 h-24 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-1.5 overflow-hidden">
+                ${sh.imageSrc 
+                  ? `<img src="${sh.imageSrc}" class="max-h-full max-w-full object-contain">`
+                  : `<span class="text-3xl">👕</span>`
+                }
+              </div>
+              <div class="flex flex-wrap gap-1.5 w-full justify-center">
+                <label class="cursor-pointer bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg transition">
+                  <span>${sh.imageSrc ? 'Trocar' : 'Subir Foto'}</span>
+                  <input type="file" accept="image/*" class="shirt-file-input hidden" data-id="${sh.id}">
+                </label>
+                ${sh.imageSrc ? `<button class="btn-remove-shirt-photo text-[11px] text-slate-400 hover:text-red-400 px-2 py-1 rounded-lg border border-slate-800" data-id="${sh.id}">Remover</button>` : ''}
+              </div>
             </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Valor (R$):</label>
-              <input type="text" value="${sh.price}" data-id="${sh.id}" class="shirt-price-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-emerald-400 font-black focus:outline-none focus:border-red-500">
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 flex-1 w-full">
+              <div class="sm:col-span-2">
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Nome do Produto:</label>
+                <input type="text" value="${sh.name}" data-id="${sh.id}" class="shirt-name-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-red-500">
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Categoria:</label>
+                <select data-id="${sh.id}" class="shirt-cat-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-red-500">
+                  <option value="camisas" ${(!sh.category || sh.category === 'camisas') ? 'selected' : ''}>Camisas de Jogo</option>
+                  <option value="treino" ${sh.category === 'treino' ? 'selected' : ''}>Treino & Agasalhos</option>
+                  <option value="acessorios" ${sh.category === 'acessorios' ? 'selected' : ''}>Acessórios & Bonés</option>
+                  <option value="infantil" ${sh.category === 'infantil' ? 'selected' : ''}>Linha Infantil & Kits</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Preço Torcedor (R$):</label>
+                <input type="text" value="${sh.price}" data-id="${sh.id}" class="shirt-price-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-emerald-400 font-black focus:outline-none focus:border-red-500">
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Preço Original / De (opcional):</label>
+                <input type="text" value="${sh.originalPrice || ''}" data-id="${sh.id}" class="shirt-orig-price-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-400 focus:outline-none focus:border-red-500">
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Selo / Destaque:</label>
+                <input type="text" value="${sh.badge || ''}" data-id="${sh.id}" class="shirt-badge-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-amber-300 font-bold focus:outline-none focus:border-red-500">
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Tecido / Detalhes de Fabricação:</label>
+                <input type="text" value="${sh.fabricDetails || ''}" data-id="${sh.id}" class="shirt-fabric-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-emerald-300 focus:outline-none focus:border-red-500">
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Tamanhos:</label>
+                <input type="text" value="${(sh.sizes || ['P', 'M', 'G', 'GG']).join(', ')}" data-id="${sh.id}" class="shirt-sizes-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-red-500">
+              </div>
+
+              <div class="sm:col-span-3">
+                <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Descrição Completa:</label>
+                <input type="text" value="${sh.description || ''}" data-id="${sh.id}" class="shirt-desc-input w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-red-500">
+              </div>
             </div>
           </div>
         `;
         list.appendChild(item);
       });
 
+      // Toggle individual de estoque (WhatsApp)
+      list.querySelectorAll('.btn-toggle-shirt-stock').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, inStock: sh.inStock === false ? true : false } : sh);
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+          const target = currentShirts.find(s => s.id === id);
+          showToast(`Status de "${target?.name}": ${target?.inStock ? '🟢 Em Estoque' : '🔴 Esgotado / Pausado'}`);
+        });
+      });
+
+      // Toggle de personalização
+      list.querySelectorAll('.btn-toggle-shirt-custom').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, allowCustomization: sh.allowCustomization === false ? true : false } : sh);
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+          showToast('Personalização do produto atualizada!');
+        });
+      });
+
       // Upload de imagem da camisa
-      document.querySelectorAll('.shirt-file-input').forEach(input => {
+      list.querySelectorAll('.shirt-file-input').forEach(input => {
         input.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -1595,56 +2158,115 @@
         });
       });
 
+      // Categoria
+      list.querySelectorAll('.shirt-cat-input').forEach(select => {
+        select.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const cat = e.target.value;
+          let catLabel = 'Camisa de Jogo';
+          if (cat === 'treino') catLabel = 'Treino & Agasalhos';
+          else if (cat === 'acessorios') catLabel = 'Acessórios & Bonés';
+          else if (cat === 'infantil') catLabel = 'Linha Infantil & Kits';
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, category: cat, categoryLabel: catLabel } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+          showToast('Categoria atualizada!');
+        });
+      });
+
       // Edição de nome
-      document.querySelectorAll('.shirt-name-input').forEach(input => {
+      list.querySelectorAll('.shirt-name-input').forEach(input => {
         input.addEventListener('change', async (e) => {
           const id = e.target.getAttribute('data-id');
           const newName = e.target.value.trim();
           currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, name: newName } : sh);
           renderStoreShirts(currentShirts);
-
-          await setDoc(doc(db, 'settings', 'store_shirts'), {
-            items: currentShirts,
-            updatedAt: serverTimestamp()
-          });
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
           showToast('Nome atualizado!');
         });
       });
 
       // Edição de preço
-      document.querySelectorAll('.shirt-price-input').forEach(input => {
+      list.querySelectorAll('.shirt-price-input').forEach(input => {
         input.addEventListener('change', async (e) => {
           const id = e.target.getAttribute('data-id');
           const newPrice = e.target.value.trim();
           currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, price: newPrice } : sh);
           renderStoreShirts(currentShirts);
-
-          await setDoc(doc(db, 'settings', 'store_shirts'), {
-            items: currentShirts,
-            updatedAt: serverTimestamp()
-          });
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
           showToast('Preço atualizado!');
         });
       });
 
+      // Edição de preço original
+      list.querySelectorAll('.shirt-orig-price-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, originalPrice: val } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+        });
+      });
+
+      // Edição de badge
+      list.querySelectorAll('.shirt-badge-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, badge: val } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+        });
+      });
+
+      // Edição de tecido
+      list.querySelectorAll('.shirt-fabric-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, fabricDetails: val } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+        });
+      });
+
+      // Edição de tamanhos
+      list.querySelectorAll('.shirt-sizes-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const sizes = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, sizes } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+        });
+      });
+
+      // Edição de descrição
+      list.querySelectorAll('.shirt-desc-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const val = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, description: val } : sh);
+          renderStoreShirts(currentShirts);
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
+        });
+      });
+
       // Remover foto
-      document.querySelectorAll('.btn-remove-shirt-photo').forEach(btn => {
+      list.querySelectorAll('.btn-remove-shirt-photo').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           const id = e.target.getAttribute('data-id');
           currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, imageSrc: '' } : sh);
           renderStoreShirts(currentShirts);
           renderAdminShirts(currentShirts);
-
-          await setDoc(doc(db, 'settings', 'store_shirts'), {
-            items: currentShirts,
-            updatedAt: serverTimestamp()
-          });
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
           showToast('Foto removida.');
         });
       });
 
       // Excluir camisa
-      document.querySelectorAll('.btn-delete-shirt').forEach(btn => {
+      list.querySelectorAll('.btn-delete-shirt').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           if (currentShirts.length <= 1) {
             alert('A loja precisa ter pelo menos 1 item cadastrado.');
@@ -1654,11 +2276,7 @@
           currentShirts = currentShirts.filter(sh => sh.id !== id);
           renderStoreShirts(currentShirts);
           renderAdminShirts(currentShirts);
-
-          await setDoc(doc(db, 'settings', 'store_shirts'), {
-            items: currentShirts,
-            updatedAt: serverTimestamp()
-          });
+          await setDoc(doc(db, 'settings', 'store_shirts'), { items: currentShirts, updatedAt: serverTimestamp() });
           showToast('Produto excluído.');
         });
       });
@@ -1669,10 +2287,17 @@
       const newShirt = {
         id: `shirt_${Date.now()}`,
         name: `Novo Produto Oficial #${currentShirts.length + 1}`,
+        category: 'camisas',
+        categoryLabel: 'Camisa de Jogo',
         price: 'R$ 89,90',
-        badge: 'Lançamento',
+        originalPrice: 'R$ 119,90',
+        badge: 'Lançamento 2026',
         imageSrc: '',
-        description: 'Produto oficial do Poeirão F.C. de alta qualidade.'
+        description: 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit respirável com acabamento tricolor premium.',
+        sizes: ['P', 'M', 'G', 'GG', 'XGG'],
+        inStock: true,
+        fabricDetails: '100% Poliéster Dry-Fit • Proteção UV • Costura Reforçada',
+        allowCustomization: true
       };
       currentShirts.push(newShirt);
       renderStoreShirts(currentShirts);
@@ -1786,6 +2411,21 @@
       } else {
         renderStoreShirts(INITIAL_SHIRTS);
         renderAdminShirts(INITIAL_SHIRTS);
+      }
+    });
+
+    // 1.5. Fotos Oficiais do Time (Lookbook)
+    onSnapshot(doc(db, 'settings', 'team_gallery'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          currentTeamPhotos = data.items;
+          renderStoreTeamPhotos(currentTeamPhotos);
+          renderAdminTeamPhotos(currentTeamPhotos);
+        }
+      } else {
+        renderStoreTeamPhotos(INITIAL_TEAM_PHOTOS);
+        renderAdminTeamPhotos(INITIAL_TEAM_PHOTOS);
       }
     });
 
@@ -3018,15 +3658,23 @@
         adminView.classList.remove('hidden');
         passError.classList.add('hidden');
         renderAdminShirts(currentShirts);
+        renderAdminTeamPhotos(currentTeamPhotos);
         renderAdminSponsors(currentSponsors);
         renderAdminMembers();
         if (adminTargetTab === 'members') {
           switchAdminTab(tabBtnMembers, contentMembers);
+        } else if (adminTargetTab === 'store') {
+          switchAdminTab(tabBtnStore, contentStore);
         }
       } else {
         passError.classList.remove('hidden');
       }
     });
+
+    // RENDERIZAÇÃO INICIAL DA LOJA E FOTOS DO TIME
+    renderStoreShirts(currentShirts);
+    renderStoreTeamPhotos(currentTeamPhotos);
+    renderPublicSponsors(currentSponsors);
   </script>
 </body>
 </html>

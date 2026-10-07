@@ -57,7 +57,11 @@ const STORAGE_KEY = 'poeirao_all_sponsors_v4';
  * Redimensiona e comprime imagens enviadas pelo usuário para que não estourem
  * a cota de 5MB do localStorage e carreguem instantaneamente no site.
  */
-export function compressImage(file: File, maxDim = 500): Promise<string> {
+export function compressImage(
+  file: File,
+  maxDim = 600,
+  preferredFormat: 'image/jpeg' | 'image/png' | 'auto' = 'auto'
+): Promise<string> {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -91,9 +95,24 @@ export function compressImage(file: File, maxDim = 500): Promise<string> {
           resolve(src);
           return;
         }
+
+        const isPng = file.type === 'image/png' && preferredFormat !== 'image/jpeg';
+        const useFormat = preferredFormat === 'auto'
+          ? (isPng ? 'image/png' : 'image/jpeg')
+          : preferredFormat;
+
+        if (useFormat === 'image/jpeg') {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+        }
+
         ctx.drawImage(img, 0, 0, width, height);
-        // Gera dataURL compacta (PNG)
-        resolve(canvas.toDataURL('image/png', 0.9));
+        try {
+          const result = canvas.toDataURL(useFormat, 0.82);
+          resolve(result);
+        } catch {
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        }
       };
       img.onerror = () => resolve(src);
       img.src = src;

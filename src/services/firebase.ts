@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore';
 import fallbackConfig from '../../firebase-applet-config.json';
 import { SponsorItem, INITIAL_SPONSORS } from '../utils/sponsorsManager';
-import { ShirtItem, INITIAL_SHIRTS } from '../utils/storeManager';
+import { ShirtItem, INITIAL_SHIRTS, TeamPhotoItem, INITIAL_TEAM_PHOTOS } from '../utils/storeManager';
 import { MemberItem, INITIAL_MEMBERS } from '../utils/membersManager';
 
 // Permite usar variáveis de ambiente (como no Netlify / Vercel) ou o arquivo de configuração local
@@ -247,6 +247,49 @@ export async function saveMembersToCloud(members: MemberItem[]): Promise<void> {
     });
   } catch (err) {
     console.error('Erro ao salvar sócios no Firebase:', err);
+  }
+}
+
+/**
+ * Escuta alterações nas Fotos Oficiais do Time / Ensaio da Loja em tempo real.
+ */
+export function subscribeToTeamPhotos(
+  callback: (photos: TeamPhotoItem[]) => void
+) {
+  try {
+    const galleryRef = doc(db, 'settings', 'team_gallery');
+    return onSnapshot(
+      galleryRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            callback(data.items);
+          }
+        }
+      },
+      (err) => {
+        console.warn('Aviso no listener de galeria de fotos do Firebase:', err);
+      }
+    );
+  } catch (e) {
+    console.error('Falha ao inicializar listener de fotos do time:', e);
+    return () => {};
+  }
+}
+
+/**
+ * Salva as fotos oficiais do time na nuvem para refletir em todos os aparelhos.
+ */
+export async function saveTeamPhotosToCloud(photos: TeamPhotoItem[]): Promise<void> {
+  try {
+    const galleryRef = doc(db, 'settings', 'team_gallery');
+    await setDoc(galleryRef, {
+      items: photos,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('Erro ao salvar fotos do time no Firebase:', err);
   }
 }
 

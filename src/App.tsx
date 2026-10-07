@@ -10,7 +10,14 @@ import { SupportBanner } from './components/SupportBanner';
 import { Footer } from './components/Footer';
 import { AdminLogosModal } from './components/AdminLogosModal';
 import { getStoredSponsors, SponsorItem } from './utils/sponsorsManager';
-import { getStoredShirts, ShirtItem } from './utils/storeManager';
+import {
+  getStoredShirts,
+  saveStoredShirts,
+  ShirtItem,
+  TeamPhotoItem,
+  getStoredTeamPhotos,
+  saveStoredTeamPhotos,
+} from './utils/storeManager';
 import {
   getStoredMembers,
   saveStoredMembers,
@@ -21,8 +28,11 @@ import {
   subscribeToSponsors,
   subscribeToStoreShirts,
   subscribeToMembers,
+  subscribeToTeamPhotos,
   saveMembersToCloud,
   saveClubSettingsToCloud,
+  saveStoreShirtsToCloud,
+  saveTeamPhotosToCloud,
 } from './services/firebase';
 
 export default function App() {
@@ -30,11 +40,13 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [sponsors, setSponsors] = useState<SponsorItem[]>(getStoredSponsors);
   const [shirts, setShirts] = useState<ShirtItem[]>(getStoredShirts);
+  const [teamPhotos, setTeamPhotos] = useState<TeamPhotoItem[]>(getStoredTeamPhotos);
   const [members, setMembers] = useState<MemberItem[]>(getStoredMembers);
   const [storeOrdersEnabled, setStoreOrdersEnabled] = useState<boolean>(() => {
     const saved = localStorage.getItem('poeirao_store_orders_enabled');
     return saved !== null ? saved === 'true' : true;
   });
+  const [adminInitialTab, setAdminInitialTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members'>('store');
   
   // Controle de visualização: 'home' (página inicial), 'loja' (loja poeirão) ou 'socio' (área do sócio torcedor)
   const [viewMode, setViewMode] = useState<'home' | 'loja' | 'socio'>(() => {
@@ -106,7 +118,15 @@ export default function App() {
     const unsubStore = subscribeToStoreShirts((cloudShirts) => {
       setShirts(cloudShirts);
       try {
-        localStorage.setItem('poeirao_store_shirts_v3', JSON.stringify(cloudShirts));
+        localStorage.setItem('poeirao_store_shirts_v4', JSON.stringify(cloudShirts));
+      } catch {}
+    });
+
+    // 3.5. Sincroniza fotos oficiais do time em tempo real
+    const unsubTeamPhotos = subscribeToTeamPhotos((cloudPhotos) => {
+      setTeamPhotos(cloudPhotos);
+      try {
+        localStorage.setItem('poeirao_team_photos_v1', JSON.stringify(cloudPhotos));
       } catch {}
     });
 
@@ -123,6 +143,7 @@ export default function App() {
       unsubSponsors();
       unsubClub();
       unsubStore();
+      unsubTeamPhotos();
       unsubMembers();
     };
   }, []);
@@ -168,6 +189,18 @@ export default function App() {
     await saveMembersToCloud(updated);
   };
 
+  const handleUpdateShirts = async (updatedShirts: ShirtItem[]) => {
+    setShirts(updatedShirts);
+    saveStoredShirts(updatedShirts);
+    await saveStoreShirtsToCloud(updatedShirts);
+  };
+
+  const handleUpdateTeamPhotos = async (updatedPhotos: TeamPhotoItem[]) => {
+    setTeamPhotos(updatedPhotos);
+    saveStoredTeamPhotos(updatedPhotos);
+    await saveTeamPhotosToCloud(updatedPhotos);
+  };
+
   const handleToggleStoreOrders = async (enabled: boolean) => {
     setStoreOrdersEnabled(enabled);
     try {
@@ -180,7 +213,10 @@ export default function App() {
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
       {/* 1. CABEÇALHO FIXO COM BARRA VERMELHA, LOGO E LINKS (SEMPRE PRESENTE) */}
       <Navbar
-        onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onOpenAdminModal={() => {
+          setAdminInitialTab('escudo_jpx');
+          setIsAdminModalOpen(true);
+        }}
         onNavigateToStore={handleNavigateToStore}
         onNavigateToMemberPortal={handleNavigateToMemberPortal}
         onNavigateToHome={handleBackToHome}
@@ -195,8 +231,12 @@ export default function App() {
         <main className="flex-1 pt-20">
           <StorePage
             onBack={handleBackToHome}
-            onOpenAdmin={() => setIsAdminModalOpen(true)}
+            onOpenAdmin={(tab) => {
+              setAdminInitialTab(tab || 'store');
+              setIsAdminModalOpen(true);
+            }}
             shirts={shirts}
+            teamPhotos={teamPhotos}
             storeOrdersEnabled={storeOrdersEnabled}
           />
         </main>
@@ -252,9 +292,12 @@ export default function App() {
         sponsors={sponsors}
         onUpdateSponsors={(updatedSponsors) => setSponsors(updatedSponsors)}
         shirts={shirts}
-        onUpdateShirts={(updatedShirts) => setShirts(updatedShirts)}
+        onUpdateShirts={handleUpdateShirts}
+        teamPhotos={teamPhotos}
+        onUpdateTeamPhotos={handleUpdateTeamPhotos}
         members={members}
         onUpdateMembers={(updatedMembers) => setMembers(updatedMembers)}
+        initialTab={adminInitialTab}
         storeOrdersEnabled={storeOrdersEnabled}
         onToggleStoreOrders={handleToggleStoreOrders}
       />

@@ -16,6 +16,7 @@ import {
   DollarSign,
   Plus,
   Trash2,
+  Camera,
 } from 'lucide-react';
 import escudoOficialImg from '../assets/escudo-oficial.png';
 import jpxWhiteLogoImg from '../assets/patrocinador-jpx-studio-white.png';
@@ -29,6 +30,9 @@ import {
   ShirtItem,
   getStoredShirts,
   saveStoredShirts,
+  TeamPhotoItem,
+  getStoredTeamPhotos,
+  saveStoredTeamPhotos,
 } from '../utils/storeManager';
 import {
   MemberItem,
@@ -46,9 +50,11 @@ import {
   saveSponsorsToCloud,
   saveStoreShirtsToCloud,
   saveMembersToCloud,
+  saveTeamPhotosToCloud,
   subscribeToClubSettings,
   subscribeToStoreShirts,
   subscribeToMembers,
+  subscribeToTeamPhotos,
 } from '../services/firebase';
 
 interface AdminLogosModalProps {
@@ -60,6 +66,8 @@ interface AdminLogosModalProps {
   onUpdateSponsors?: (sponsors: SponsorItem[]) => void;
   shirts?: ShirtItem[];
   onUpdateShirts?: (shirts: ShirtItem[]) => void;
+  teamPhotos?: TeamPhotoItem[];
+  onUpdateTeamPhotos?: (photos: TeamPhotoItem[]) => void;
   members?: MemberItem[];
   onUpdateMembers?: (members: MemberItem[]) => void;
   initialTab?: 'escudo_jpx' | 'sponsors' | 'store' | 'members';
@@ -78,6 +86,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   onUpdateSponsors,
   shirts: propShirts,
   onUpdateShirts,
+  teamPhotos: propTeamPhotos,
+  onUpdateTeamPhotos,
   members: propMembers,
   onUpdateMembers,
   initialTab = 'store',
@@ -89,7 +99,15 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members'>(
+    (initialTab as any) === 'team_photos' ? 'store' : (initialTab || 'store')
+  );
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab((initialTab as any) === 'team_photos' ? 'store' : initialTab);
+    }
+  }, [initialTab]);
 
   // Lista local caso propSponsors não seja passado
   const [localSponsors, setLocalSponsors] = useState<SponsorItem[]>(getStoredSponsors);
@@ -99,9 +117,29 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [localShirts, setLocalShirts] = useState<ShirtItem[]>(getStoredShirts);
   const shirts = propShirts || localShirts;
 
+  // Lista de fotos oficiais do time
+  const [localTeamPhotos, setLocalTeamPhotos] = useState<TeamPhotoItem[]>(getStoredTeamPhotos);
+  const teamPhotos = propTeamPhotos || localTeamPhotos;
+
   // Lista de sócios torcedores
   const [localMembers, setLocalMembers] = useState<MemberItem[]>(getStoredMembers);
   const members = propMembers || localMembers;
+
+  useEffect(() => {
+    if (propShirts) setLocalShirts(propShirts);
+  }, [propShirts]);
+
+  useEffect(() => {
+    if (propTeamPhotos) setLocalTeamPhotos(propTeamPhotos);
+  }, [propTeamPhotos]);
+
+  useEffect(() => {
+    if (propSponsors) setLocalSponsors(propSponsors);
+  }, [propSponsors]);
+
+  useEffect(() => {
+    if (propMembers) setLocalMembers(propMembers);
+  }, [propMembers]);
 
   // Filtro e formulário de novo sócio
   const [memberSearch, setMemberSearch] = useState('');
@@ -124,14 +162,16 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const targetTypeRef = useRef<'escudo' | 'sponsor' | 'jpx_footer' | 'shirt'>('escudo');
+  const targetTypeRef = useRef<'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo'>('escudo');
   const targetSponsorIdRef = useRef<string>('');
   const targetShirtIdRef = useRef<string>('');
+  const targetPhotoIdRef = useRef<string>('');
 
   useEffect(() => {
     if (isOpen) {
       setLocalSponsors(getStoredSponsors());
       setLocalShirts(getStoredShirts());
+      setLocalTeamPhotos(getStoredTeamPhotos());
       setEscudoPreview(localStorage.getItem('poeirao_asset_escudo') || escudoOficialImg);
       setJpxFooterPreview(
         localStorage.getItem('poeirao_asset_jpx_footer') ||
@@ -144,20 +184,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         if (settings.jpxFooter !== undefined) setJpxFooterPreview(settings.jpxFooter || jpxWhiteLogoImg);
       });
 
-      const unsubStore = subscribeToStoreShirts((cloudShirts) => {
-        setLocalShirts(cloudShirts);
-        if (onUpdateShirts) onUpdateShirts(cloudShirts);
-      });
-
-      const unsubMembers = subscribeToMembers((cloudMembers) => {
-        setLocalMembers(cloudMembers);
-        if (onUpdateMembers) onUpdateMembers(cloudMembers);
-      });
-
       return () => {
         unsubClub();
-        unsubStore();
-        unsubMembers();
       };
     }
   }, [isOpen]);
@@ -175,12 +203,17 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     }
   };
 
-  const triggerUpload = (type: 'escudo' | 'sponsor' | 'jpx_footer' | 'shirt', id?: string) => {
+  const triggerUpload = (
+    type: 'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo',
+    id?: string
+  ) => {
     targetTypeRef.current = type;
     if (type === 'sponsor') {
       targetSponsorIdRef.current = id || '';
     } else if (type === 'shirt') {
       targetShirtIdRef.current = id || '';
+    } else if (type === 'team_photo') {
+      targetPhotoIdRef.current = id || '';
     }
     fileInputRef.current?.click();
   };
@@ -189,12 +222,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Reseta o input para permitir selecionar a mesma imagem novamente se quiser
-    e.target.value = '';
-
     setIsProcessing(true);
     try {
-      const dataUrl = await compressImage(file, 600);
+      const isPhoto = targetTypeRef.current === 'shirt' || targetTypeRef.current === 'team_photo';
+      const dataUrl = await compressImage(file, isPhoto ? 700 : 500, isPhoto ? 'image/jpeg' : 'auto');
+      if (!dataUrl) {
+        throw new Error('Falha ao converter imagem');
+      }
 
       if (targetTypeRef.current === 'escudo') {
         localStorage.setItem('poeirao_asset_escudo', dataUrl);
@@ -235,11 +269,27 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         const id = targetShirtIdRef.current;
         const updated = shirts.map((sh) => (sh.id === id ? { ...sh, imageSrc: dataUrl } : sh));
         setLocalShirts(updated);
-        if (onUpdateShirts) onUpdateShirts(updated);
         saveStoredShirts(updated);
-        await saveStoreShirtsToCloud(updated);
+        if (onUpdateShirts) {
+          onUpdateShirts(updated);
+        } else {
+          await saveStoreShirtsToCloud(updated);
+        }
 
-        setSuccessMessage('Foto da camisa atualizada e sincronizada com sucesso!');
+        setSuccessMessage('Foto do produto atualizada e sincronizada com sucesso!');
+        setTimeout(() => setSuccessMessage(null), 3500);
+      } else if (targetTypeRef.current === 'team_photo') {
+        const id = targetPhotoIdRef.current;
+        const updated = teamPhotos.map((tp) => (tp.id === id ? { ...tp, imageSrc: dataUrl } : tp));
+        setLocalTeamPhotos(updated);
+        saveStoredTeamPhotos(updated);
+        if (onUpdateTeamPhotos) {
+          onUpdateTeamPhotos(updated);
+        } else {
+          await saveTeamPhotosToCloud(updated);
+        }
+
+        setSuccessMessage('Foto oficial do time atualizada e sincronizada com sucesso!');
         setTimeout(() => setSuccessMessage(null), 3500);
       } else {
         const id = targetSponsorIdRef.current;
@@ -257,11 +307,12 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         });
 
         setLocalSponsors(updated);
+        saveStoredSponsors(updated);
         if (onUpdateSponsors) {
           onUpdateSponsors(updated);
+        } else {
+          await saveSponsorsToCloud(updated);
         }
-        saveStoredSponsors(updated);
-        await saveSponsorsToCloud(updated);
 
         await fetch('/api/upload-asset', {
           method: 'POST',
@@ -274,8 +325,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       }
     } catch (err) {
       console.error('Erro ao processar imagem:', err);
+      setSuccessMessage('Aviso: Não foi possível carregar a imagem. Tente uma foto JPG ou PNG menor.');
+      setTimeout(() => setSuccessMessage(null), 4000);
     } finally {
       setIsProcessing(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -323,71 +379,249 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
+  // Funções de Gestão de Fotos do Time (Lookbook Oficial)
+  const handleUpdateTeamPhotoTitle = (id: string, title: string) => {
+    const updated = teamPhotos.map((tp) => (tp.id === id ? { ...tp, title } : tp));
+    setLocalTeamPhotos(updated);
+    if (onUpdateTeamPhotos) onUpdateTeamPhotos(updated);
+    saveStoredTeamPhotos(updated);
+    saveTeamPhotosToCloud(updated);
+  };
+
+  const handleUpdateTeamPhotoSubtitle = (id: string, subtitle: string) => {
+    const updated = teamPhotos.map((tp) => (tp.id === id ? { ...tp, subtitle } : tp));
+    setLocalTeamPhotos(updated);
+    if (onUpdateTeamPhotos) onUpdateTeamPhotos(updated);
+    saveStoredTeamPhotos(updated);
+    saveTeamPhotosToCloud(updated);
+  };
+
+  const handleUpdateTeamPhotoBadge = (id: string, badge: string) => {
+    const updated = teamPhotos.map((tp) => (tp.id === id ? { ...tp, badge } : tp));
+    setLocalTeamPhotos(updated);
+    if (onUpdateTeamPhotos) onUpdateTeamPhotos(updated);
+    saveStoredTeamPhotos(updated);
+    saveTeamPhotosToCloud(updated);
+  };
+
+  const handleRemoveTeamPhotoImage = (id: string) => {
+    const updated = teamPhotos.map((tp) => (tp.id === id ? { ...tp, imageSrc: '' } : tp));
+    setLocalTeamPhotos(updated);
+    if (onUpdateTeamPhotos) onUpdateTeamPhotos(updated);
+    saveStoredTeamPhotos(updated);
+    saveTeamPhotosToCloud(updated);
+    setSuccessMessage('Foto do ensaio removida.');
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleCopyPhoto3SubtitleToAll = () => {
+    const p3 = teamPhotos.find((p) => p.id === 'photo_3_detalhes') || teamPhotos[2];
+    const targetSub = p3?.subtitle || 'Postura, garra e identidade visual que representam nossa terra';
+    const updated = teamPhotos.map((p) => ({ ...p, subtitle: targetSub }));
+    setLocalTeamPhotos(updated);
+    saveStoredTeamPhotos(updated);
+    if (onUpdateTeamPhotos) {
+      onUpdateTeamPhotos(updated);
+    } else {
+      saveTeamPhotosToCloud(updated);
+    }
+    setSuccessMessage('Legenda da Imagem 3 copiada para as fotos 1 e 2!');
+    setTimeout(() => setSuccessMessage(null), 3500);
+  };
+
   // Funções da Loja Poeirão
+  const handleToggleShirtStock = (id: string) => {
+    const updated = shirts.map((sh) =>
+      sh.id === id ? { ...sh, inStock: sh.inStock === false ? true : false } : sh
+    );
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+    const target = updated.find((s) => s.id === id);
+    setSuccessMessage(
+      `Status do produto "${target?.name}": ${
+        target?.inStock ? '🟢 Em Estoque (Pedidos Ativos)' : '🔴 Esgotado / Pausado'
+      }`
+    );
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleToggleShirtCustomization = (id: string) => {
+    const updated = shirts.map((sh) =>
+      sh.id === id
+        ? { ...sh, allowCustomization: sh.allowCustomization === false ? true : false }
+        : sh
+    );
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+    const target = updated.find((s) => s.id === id);
+    setSuccessMessage(
+      `Personalização de Nome/Número para "${target?.name}": ${
+        target?.allowCustomization !== false ? 'ATIVADA' : 'DESATIVADA'
+      }`
+    );
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleUpdateShirtCategory = (id: string, category: string) => {
+    let categoryLabel = 'Camisa de Jogo';
+    if (category === 'treino') categoryLabel = 'Treino & Agasalhos';
+    else if (category === 'acessorios') categoryLabel = 'Acessórios & Bonés';
+    else if (category === 'infantil') categoryLabel = 'Linha Infantil & Kits';
+    const updated = shirts.map((sh) =>
+      sh.id === id ? { ...sh, category, categoryLabel } : sh
+    );
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+  };
+
+  const handleUpdateShirtOriginalPrice = (id: string, originalPrice: string) => {
+    const updated = shirts.map((sh) => (sh.id === id ? { ...sh, originalPrice } : sh));
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+  };
+
+  const handleUpdateShirtDescription = (id: string, description: string) => {
+    const updated = shirts.map((sh) => (sh.id === id ? { ...sh, description } : sh));
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+  };
+
+  const handleUpdateShirtFabric = (id: string, fabricDetails: string) => {
+    const updated = shirts.map((sh) => (sh.id === id ? { ...sh, fabricDetails } : sh));
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+  };
+
+  const handleUpdateShirtSizes = (id: string, sizesStr: string) => {
+    const sizes = sizesStr.split(',').map((s) => s.trim()).filter(Boolean);
+    const updated = shirts.map((sh) => (sh.id === id ? { ...sh, sizes } : sh));
+    setLocalShirts(updated);
+    saveStoredShirts(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+  };
+
   const handleUpdateShirtName = (id: string, name: string) => {
     const updated = shirts.map((sh) => (sh.id === id ? { ...sh, name } : sh));
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
   };
 
   const handleUpdateShirtPrice = (id: string, price: string) => {
     const updated = shirts.map((sh) => (sh.id === id ? { ...sh, price } : sh));
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
   };
 
   const handleUpdateShirtBadge = (id: string, badge: string) => {
     const updated = shirts.map((sh) => (sh.id === id ? { ...sh, badge } : sh));
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
   };
 
   const handleRemoveShirtImage = (id: string) => {
     const updated = shirts.map((sh) => (sh.id === id ? { ...sh, imageSrc: '' } : sh));
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
-    setSuccessMessage('Foto personalizada removida. A camisa agora usa a ilustração padrão.');
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+    setSuccessMessage('Foto personalizada removida. O produto agora usa a ilustração padrão.');
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   const handleAddNewShirt = () => {
     const newShirt: ShirtItem = {
       id: `shirt_${Date.now()}`,
-      name: `Nova Camisa Oficial #${shirts.length + 1}`,
+      name: `Novo Produto Oficial #${shirts.length + 1}`,
+      category: 'camisas',
+      categoryLabel: 'Camisa de Jogo',
       price: 'R$ 89,90',
+      originalPrice: 'R$ 119,90',
       imageSrc: '',
-      badge: 'Lançamento',
-      description: 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit respirável.',
-      sizes: ['P', 'M', 'G', 'GG'],
+      badge: 'Lançamento 2026',
+      description: 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit respirável com acabamento tricolor premium.',
+      sizes: ['P', 'M', 'G', 'GG', 'XGG'],
+      inStock: true,
+      fabricDetails: '100% Poliéster Dry-Fit • Proteção UV • Costura Reforçada',
+      allowCustomization: true,
     };
     const updated = [...shirts, newShirt];
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
-    setSuccessMessage('Novo modelo de camisa adicionado com sucesso!');
-    setTimeout(() => setSuccessMessage(null), 3000);
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+    setSuccessMessage('Novo produto adicionado com sucesso! Role para baixo para editá-lo.');
+    setTimeout(() => setSuccessMessage(null), 3500);
   };
 
   const handleDeleteShirt = (id: string) => {
     if (shirts.length <= 1) {
-      alert('A loja precisa ter pelo menos um modelo de camisa cadastrado.');
+      alert('A loja precisa ter pelo menos um produto cadastrado.');
       return;
     }
     const updated = shirts.filter((sh) => sh.id !== id);
     setLocalShirts(updated);
-    if (onUpdateShirts) onUpdateShirts(updated);
     saveStoredShirts(updated);
-    saveStoreShirtsToCloud(updated);
-    setSuccessMessage('Modelo de camisa removido da loja.');
+    if (onUpdateShirts) {
+      onUpdateShirts(updated);
+    } else {
+      saveStoreShirtsToCloud(updated);
+    }
+    setSuccessMessage('Produto removido da loja.');
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -654,11 +888,141 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
             <div className="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
 
               {/* ================================================================= */}
-              {/* ABA 1: GERENCIAR LOJA POEIRÃO (CAMISAS, MODELOS, VALORES)         */}
+              {/* ABA 1: GERENCIAR LOJA POEIRÃO & FOTOS DO TIME (LOOKBOOK)          */}
               {/* ================================================================= */}
               {activeTab === 'store' && (
-                <div className="space-y-6">
-                  {/* CONTROLE GLOBAL: ATIVAR/DESATIVAR BOTÃO PEDIR NO ZAP */}
+                <div className="space-y-8">
+                  {/* SEÇÃO 1: FOTOS OFICIAIS DO TIME & ENSAIO LOOKBOOK (IMAGENS 1, 2 E 3) */}
+                  <div className="bg-gradient-to-b from-[#11192b] to-[#0a0f1b] border-2 border-red-900/50 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                      <div>
+                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-900/40 px-3 py-1 rounded-full mb-1.5">
+                          <Camera className="w-3.5 h-3.5 text-red-400" />
+                          <span>Ensaio Oficial • 3 Fotos do Time</span>
+                        </div>
+                        <h4 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+                          📸 Fotos Oficiais do Time & Lookbook da Loja
+                        </h4>
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          Altere as 3 fotos do topo da loja (Imagens 1, 2 e 3), títulos, legendas e selos. Sincroniza em tempo real.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleCopyPhoto3SubtitleToAll}
+                        className="inline-flex items-center gap-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer shrink-0"
+                        title="Aplica a mesma legenda da foto 3 nas fotos 1 e 2"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Copiar Legenda da Foto 3 p/ Todas</span>
+                      </button>
+                    </div>
+
+                    {/* GRADE DAS 3 FOTOS DO TIME */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {teamPhotos.map((photo, idx) => (
+                        <div
+                          key={photo.id}
+                          className="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 shadow-md hover:border-red-900/60 transition"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-2 mb-2.5">
+                              <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2 py-0.5 rounded-md">
+                                Foto #{idx + 1} • {photo.badge || 'Oficial'}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-bold">
+                                Imagem {idx + 1}
+                              </span>
+                            </div>
+
+                            {/* PREVIEW DA FOTO */}
+                            <div className="relative w-full h-40 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center mb-3">
+                              {photo.imageSrc ? (
+                                <img
+                                  src={photo.imageSrc}
+                                  alt={photo.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="text-center p-3 text-slate-500">
+                                  <Camera className="w-8 h-8 mx-auto text-slate-600 mb-1" />
+                                  <span className="text-[10px] block">Sem foto (usa ilustração)</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* BOTÕES DE UPLOAD / REMOÇÃO DA FOTO */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <button
+                                type="button"
+                                onClick={() => triggerUpload('team_photo', photo.id)}
+                                disabled={isProcessing}
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg shadow-sm transition cursor-pointer flex-1 justify-center"
+                              >
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>{photo.imageSrc ? 'Trocar Foto' : 'Subir Imagem'}</span>
+                              </button>
+
+                              {photo.imageSrc && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveTeamPhotoImage(photo.id)}
+                                  className="text-xs text-slate-400 hover:text-red-400 px-2 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition"
+                                >
+                                  Remover
+                                </button>
+                              )}
+                            </div>
+
+                            {/* CAMPOS DE EDIÇÃO: TÍTULO, LEGENDA E BADGE */}
+                            <div className="space-y-2">
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                  Título da Imagem:
+                                </label>
+                                <input
+                                  type="text"
+                                  value={photo.title}
+                                  onChange={(e) => handleUpdateTeamPhotoTitle(photo.id, e.target.value)}
+                                  placeholder="Ex: Ensaio Oficial do Elenco"
+                                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-red-500"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                  Legenda / Descrição:
+                                </label>
+                                <textarea
+                                  rows={2}
+                                  value={photo.subtitle}
+                                  onChange={(e) => handleUpdateTeamPhotoSubtitle(photo.id, e.target.value)}
+                                  placeholder="Postura, garra e identidade visual que representam nossa terra"
+                                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-red-500 resize-none leading-relaxed"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                  Selo no Card:
+                                </label>
+                                <input
+                                  type="text"
+                                  value={photo.badge || ''}
+                                  onChange={(e) => handleUpdateTeamPhotoBadge(photo.id, e.target.value)}
+                                  placeholder="Ex: LANÇAMENTO 2026"
+                                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1 text-xs text-amber-300 font-bold focus:outline-none focus:border-red-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* SEÇÃO 2: CONTROLE GLOBAL DE EMERGÊNCIA (PAUSA GERAL) */}
                   <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
                     <div className="flex items-center gap-3.5">
                       <div
@@ -673,7 +1037,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                       <div>
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">
-                            Botão "Pedir no Zap" em Todos os Produtos
+                            Pausa Geral de Emergência (Todos os Produtos)
                           </h4>
                           <span
                             className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
@@ -682,13 +1046,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                                 : 'bg-red-500/20 text-red-400 border-red-500/30'
                             }`}
                           >
-                            {storeOrdersEnabled ? '🟢 Ativado (Recebendo Pedidos)' : '🔴 Desativado (Sem Estoque)'}
+                            {storeOrdersEnabled ? '🟢 Loja Aberta' : '🔴 Pedidos Gerais Pausados'}
                           </span>
                         </div>
                         <p className="text-xs text-slate-400 mt-0.5">
                           {storeOrdersEnabled
-                            ? 'O botão de compra pelo WhatsApp está ativo em todas as camisas e produtos.'
-                            : 'O botão de WhatsApp está oculto e os produtos aparecem como "Esgotado".'}
+                            ? 'A loja está aberta. Cada produto abaixo controla o seu próprio botão de WhatsApp individualmente.'
+                            : 'Pausa geral ativada: todos os botões do WhatsApp estão suspensos de uma só vez.'}
                         </p>
                       </div>
                     </div>
@@ -701,8 +1065,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                           onToggleStoreOrders(nextVal);
                           setSuccessMessage(
                             nextVal
-                              ? 'Botão "Pedir no Zap" ATIVADO em todos os produtos da loja!'
-                              : 'Botão "Pedir no Zap" PAUSADO em todos os produtos (Produtos Esgotados).'
+                              ? 'Loja REABERTA! Cada produto segue seu próprio estoque individual.'
+                              : 'Pausa geral ATIVADA em toda a loja.'
                           );
                           setTimeout(() => setSuccessMessage(null), 3500);
                         }}
@@ -712,139 +1076,265 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                             : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 shadow-emerald-600/30'
                         }`}
                       >
-                        {storeOrdersEnabled ? 'Pausar Pedidos no Zap' : 'Reativar Pedidos no Zap'}
+                        {storeOrdersEnabled ? 'Pausar Toda a Loja' : 'Reabrir Toda a Loja'}
                       </button>
                     )}
                   </div>
 
-                  <div className="bg-slate-950/60 border border-slate-800/90 rounded-2xl p-4 flex items-center justify-between gap-4">
-                    <div>
-                      <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <ShoppingBag className="w-4 h-4 text-red-500" />
-                        Catálogo de Camisas e Produtos da Loja Oficial
-                      </h4>
-                      <p className="text-xs text-slate-400 mt-1">
-                        Gerencie as camisas e produtos da loja. Você pode adicionar outros produtos (bonés, copos, agasalhos) quando desejar.
-                      </p>
+                  {/* SEÇÃO 3: CATÁLOGO DE PRODUTOS COM CONTROLE INDIVIDUAL DE ESTOQUE/WHATSAPP */}
+                  <div className="space-y-4">
+                    <div className="bg-slate-950/60 border border-slate-800/90 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                          <Shirt className="w-4 h-4 text-red-500" />
+                          Catálogo de Produtos ({shirts.length} Itens Cadastrados)
+                        </h4>
+                        <p className="text-xs text-slate-400 mt-1">
+                          Cada item possui seu próprio botão para ligar ou desligar pedidos no WhatsApp sem afetar os outros produtos.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleAddNewShirt}
+                        className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition cursor-pointer shrink-0"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Adicionar Produto</span>
+                      </button>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={handleAddNewShirt}
-                      className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition cursor-pointer shrink-0"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Adicionar Produto</span>
-                    </button>
-                  </div>
+                    {/* LISTA COMPLETA DOS PRODUTOS */}
+                    <div className="space-y-4">
+                      {shirts.map((shirt, idx) => {
+                        const isItemInStock = shirt.inStock !== false;
+                        const isCustomAllowed = shirt.allowCustomization !== false;
 
-                  <div className="space-y-4">
-                    {shirts.map((shirt, idx) => (
-                      <div
-                        key={shirt.id}
-                        className="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row gap-5 items-start md:items-center justify-between hover:border-slate-700 transition"
-                      >
-                        {/* FOTO E BOTÃO DE UPLOAD */}
-                        <div className="flex items-center gap-4 w-full md:w-auto">
-                          <div className="relative w-20 h-20 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 overflow-hidden shrink-0">
-                            {shirt.imageSrc ? (
-                              <img src={shirt.imageSrc} alt={shirt.name} className="max-h-full max-w-full object-contain" />
-                            ) : (
-                              <div className="flex flex-col items-center justify-center text-slate-500 text-center">
-                                <Shirt className="w-7 h-7 text-red-500/70" />
-                                <span className="text-[9px] font-bold mt-1">Padrão</span>
+                        return (
+                          <div
+                            key={shirt.id}
+                            className={`bg-slate-950 border rounded-3xl p-4 sm:p-5 flex flex-col gap-4 transition-all shadow-xl ${
+                              isItemInStock
+                                ? 'border-slate-800 hover:border-slate-700'
+                                : 'border-red-950/70 bg-red-950/10'
+                            }`}
+                          >
+                            {/* LINHA SUPERIOR: STATUS DO ESTOQUE INDIVIDUAL & PERSONALIZAÇÃO */}
+                            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-slate-800/80">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-black uppercase text-red-400 bg-red-950/60 border border-red-900/40 px-2.5 py-0.5 rounded-md">
+                                  Item #{idx + 1}
+                                </span>
+                                <span className="text-xs font-black text-white truncate max-w-[200px] sm:max-w-xs">
+                                  {shirt.name}
+                                </span>
                               </div>
-                            )}
-                          </div>
 
-                          <div className="space-y-1.5">
-                            <span className="text-[10px] font-black uppercase text-red-400 bg-red-950/60 border border-red-900/40 px-2 py-0.5 rounded-md">
-                              Modelo #{idx + 1}
-                            </span>
-                            <div className="flex flex-wrap gap-2 pt-1">
-                              <button
-                                type="button"
-                                onClick={() => triggerUpload('shirt', shirt.id)}
-                                disabled={isProcessing}
-                                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg shadow-sm transition cursor-pointer"
-                              >
-                                <Upload className="w-3.5 h-3.5" />
-                                <span>{shirt.imageSrc ? 'Trocar Imagem' : 'Subir Imagem'}</span>
-                              </button>
-
-                              {shirt.imageSrc && (
+                              <div className="flex flex-wrap items-center gap-2">
+                                {/* BOTÃO EXCLUSIVO: CONTROLE INDIVIDUAL DE ESTOQUE / WHATSAPP DESTE PRODUTO */}
                                 <button
                                   type="button"
-                                  onClick={() => handleRemoveShirtImage(shirt.id)}
-                                  className="text-xs text-slate-400 hover:text-red-400 px-2 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition"
+                                  onClick={() => handleToggleShirtStock(shirt.id)}
+                                  className={`text-[11px] font-black uppercase px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shadow-sm ${
+                                    isItemInStock
+                                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                                      : 'bg-red-500/20 text-red-300 border-red-500/40 hover:bg-red-500/30'
+                                  }`}
+                                  title="Clique para alternar o botão do WhatsApp apenas para este produto"
                                 >
-                                  Remover Foto
+                                  <span>{isItemInStock ? '🟢 Pedir no Zap: ATIVO' : '🔴 Esgotado / Pausado'}</span>
                                 </button>
-                              )}
+
+                                {/* BOTÃO EXCLUSIVO: PERMITIR PERSONALIZAÇÃO (NOME E NÚMERO) */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleShirtCustomization(shirt.id)}
+                                  className={`text-[11px] font-black uppercase px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                    isCustomAllowed
+                                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
+                                      : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                                  }`}
+                                  title="Ativa/desativa campos de Nome e Número para o cliente personalizar"
+                                >
+                                  <span>{isCustomAllowed ? '✍️ Personalização (Nome/Nº): SIM' : '✍️ Personalização: NÃO'}</span>
+                                </button>
+
+                                {/* EXCLUIR PRODUTO */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteShirt(shirt.id)}
+                                  className="text-xs text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-900/60 border border-red-900/50 py-1.5 px-2.5 rounded-xl transition cursor-pointer"
+                                  title="Excluir este produto da loja"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* LINHA DO MEIO: FOTO DO PRODUTO & CAMPOS EDITÁVEIS */}
+                            <div className="flex flex-col md:flex-row gap-5 items-start">
+                              {/* FOTO E BOTÕES DE UPLOAD */}
+                              <div className="flex flex-col items-center gap-2 w-full md:w-36 shrink-0">
+                                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 overflow-hidden shadow-inner">
+                                  {shirt.imageSrc ? (
+                                    <img
+                                      src={shirt.imageSrc}
+                                      alt={shirt.name}
+                                      className="max-h-full max-w-full object-contain"
+                                    />
+                                  ) : (
+                                    <div className="flex flex-col items-center justify-center text-slate-500 text-center">
+                                      <Shirt className="w-8 h-8 text-red-500/70 mb-1" />
+                                      <span className="text-[9px] font-bold">Ilustração Padrão</span>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="flex flex-wrap gap-1.5 w-full justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={() => triggerUpload('shirt', shirt.id)}
+                                    disabled={isProcessing}
+                                    className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-red-600 hover:bg-red-700 px-2.5 py-1.5 rounded-lg shadow-sm transition cursor-pointer"
+                                  >
+                                    <Upload className="w-3 h-3" />
+                                    <span>{shirt.imageSrc ? 'Trocar' : 'Subir Foto'}</span>
+                                  </button>
+
+                                  {shirt.imageSrc && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveShirtImage(shirt.id)}
+                                      className="text-[11px] text-slate-400 hover:text-red-400 px-2 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition"
+                                    >
+                                      Remover
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* GRADE DE CAMPOS: DADOS COMPLETOS DO PRODUTO */}
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1 w-full">
+                                {/* Nome do produto */}
+                                <div className="sm:col-span-2">
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Nome do Produto
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.name}
+                                    onChange={(e) => handleUpdateShirtName(shirt.id, e.target.value)}
+                                    placeholder="Ex: Camisa Oficial 2026 - Poeirão F.C."
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Categoria */}
+                                <div>
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Categoria (Aba na Loja)
+                                  </label>
+                                  <select
+                                    value={shirt.category || 'camisas'}
+                                    onChange={(e) => handleUpdateShirtCategory(shirt.id, e.target.value)}
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-2 text-xs font-bold text-white focus:outline-none focus:border-red-500 transition cursor-pointer"
+                                  >
+                                    <option value="camisas">Camisas de Jogo</option>
+                                    <option value="treino">Treino & Agasalhos</option>
+                                    <option value="acessorios">Acessórios & Bonés</option>
+                                    <option value="infantil">Linha Infantil & Kits</option>
+                                  </select>
+                                </div>
+
+                                {/* Preço de Venda */}
+                                <div>
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Preço de Venda (R$)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.price}
+                                    onChange={(e) => handleUpdateShirtPrice(shirt.id, e.target.value)}
+                                    placeholder="R$ 89,90"
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-black text-emerald-400 focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Preço Original (De / Por) */}
+                                <div>
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Preço Original / De (opcional)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.originalPrice || ''}
+                                    onChange={(e) => handleUpdateShirtOriginalPrice(shirt.id, e.target.value)}
+                                    placeholder="Ex: R$ 119,90"
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-400 focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Selo / Badge */}
+                                <div>
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Selo / Destaque
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.badge || ''}
+                                    onChange={(e) => handleUpdateShirtBadge(shirt.id, e.target.value)}
+                                    placeholder="Ex: Lançamento 2026, Mais Vendido"
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-amber-300 font-bold focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Tecido / Detalhes de Fabricação */}
+                                <div className="sm:col-span-2">
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Tecido / Detalhes de Fabricação
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.fabricDetails || ''}
+                                    onChange={(e) => handleUpdateShirtFabric(shirt.id, e.target.value)}
+                                    placeholder="Ex: 100% Poliéster Dry-Fit • Proteção UV • Costura Reforçada"
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-emerald-300 focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Tamanhos Disponíveis */}
+                                <div>
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Tamanhos (separados por vírgula)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={(shirt.sizes || []).join(', ')}
+                                    onChange={(e) => handleUpdateShirtSizes(shirt.id, e.target.value)}
+                                    placeholder="P, M, G, GG, XGG"
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+
+                                {/* Descrição Completa */}
+                                <div className="sm:col-span-3">
+                                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Descrição Completa do Produto
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={shirt.description || ''}
+                                    onChange={(e) => handleUpdateShirtDescription(shirt.id, e.target.value)}
+                                    placeholder="Ex: Camisa oficial de jogo em tecido Dry-Fit e poliéster com escudo em alta definição."
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-red-500 transition"
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-
-                        {/* CAMPOS DE TEXTO: NOME DO MODELO, VALOR E DESTAQUE */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:flex-1">
-                          {/* Nome do modelo ou produto */}
-                          <div className="sm:col-span-2">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                              Nome do Produto ou Modelo
-                            </label>
-                            <input
-                              type="text"
-                              value={shirt.name}
-                              onChange={(e) => handleUpdateShirtName(shirt.id, e.target.value)}
-                              placeholder="Ex: Camisa Oficial 2026, Boné Tricolor, Copo..."
-                              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-red-500 transition"
-                            />
-                          </div>
-
-                          {/* Valor */}
-                          <div>
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                              Valor do Produto (R$)
-                            </label>
-                            <div className="relative">
-                              <input
-                                type="text"
-                                value={shirt.price}
-                                onChange={(e) => handleUpdateShirtPrice(shirt.id, e.target.value)}
-                                placeholder="R$ 89,90"
-                                className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-black text-emerald-400 focus:outline-none focus:border-red-500 transition"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Badge / Categoria */}
-                          <div className="sm:col-span-2">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                              Selo / Categoria (ex: Oficial 2026, Acessório)
-                            </label>
-                            <input
-                              type="text"
-                              value={shirt.badge || ''}
-                              onChange={(e) => handleUpdateShirtBadge(shirt.id, e.target.value)}
-                              placeholder="Ex: Oficial 2026, Acessório, etc."
-                              className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-red-500 transition"
-                            />
-                          </div>
-
-                          {/* Excluir Camisa */}
-                          <div className="flex items-end">
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteShirt(shirt.id)}
-                              className="w-full inline-flex items-center justify-center gap-1.5 text-xs text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-900/60 border border-red-900/50 py-1.5 px-3 rounded-xl transition cursor-pointer"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              <span>Excluir</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
