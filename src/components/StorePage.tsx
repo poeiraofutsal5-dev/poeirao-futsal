@@ -5,11 +5,20 @@ import {
   Sparkles,
   CheckCircle2,
   Clock,
-  Phone,
-  AlertCircle,
   ShoppingBag,
+  ShieldCheck,
+  Search,
+  Tag,
+  Award,
+  Maximize2,
+  X,
+  Camera,
+  Shirt,
+  Flame,
+  AlertCircle,
+  SlidersHorizontal,
 } from 'lucide-react';
-import { ShirtItem } from '../utils/storeManager';
+import { ShirtItem, TeamPhotoItem } from '../utils/storeManager';
 import { SITE_CONFIG } from '../siteConfig';
 import { Crest } from './Crest';
 
@@ -17,6 +26,7 @@ interface StorePageProps {
   onBack: () => void;
   onOpenAdmin: () => void;
   shirts: ShirtItem[];
+  teamPhotos?: TeamPhotoItem[];
   storeOrdersEnabled?: boolean;
 }
 
@@ -24,170 +34,402 @@ export const StorePage: React.FC<StorePageProps> = ({
   onBack,
   onOpenAdmin,
   shirts,
+  teamPhotos = [],
   storeOrdersEnabled = true,
 }) => {
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [zoomedPhoto, setZoomedPhoto] = useState<TeamPhotoItem | null>(null);
 
   const handleSelectSize = (shirtId: string, size: string) => {
     setSelectedSizes((prev) => ({ ...prev, [shirtId]: size }));
   };
 
   const getWhatsAppBuyLink = (shirt: ShirtItem) => {
-    const size = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[1]) || 'M';
-    const msg = `Olá! Gostaria de comprar o produto oficial "${shirt.name}" do Poeirão F.C. no valor de ${shirt.price} (Tamanho/Opção: ${size}). Como faço para combinar o pagamento e entrega?`;
+    const size = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[0]) || 'M';
+    const msg = `Olá! Gostaria de comprar o produto oficial "${shirt.name}" do Poeirão F.C. no valor de ${shirt.price} (Tamanho: ${size}). Como faço para combinar entrega e pagamento?`;
     return `https://wa.me/${SITE_CONFIG.whatsapp.numero}?text=${encodeURIComponent(msg)}`;
   };
 
+  const getWhatsAppReserveLink = (shirt: ShirtItem) => {
+    const size = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[0]) || 'M';
+    const msg = `Olá! Gostaria de reservar uma unidade do produto "${shirt.name}" do Poeirão F.C. (Tamanho: ${size}) assim que o novo lote chegar ao estoque. Pode me avisar?`;
+    return `https://wa.me/${SITE_CONFIG.whatsapp.numero}?text=${encodeURIComponent(msg)}`;
+  };
+
+  // Categorias disponíveis calculadas dinamicamente
+  const categories = [
+    { id: 'all', label: 'Todos os Itens', count: shirts.length },
+    {
+      id: 'camisas',
+      label: 'Camisas de Jogo',
+      count: shirts.filter((s) => !s.category || s.category === 'camisas' || s.category.includes('Jogo')).length,
+    },
+    {
+      id: 'treino',
+      label: 'Treino & Agasalhos',
+      count: shirts.filter((s) => s.category === 'treino').length,
+    },
+    {
+      id: 'acessorios',
+      label: 'Acessórios & Bonés',
+      count: shirts.filter((s) => s.category === 'acessorios').length,
+    },
+    {
+      id: 'infantil',
+      label: 'Linha Infantil & Kits',
+      count: shirts.filter((s) => s.category === 'infantil').length,
+    },
+  ];
+
+  // Filtra produtos por categoria e busca
+  const filteredShirts = shirts.filter((shirt) => {
+    const matchesCategory =
+      activeCategory === 'all'
+        ? true
+        : activeCategory === 'camisas'
+        ? !shirt.category || shirt.category === 'camisas' || shirt.category.includes('Jogo')
+        : shirt.category === activeCategory;
+
+    const matchesSearch =
+      !searchTerm.trim() ||
+      shirt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (shirt.description && shirt.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (shirt.badge && shirt.badge.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <div className="bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-      {/* 1. SUB-BARRA DA LOJA COM BOTÃO VOLTAR E INDICADOR */}
-      <div className="bg-slate-900 border-b border-slate-800 py-3.5 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <div className="bg-[#080c14] text-slate-100 flex flex-col font-sans selection:bg-red-600 selection:text-white min-h-screen">
+      {/* 1. SUB-BARRA DE NAVEGAÇÃO DA LOJA COM CORES DO POEIRÃO */}
+      <div className="bg-[#0b101c] border-b border-red-950/40 py-3.5 px-4 sm:px-6 lg:px-8 sticky top-16 z-30 backdrop-blur-md bg-opacity-95">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-300 hover:text-white bg-slate-950 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl transition cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-300 hover:text-white bg-slate-900/90 hover:bg-red-950/60 border border-slate-800 hover:border-red-600/50 px-4 py-2 rounded-xl transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-red-500" />
-            <span>Voltar ao Site Principal</span>
+            <span>Voltar ao Site</span>
           </button>
 
-          <span className="text-xs font-black uppercase tracking-wider text-red-500">
-            Loja Oficial Poeirão F.C.
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center p-0.5">
+              <Crest className="w-full h-full object-contain" />
+            </div>
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-red-500">
+              Loja Oficial Poeirão F.C.
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onOpenAdmin}
+            className="text-[11px] font-bold text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-850 border border-slate-800 px-3 py-1.5 rounded-lg transition hidden sm:inline-flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>Gerenciar Loja</span>
+          </button>
         </div>
       </div>
 
-      {/* 2. HERO EXCLUSIVO DA LOJA */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border-b border-slate-800 py-12 sm:py-16">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
+      {/* 2. HERO PRINCIPAL DA LOJA NAS CORES DO POEIRÃO (VERMELHO, PRETO E DOURADO) */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#0f172a] via-[#090d16] to-[#080c14] border-b border-red-950/50 py-12 sm:py-16">
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-black uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            Loja Oficial do Poeirão Futebol Clube
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-red-600/20 to-red-950/60 border border-red-500/40 text-red-400 text-xs font-black uppercase tracking-widest mb-4 shadow-lg">
+            <Flame className="w-3.5 h-3.5 text-red-500" />
+            <span>Manto Sagrado • Temporada 2026</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase max-w-3xl mx-auto leading-tight">
-            VISTA AS CORES DO <span className="text-red-500">POEIRÃO F.C.</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase max-w-4xl mx-auto leading-tight">
+            VISTA AS CORES DO <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-500 to-amber-500">POEIRÃO F.C.</span>
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
-            Aqui você adquire os produtos oficiais do time. <strong>100% da renda das vendas</strong> é revertida diretamente para o clube, ajudando no custeio das viagens, uniformes, arbitragens e materiais esportivos dos atletas.
+            Produtos oficiais desenvolvidos com tecido de alta performance. <strong>100% do lucro das vendas</strong> é destinado diretamente aos atletas do clube, ajudando no custeio das viagens, uniformes, inscrições e materiais esportivos.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-slate-300 font-semibold">
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <CheckCircle2 className="w-4 h-4" /> Tecido Dry-Fit e Poliéster
+          {/* BENEFÍCIOS E SELOS DE QUALIDADE */}
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-slate-200 font-bold">
+            <span className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl text-emerald-400">
+              <CheckCircle2 className="w-4 h-4" /> Tecido Dry-Fit 100% Poliéster
             </span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <CheckCircle2 className="w-4 h-4" /> Envio Rápido e Seguro
+            <span className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl text-emerald-400">
+              <CheckCircle2 className="w-4 h-4" /> Escudo Oficial em Alta Definição
             </span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
+            <span className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl text-emerald-400">
               <CheckCircle2 className="w-4 h-4" /> Atendimento Direto no WhatsApp
+            </span>
+            <span className="flex items-center gap-1.5 bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl text-amber-400">
+              <Award className="w-4 h-4" /> Até 30% OFF para Sócios Torcedores
             </span>
           </div>
         </div>
       </section>
 
-      {/* 3. FILTROS E PRODUTOS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-8">
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase transition-all ${
-                activeCategory === 'all'
-                  ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-              }`}
-            >
-              Todos os Produtos ({shirts.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveCategory('camisas')}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase transition-all ${
-                activeCategory === 'camisas'
-                  ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-              }`}
-            >
-              Camisas Oficiais
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveCategory('em_breve')}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase transition-all ${
-                activeCategory === 'em_breve'
-                  ? 'bg-red-600 text-white shadow-lg shadow-red-600/30'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-              }`}
-            >
-              Novidades em Breve
-            </button>
+      {/* 3. ENSAIO OFICIAL DO MANTO (FOTOS DO TIME ESTILO IMAGEM 1) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 w-full">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            <div className="flex items-center gap-2 text-red-500 text-xs font-black uppercase tracking-wider mb-1">
+              <Camera className="w-4 h-4" />
+              <span>Editorial & Lookbook Oficial</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+              Ensaio Oficial do Manto 2026
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
+              Confira os atletas do Poeirão F.C. e os detalhes de acabamento do novo uniforme em campo.
+            </p>
           </div>
 
-          <p className="text-xs text-slate-500 font-medium">
-            Entregas em toda a região e envio para torcedores de todo o Brasil
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">
+              3 Fotos Oficiais
+            </span>
+            <button
+              type="button"
+              onClick={onOpenAdmin}
+              className="text-[11px] font-bold text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/80 border border-red-900/50 px-3 py-1 rounded-lg transition cursor-pointer"
+            >
+              Trocar Fotos na Área Restrita
+            </button>
+          </div>
         </div>
 
-        {/* AVISO QUANDO PEDIDOS ESTIVEREM DESATIVADOS PELA DIRETORIA */}
-        {!storeOrdersEnabled && (
-          <div className="mb-8 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-4 sm:p-5 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-            <div>
-              <h4 className="text-sm font-black text-amber-300 uppercase tracking-wide">
-                Pedidos pelo WhatsApp Temporariamente Pausados
-              </h4>
-              <p className="text-xs text-amber-200/90 mt-1 leading-relaxed">
-                No momento nossos produtos estão aguardando reposição de estoque. Os pedidos via WhatsApp foram pausados pela diretoria para não acumular mensagens. Assim que novas unidades chegarem, as vendas serão reativadas imediatamente!
+        {/* GRADE DAS 3 FOTOS EDITORIAIS IDÊNTICA À IMAGEM DE REFERÊNCIA */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-stretch">
+          {teamPhotos.map((photo, idx) => (
+            <div
+              key={photo.id}
+              onClick={() => photo.imageSrc && setZoomedPhoto(photo)}
+              className="group relative bg-[#0e1422] border-2 border-red-950/60 hover:border-red-600/70 rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-end min-h-[380px] sm:min-h-[460px] cursor-pointer"
+            >
+              {/* IMAGEM REAL SE ENVIADA, OU PAINEL ILUSTRADO COM IDENTIDADE POEIRÃO */}
+              {photo.imageSrc ? (
+                <div className="absolute inset-0 w-full h-full overflow-hidden">
+                  <img
+                    src={photo.imageSrc}
+                    alt={photo.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity"></div>
+                </div>
+              ) : (
+                <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-b from-[#11192b] via-[#0a0f1b] to-[#080c14]">
+                  {/* Ilustração estilizada do ensaio com escudo do clube */}
+                  <div className="relative w-28 h-28 mb-4 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-red-600/20 rounded-full blur-xl group-hover:bg-red-600/30 transition-colors"></div>
+                    <div className="relative z-10 w-20 h-20 flex items-center justify-center bg-slate-900/80 border border-red-600/40 rounded-2xl p-3 shadow-xl">
+                      {idx === 0 ? (
+                        <Shirt className="w-10 h-10 text-red-500" />
+                      ) : idx === 1 ? (
+                        <Crest className="w-12 h-12 object-contain" />
+                      ) : (
+                        <Sparkles className="w-10 h-10 text-amber-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <span className="text-[10px] font-black uppercase tracking-widest text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1 rounded-full mb-2">
+                    Foto #{idx + 1} • {idx === 0 ? 'Elenco' : idx === 1 ? 'Manto Titular' : 'Detalhes do Escudo'}
+                  </span>
+                  <p className="text-xs text-slate-400 text-center max-w-xs">
+                    Adicione fotos do time (como a do ensaio) na Área Restrita da Diretoria.
+                  </p>
+                </div>
+              )}
+
+              {/* OVERLAY DE TEXTO E SELO */}
+              <div className="relative z-10 p-6 space-y-2 bg-gradient-to-t from-black via-black/80 to-transparent">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2.5 py-0.5 rounded-full">
+                    {photo.badge || `ENSAIO 2026 • FOTO ${idx + 1}`}
+                  </span>
+                  <span className="text-slate-400 group-hover:text-white transition-colors text-xs font-bold flex items-center gap-1">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Ver</span>
+                  </span>
+                </div>
+
+                <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight group-hover:text-red-400 transition-colors">
+                  {photo.title}
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                  {photo.subtitle}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. BANNER DE DESCONTO EXCLUSIVO PARA SÓCIO TORCEDOR */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <div className="bg-gradient-to-r from-red-950/90 via-slate-900 to-amber-950/80 border-2 border-red-600/40 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+          <div className="absolute right-0 top-0 w-80 h-full bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-2 text-amber-400 text-xs font-black uppercase tracking-wider">
+                <Award className="w-4 h-4" />
+                <span>Vantagem do Sócio Torcedor Poeirão F.C.</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+                É Sócio Torcedor? Desconto garantido de até 30% em toda a Loja!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Ao pedir no WhatsApp, informe seu número de matrícula ou o celular cadastrado na sua <strong>Carteirinha Virtual</strong>. O desconto de <strong>30% (Sócio Ouro)</strong> ou <strong>10% (Sócio Prata)</strong> é aplicado no ato da compra!
               </p>
             </div>
-          </div>
-        )}
 
-        {/* GRADE DE PRODUTOS */}
-        {activeCategory !== 'em_breve' && (
-          <div className={`grid gap-6 sm:gap-8 ${
-            shirts.length === 1 
-              ? 'max-w-md mx-auto grid-cols-1' 
-              : shirts.length === 2 
-                ? 'max-w-3xl mx-auto grid-cols-1 md:grid-cols-2' 
-                : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-          }`}>
-            {shirts.map((shirt) => {
-              const currentSize = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[1]) || 'M';
+            <div className="shrink-0 flex flex-col sm:flex-row gap-3">
+              <a
+                href="#socio"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.hash = '#socio';
+                }}
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs sm:text-sm px-5 py-3.5 rounded-2xl shadow-lg shadow-amber-500/20 transition cursor-pointer"
+              >
+                <span>⭐ Ver Carteirinha / Ser Sócio</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. ÁREA DE PRODUTOS: FILTROS POR CATEGORIA, BUSCA E GRADE DETALHADA */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+        {/* BARRA DE FILTROS E BUSCA */}
+        <div className="bg-[#0b101c] border border-slate-800 rounded-3xl p-5 sm:p-6 mb-8 space-y-4 shadow-xl">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            {/* Título da seção de itens */}
+            <div>
+              <span className="text-xs font-black uppercase text-red-500 tracking-wider block">
+                Catálogo de Produtos Oficiais
+              </span>
+              <h3 className="text-xl font-black text-white uppercase">
+                Escolha seu Manto & Acessórios
+              </h3>
+            </div>
+
+            {/* Campo de Busca Rápida */}
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por nome, modelo..."
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-red-500 transition"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* BOTÕES DE CATEGORIAS ("SEPARAR POR ITENS") */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all flex items-center gap-2 cursor-pointer ${
+                  activeCategory === cat.id
+                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 ring-2 ring-red-500'
+                    : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-850 border border-slate-800'
+                }`}
+              >
+                <span>{cat.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                    activeCategory === cat.id ? 'bg-red-950 text-red-200' : 'bg-slate-800 text-slate-400'
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* GRADE DE PRODUTOS DETALHADOS COM CORES DO POEIRÃO */}
+        {filteredShirts.length === 0 ? (
+          <div className="bg-[#0b101c] border border-slate-800 rounded-3xl p-12 text-center max-w-md mx-auto">
+            <ShoppingBag className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+            <h4 className="text-base font-bold text-white uppercase">Nenhum produto encontrado</h4>
+            <p className="text-xs text-slate-400 mt-1">
+              Tente selecionar outra categoria ou limpar a busca.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveCategory('all');
+                setSearchTerm('');
+              }}
+              className="mt-4 text-xs font-bold text-red-400 hover:underline"
+            >
+              Ver todos os produtos
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredShirts.map((shirt) => {
+              const currentSize = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[0]) || 'M';
+              const isAvailable = shirt.inStock !== false && storeOrdersEnabled !== false;
               const buyLink = getWhatsAppBuyLink(shirt);
+              const reserveLink = getWhatsAppReserveLink(shirt);
 
               return (
                 <div
                   key={shirt.id}
-                  className="group bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-red-500/50 transition-all duration-300 flex flex-col justify-between shadow-xl"
+                  className="group bg-[#0c1220] border border-slate-800 hover:border-red-600/60 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-red-950/20 transition-all duration-300 flex flex-col justify-between"
                 >
-                  {/* IMAGEM DO PRODUTO */}
-                  <div className="relative h-64 sm:h-72 bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center p-6 overflow-hidden border-b border-slate-800">
+                  {/* TOPO: IMAGEM DO PRODUTO & SELOS */}
+                  <div className="relative h-64 sm:h-72 bg-gradient-to-b from-[#131b2e] to-[#0c1220] flex items-center justify-center p-6 overflow-hidden border-b border-slate-800">
+                    {/* Selo do Produto (ex: Lançamento, Oficial 2026) */}
                     {shirt.badge && (
                       <span className="absolute top-4 left-4 z-10 bg-red-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
                         {shirt.badge}
                       </span>
                     )}
 
+                    {/* Selo de Estoque INDIVIDUAL */}
+                    <span
+                      className={`absolute top-4 right-4 z-10 text-[10px] font-black uppercase px-2.5 py-1 rounded-full border shadow-sm ${
+                        isAvailable
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                          : 'bg-red-500/20 text-red-300 border-red-500/40'
+                      }`}
+                    >
+                      {isAvailable ? '🟢 Em Estoque' : '🔴 Esgotado'}
+                    </span>
+
+                    {/* Imagem ou ilustração */}
                     {shirt.imageSrc ? (
                       <img
                         src={shirt.imageSrc}
                         alt={shirt.name}
-                        className="max-h-full max-w-full object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
+                        className="max-h-full max-w-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
                       <div className="relative w-44 h-48 flex items-center justify-center">
                         <svg
                           viewBox="0 0 200 200"
-                          className="w-full h-full drop-shadow-xl transition-transform duration-300 group-hover:scale-105"
+                          className="w-full h-full drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -197,8 +439,8 @@ export const StorePage: React.FC<StorePageProps> = ({
                             stroke="#991b1b"
                             strokeWidth="3"
                           />
-                          <rect x="75" y="55" width="15" height="120" fill="#0f172a" />
-                          <rect x="110" y="55" width="15" height="120" fill="#0f172a" />
+                          <rect x="75" y="55" width="15" height="120" fill="#0b0f19" />
+                          <rect x="110" y="55" width="15" height="120" fill="#0b0f19" />
                           <path d="M85 50 C90 55 110 55 115 50" stroke="#ffffff" strokeWidth="4" />
                         </svg>
 
@@ -208,25 +450,38 @@ export const StorePage: React.FC<StorePageProps> = ({
                       </div>
                     )}
 
-                    <div className="absolute bottom-3 right-3 text-[11px] font-bold text-slate-400 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-lg">
-                      Dry-Fit e Poliéster
+                    <div className="absolute bottom-3 right-3 text-[10px] font-bold text-slate-400 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-lg">
+                      {shirt.categoryLabel || 'Produto Oficial'}
                     </div>
                   </div>
 
-                  {/* DADOS DO PRODUTO */}
-                  <div className="p-6 flex-1 flex flex-col justify-between">
+                  {/* CORPO: DADOS, TECIDO, TAMANHOS E PREÇO */}
+                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      <h3 className="text-xl font-black text-white group-hover:text-red-400 transition-colors">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-black uppercase text-red-400 tracking-wider">
+                          {shirt.categoryLabel || 'Poeirão F.C.'}
+                        </span>
+                      </div>
+
+                      <h3 className="text-xl font-black text-white group-hover:text-red-400 transition-colors uppercase tracking-tight">
                         {shirt.name}
                       </h3>
-                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
-                        {shirt.description || 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit e poliéster de alta durabilidade.'}
+
+                      <p className="text-xs text-slate-300 mt-2 line-clamp-2 leading-relaxed">
+                        {shirt.description || 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit e acabamento tricolor premium.'}
                       </p>
 
-                      {/* TAMANHOS */}
-                      <div className="mt-5">
+                      {/* DETALHE DO TECIDO */}
+                      <div className="mt-3 text-[11px] font-semibold text-emerald-400 flex items-center gap-1.5 bg-emerald-950/30 border border-emerald-900/40 px-2.5 py-1.5 rounded-xl">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>{shirt.fabricDetails || 'Tecido Dry-Fit • Proteção UV • Costura Reforçada'}</span>
+                      </div>
+
+                      {/* SELETOR DE TAMANHOS */}
+                      <div className="mt-4">
                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                          Selecione o tamanho:
+                          Tamanho / Opção:
                         </label>
                         <div className="flex flex-wrap gap-2">
                           {(shirt.sizes || ['P', 'M', 'G', 'GG', 'XGG']).map((size) => (
@@ -234,10 +489,10 @@ export const StorePage: React.FC<StorePageProps> = ({
                               key={size}
                               type="button"
                               onClick={() => handleSelectSize(shirt.id, size)}
-                              className={`w-9 h-9 rounded-xl text-xs font-black transition-all ${
+                              className={`w-9 h-9 rounded-xl text-xs font-black transition-all cursor-pointer ${
                                 currentSize === size
-                                  ? 'bg-red-600 text-white shadow-md shadow-red-600/30 ring-2 ring-red-600 ring-offset-2 ring-offset-slate-900'
-                                  : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                                  ? 'bg-red-600 text-white shadow-md shadow-red-600/40 ring-2 ring-red-500'
+                                  : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800'
                               }`}
                             >
                               {size}
@@ -247,30 +502,58 @@ export const StorePage: React.FC<StorePageProps> = ({
                       </div>
                     </div>
 
-                    {/* PREÇO E BOTÃO PEDIR NO WHATSAPP */}
-                    <div className="mt-6 pt-5 border-t border-slate-800 flex items-center justify-between gap-4">
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Preço</span>
-                        <span className="text-2xl font-black text-emerald-400 tracking-tight">{shirt.price}</span>
+                    {/* PREÇOS E BOTÃO INDIVIDUAL DE COMPRA */}
+                    <div className="pt-4 border-t border-slate-800/80">
+                      <div className="flex items-baseline justify-between mb-3">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                            Preço Torcedor
+                          </span>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-black text-emerald-400 tracking-tight">
+                              {shirt.price}
+                            </span>
+                            {shirt.originalPrice && (
+                              <span className="text-xs text-slate-500 line-through font-mono">
+                                {shirt.originalPrice}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* DESCONTO SÓCIO */}
+                        <div className="text-right">
+                          <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2 py-0.5 rounded-md inline-block">
+                            Sócio Ouro: -30%
+                          </span>
+                        </div>
                       </div>
 
-                      {storeOrdersEnabled ? (
+                      {/* BOTÃO INDIVIDUAL DE PEDIR NO ZAP OU ESGOTADO */}
+                      {isAvailable ? (
                         <a
                           href={buyLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-4 sm:px-5 py-3 rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
                         >
                           <MessageCircle className="w-4 h-4 fill-white" />
-                          <span>Pedir no Zap</span>
+                          <span>Pedir no Zap ({currentSize})</span>
                         </a>
                       ) : (
-                        <div
-                          className="inline-flex items-center gap-1.5 bg-slate-950 text-slate-400 font-bold text-xs sm:text-sm px-3.5 sm:px-4 py-3 rounded-xl border border-slate-800 cursor-not-allowed select-none opacity-80"
-                          title="Vendas pausadas temporariamente por falta de estoque"
-                        >
-                          <Clock className="w-3.5 h-3.5 text-amber-500" />
-                          <span>Esgotado</span>
+                        <div className="space-y-1.5">
+                          <div className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 text-slate-400 font-bold text-xs py-3 px-4 rounded-xl border border-slate-800 select-none">
+                            <Clock className="w-4 h-4 text-amber-400" />
+                            <span>Esgotado no Momento</span>
+                          </div>
+                          <a
+                            href={reserveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 hover:underline block text-center pt-0.5 cursor-pointer"
+                          >
+                            💬 Toque para reservar seu tamanho no WhatsApp
+                          </a>
                         </div>
                       )}
                     </div>
@@ -280,30 +563,44 @@ export const StorePage: React.FC<StorePageProps> = ({
             })}
           </div>
         )}
+      </section>
 
-        {/* CARD DE FUTUROS PRODUTOS / EM BREVE */}
-        <div className="mt-12 bg-slate-900/60 border border-slate-800 rounded-3xl p-8 sm:p-10 text-center max-w-3xl mx-auto">
-          <div className="w-14 h-14 bg-red-600/10 border border-red-500/20 rounded-2xl flex items-center justify-center text-red-500 mx-auto mb-4">
-            <Clock className="w-7 h-7" />
-          </div>
-          <h4 className="text-xl sm:text-2xl font-black text-white uppercase">
-            Mais Produtos Oficiais em Breve!
-          </h4>
-          <p className="mt-2 text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Estamos preparando a linha completa do torcedor tricolor: <strong>bonés oficiais, copos térmicos, agasalhos e chaveiros</strong>. Assim que estiverem prontos, a diretoria adicionará todos aqui na loja!
-          </p>
-          <div className="mt-6">
+      {/* 6. MODAL DE ZOOM PARA VER FOTOS DO TIME EM ALTA RESOLUÇÃO */}
+      {zoomedPhoto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in"
+          onClick={() => setZoomedPhoto(null)}
+        >
+          <div
+            className="relative max-w-3xl w-full bg-[#0b101c] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
-              onClick={onBack}
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-5 py-3 rounded-xl border border-slate-700 transition cursor-pointer"
+              onClick={() => setZoomedPhoto(null)}
+              className="absolute right-4 top-4 z-20 text-white/80 hover:text-white p-2 rounded-full bg-black/60 hover:bg-black/90 transition cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Voltar para a Página Principal</span>
+              <X className="w-5 h-5" />
             </button>
+
+            {zoomedPhoto.imageSrc ? (
+              <img
+                src={zoomedPhoto.imageSrc}
+                alt={zoomedPhoto.title}
+                className="w-full max-h-[75vh] object-contain bg-black"
+              />
+            ) : null}
+
+            <div className="p-6 bg-[#0b101c] border-t border-slate-800">
+              <span className="text-[11px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2.5 py-0.5 rounded-full inline-block mb-1.5">
+                {zoomedPhoto.badge || 'ENSAIO OFICIAL DO POEIRÃO F.C.'}
+              </span>
+              <h3 className="text-xl font-black text-white uppercase">{zoomedPhoto.title}</h3>
+              <p className="text-xs text-slate-300 mt-1">{zoomedPhoto.subtitle}</p>
+            </div>
           </div>
         </div>
-      </section>
+      )}
     </div>
   );
 };
