@@ -1,0 +1,12 @@
+{
+  "projectId": "poeirao-futsal",
+  "appId": "1:210079988053:web:9c23af6a6dc009ea25d7dc",
+  "apiKey": "AIzaSyAWdlrVmG3y2sBJucOqMx1ZHnJNL2NPJn0",
+  "authDomain": "poeirao-futsal.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "poeirao-futsal.firebasestorage.app",
+  "messagingSenderId": "210079988053",
+  "measurementId": "",
+  "oAuthClientId": "",
+  "recaptchaSiteKey": ""
+}

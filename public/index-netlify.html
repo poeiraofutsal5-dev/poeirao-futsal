@@ -1,0 +1,3032 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poeirão F.C. - Sócio Torcedor & Loja Oficial</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. CABEÇALHO / NAVBAR IDÊNTICA AO SITE OFICIAL (BRANCA COM TOPO VERMELHO) -->
+  <!-- ========================================================================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="h-1 bg-red-600 w-full"></div>
+    <nav class="w-full bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100 py-3">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        
+        <!-- ESCUDO E LOGO DO CLUBE -->
+        <a href="#inicio" id="nav-brand-link" class="flex items-center gap-3.5 group cursor-pointer" aria-label="Poeirão Futebol Clube">
+          <img id="nav-escudo" src="./escudo-oficial.png" alt="Escudo Poeirão F.C." class="h-12 w-auto sm:h-14 drop-shadow-sm transition-transform duration-200 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/120?text=PFC'">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight leading-none group-hover:text-red-600 transition-colors">
+              POEIRÃO F.C.
+            </span>
+            <span class="text-[11px] font-bold text-red-600 tracking-widest uppercase mt-0.5">
+              SÓCIO TORCEDOR
+            </span>
+          </div>
+        </a>
+
+        <!-- MENU DESKTOP -->
+        <div class="hidden md:flex items-center gap-8">
+          <ul class="flex items-center gap-7">
+            <li>
+              <button type="button" id="nav-btn-inicio" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
+                Início
+              </button>
+            </li>
+            <li>
+              <button type="button" id="nav-btn-planos" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
+                Planos
+              </button>
+            </li>
+            <li>
+              <button type="button" id="nav-btn-store" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
+                Loja Poeirão
+              </button>
+            </li>
+            <li>
+              <button type="button" id="nav-btn-sponsors" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
+                Patrocinadores
+              </button>
+            </li>
+            <li>
+              <button type="button" id="nav-btn-socio" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800 hover:text-red-600 transition-all py-1.5 px-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer" title="Carteirinha Digital do Sócio">
+                <svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                <span>Área do Sócio</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" id="nav-btn-admin" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-red-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg transition-colors cursor-pointer group" title="Acesso com senha da diretoria">
+                <svg class="w-3 h-3 text-slate-400 group-hover:text-red-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span>Área Restrita</span>
+              </button>
+            </li>
+          </ul>
+
+          <!-- BOTÃO DESTACADO WHATSAPP (SUPORTE / TIRAR DÚVIDAS) -->
+          <a
+            href="https://wa.me/5577981677054?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20plano%20de%20S%C3%B3cio%20Torcedor%20do%20Poeir%C3%A3o%20F.C."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+          >
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            <span>Suporte WhatsApp</span>
+          </a>
+        </div>
+
+        <!-- BOTÃO MOBILE MENU -->
+        <button type="button" id="btn-toggle-mobile" class="md:hidden p-2 text-slate-700 hover:text-red-600 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+
+      <!-- MENU MOBILE -->
+      <div id="mobile-menu" class="hidden md:hidden px-4 pt-3 pb-6 border-t border-slate-100 bg-white">
+        <div class="flex flex-col gap-3">
+          <button type="button" id="m-btn-inicio" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Início</button>
+          <button type="button" id="m-btn-planos" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Planos</button>
+          <button type="button" id="m-btn-store" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Loja Poeirão</button>
+          <button type="button" id="m-btn-sponsors" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Patrocinadores</button>
+          <button type="button" id="m-btn-socio" class="text-left font-bold text-red-600 py-1.5 flex items-center justify-between">
+            <span>💳 Área do Sócio (Carteirinha)</span>
+            <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-black uppercase">Digital</span>
+          </button>
+          <button type="button" id="m-btn-admin" class="text-left font-semibold text-slate-500 hover:text-red-600 py-1.5 flex items-center gap-2">
+            <span>🔒 Área Restrita</span>
+          </button>
+          <a
+            href="https://wa.me/5577981677054?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20plano%20de%20S%C3%B3cio%20Torcedor%20do%20Poeir%C3%A3o%20F.C."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2 text-center bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs uppercase"
+          >
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. PÁGINA PRINCIPAL DO CLUBE (HOME VIEW)                                  -->
+  <!-- ========================================================================= -->
+  <div id="home-view" class="flex-1 flex flex-col pt-20">
+    
+    <!-- HERO SECTION (ESTILO ARENA ESPORTIVA COM TEXTURA DE TORCIDA) -->
+    <section id="inicio" class="relative min-h-[90vh] flex items-center justify-center pt-20 pb-16 overflow-hidden bg-slate-950 text-white">
+      <div class="absolute inset-0 z-0">
+        <img
+          id="hero-bg-img"
+          src="./IMG_1610.jpg"
+          alt="Torcida do Poeirão F.C."
+          class="w-full h-full object-cover object-center scale-105 brightness-[0.38] contrast-[1.12]"
+          onerror="this.src='https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=80'"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/50"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-red-950/30 to-black/85"></div>
+      </div>
+
+      <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+        <!-- ESCUDO NO HERO -->
+        <div class="mb-6 flex flex-col items-center">
+          <div class="relative group cursor-pointer">
+            <div class="absolute -inset-4 bg-gradient-to-r from-red-600 via-amber-500 to-red-600 rounded-full blur-xl opacity-40 group-hover:opacity-70 transition duration-500"></div>
+            <img
+              id="hero-escudo"
+              src="./escudo-oficial.png"
+              alt="Escudo Poeirão F.C."
+              class="relative h-32 sm:h-40 w-auto object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
+              onerror="this.src='https://via.placeholder.com/160?text=PFC'"
+            />
+          </div>
+        </div>
+
+        <!-- BADGE TEMPORADA -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/10 text-white text-xs sm:text-sm font-semibold mb-6 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span>Temporada 2026 • Apoie o Maior do Futsal</span>
+        </div>
+
+        <!-- TÍTULO PRINCIPAL -->
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white max-w-4xl leading-tight">
+          A FORÇA DA NOSSA TERRA, O ORGULHO DA NOSSA GENTE!
+        </h1>
+
+        <!-- SUBTÍTULO -->
+        <p class="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed">
+          Faça parte da nossa história. Escolha seu plano de sócio-torcedor, adquira a camisa oficial na Loja Poeirão e fortaleça o clube.
+        </p>
+
+        <!-- BOTÕES DO HERO -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <button
+            type="button"
+            id="hero-btn-store"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 text-white font-black text-base px-8 py-4 rounded-xl shadow-xl shadow-red-600/30 transition transform hover:-translate-y-0.5 cursor-pointer"
+          >
+            <span>🛒 CONHECER LOJA POEIRÃO</span>
+          </button>
+          
+          <button
+            type="button"
+            id="hero-btn-planos"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900/90 hover:bg-slate-800 text-white font-bold text-base px-8 py-4 rounded-xl border border-slate-700/80 transition cursor-pointer"
+          >
+            <span>Ver Planos de Sócio</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 3. SEÇÃO DE PLANOS (FUNDO CLARO SLATE-50 IGUAL AO SITE REACT)            -->
+    <!-- ======================================================================= -->
+    <section id="planos" class="py-20 bg-slate-50 text-slate-900 scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <span class="text-xs sm:text-sm font-bold tracking-widest text-red-600 uppercase">
+            Planos Oficiais 2026
+          </span>
+          <h2 class="mt-2 text-3xl sm:text-4xl md:text-5xl font-black uppercase text-slate-900 tracking-tight">
+            Escolha o seu Plano
+          </h2>
+          <p class="mt-4 text-base sm:text-lg text-slate-600">
+            Cada assinatura fortalece o Poeirão F.C. e garante benefícios exclusivos para você vibrar em cada lance. Escolha o seu e vista a camisa!
+          </p>
+        </div>
+
+        <!-- AVISO DE REGRA FUNDAMENTAL -->
+        <div class="max-w-4xl mx-auto mb-12 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white rounded-2xl p-4 sm:p-5 shadow-xl shadow-red-600/15 flex flex-col sm:flex-row items-center justify-between gap-4 border border-red-400/30">
+          <div class="flex items-center gap-3.5 text-center sm:text-left">
+            <div class="p-3 bg-white/20 rounded-xl shrink-0">
+              <span class="text-2xl">⚠️</span>
+            </div>
+            <div>
+              <span class="text-xs font-black uppercase tracking-wider text-amber-200 block">
+                Regra Fundamental de Adesão
+              </span>
+              <p class="text-sm sm:text-base font-extrabold leading-snug">
+                Todos os benefícios são válidos mediante o pagamento correto e em dia todo mês!
+              </p>
+            </div>
+          </div>
+          <span class="shrink-0 bg-white text-red-700 text-xs font-black uppercase tracking-wider py-2 px-4 rounded-xl shadow-md">
+            Mantenha em Dia ⭐
+          </span>
+        </div>
+
+        <!-- GRID DE 3 CARDS DE PLANOS IDÊNTICOS À IMAGEM -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
+          
+          <!-- CARD 1: SÓCIO PRATA+ -->
+          <div class="flex flex-col bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div class="bg-[#18212f] text-white p-7 sm:p-8">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1">
+                PLANO DE ENTRADA
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+                SÓCIO PRATA+
+              </h3>
+              <div class="mt-5 flex items-baseline gap-1">
+                <span class="text-4xl font-black text-white">R$ 14,99</span>
+                <span class="text-slate-300 text-sm font-medium">/ mês</span>
+              </div>
+            </div>
+
+            <div class="p-7 sm:p-8 flex-1 flex flex-col justify-between">
+              <ul class="space-y-4 pt-2">
+                <li class="flex items-start gap-3 text-sm text-slate-800">
+                  <span class="text-emerald-500 font-bold text-base">✓</span>
+                  <span><strong>10% de desconto</strong> nas camisas do time</span>
+                </li>
+              </ul>
+
+              <div class="pt-10">
+                <a
+                  href="https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03"
+                  id="btn-landing-prata"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full flex items-center justify-center gap-2 bg-[#111827] hover:bg-black text-white font-extrabold uppercase text-xs sm:text-sm tracking-wider py-4 px-6 rounded-2xl shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-98 cursor-pointer"
+                >
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                  <span>ASSINAR PRATA+ AGORA</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: SÓCIO OURO+ (MAIS POPULAR) -->
+          <div class="flex flex-col bg-white rounded-3xl border-2 border-[#f59e0b] shadow-xl shadow-amber-500/10 hover:shadow-2xl transition-all duration-300 overflow-hidden relative group">
+            <div class="bg-[#f59e0b] text-slate-950 text-xs font-black uppercase tracking-wider text-center py-2 flex items-center justify-center gap-1.5">
+              <span>★ PLANO OURO - MAIS POPULAR</span>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#d97706] to-[#b45309] text-white p-7 sm:p-8">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-100 block mb-1">
+                O QUERIDINHO DA TORCIDA
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+                SÓCIO OURO+
+              </h3>
+              <div class="mt-5 flex items-baseline gap-1">
+                <span class="text-4xl font-black text-white">R$ 24,99</span>
+                <span class="text-amber-100 text-sm font-medium">/ mês</span>
+              </div>
+            </div>
+
+            <div class="p-7 sm:p-8 flex-1 flex flex-col justify-between">
+              <ul class="space-y-4 pt-2">
+                <li class="flex items-start gap-3 text-sm text-slate-800">
+                  <span class="text-amber-500 font-bold text-base">✓</span>
+                  <span><strong>30% de desconto</strong> em camisas do time</span>
+                </li>
+              </ul>
+
+              <div class="pt-10">
+                <a
+                  href="https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02"
+                  id="btn-landing-ouro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#f59e0b] to-[#d97706] hover:from-amber-500 hover:to-amber-600 text-white font-extrabold uppercase text-xs sm:text-sm tracking-wider py-4 px-6 rounded-2xl shadow-lg shadow-amber-500/30 transition-all duration-200 hover:scale-[1.02] active:scale-98 cursor-pointer"
+                >
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                  <span>ASSINAR OURO+ AGORA</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 3: PATROCINADOR+ (PLANO CORPORATIVO) -->
+          <div class="flex flex-col bg-white rounded-3xl border-2 border-[#00b4db] shadow-xl shadow-cyan-500/10 hover:shadow-2xl transition-all duration-300 overflow-hidden relative group">
+            <div class="bg-gradient-to-r from-[#00b4db] to-[#0083b0] text-white text-xs font-black uppercase tracking-wider text-center py-2 flex items-center justify-center gap-1.5">
+              <span>💎 PLANO CORPORATIVO</span>
+            </div>
+
+            <div class="bg-[#0b192c] text-white p-7 sm:p-8">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-400 block mb-1">
+                💎 NÍVEL CORPORATIVO & PARCERIAS
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+                PATROCINADOR+
+              </h3>
+              <div class="mt-5 flex items-baseline gap-1">
+                <span class="text-4xl font-black text-white">R$ 49,99</span>
+                <span class="text-slate-300 text-sm font-medium">/ mês</span>
+              </div>
+            </div>
+
+            <div class="p-7 sm:p-8 flex-1 flex flex-col justify-between">
+              <ul class="space-y-4 pt-2">
+                <li class="flex items-start gap-3 text-sm text-slate-800">
+                  <span class="text-cyan-500 font-bold text-base">✓</span>
+                  <span><strong>Divulgação da logo no site oficial</strong> do clube.</span>
+                </li>
+                <li class="flex items-start gap-3 text-sm text-slate-800">
+                  <span class="text-cyan-500 font-bold text-base">✓</span>
+                  <span><strong>Divulgação nas redes sociais</strong> (feed, stories).</span>
+                </li>
+                <li class="flex items-start gap-3 text-sm text-cyan-950 font-bold bg-cyan-50 p-2.5 rounded-xl border border-cyan-200">
+                  <span class="text-cyan-600 font-bold text-base">👕</span>
+                  <span><strong>Direito a 1 camisa oficial</strong> do time personalizada.</span>
+                </li>
+              </ul>
+
+              <div class="pt-10">
+                <a
+                  href="https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01"
+                  id="btn-landing-patrocinador"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#00b4db] to-[#0083b0] hover:opacity-95 text-white font-extrabold uppercase text-xs sm:text-sm tracking-wider py-4 px-6 rounded-2xl shadow-lg shadow-cyan-500/30 transition-all duration-200 hover:scale-[1.02] active:scale-98 cursor-pointer"
+                >
+                  <span>💎 ASSINAR PATROCINADOR+ AGORA</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. BANNER EXPLICATIVO DA LOJA POEIRÃO (ACIMA DE PATROCINADORES)          -->
+    <!-- ======================================================================= -->
+    <section id="loja-poeirao" class="py-16 sm:py-20 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-t border-slate-200 scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-slate-950 text-white p-6 sm:p-10 md:p-12 shadow-2xl border border-slate-800">
+          <div class="absolute top-0 right-0 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+          <div class="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="max-w-2xl text-center lg:text-left">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-black uppercase tracking-wider mb-4">
+                Coleção Oficial 2026 • Linha do Torcedor
+              </div>
+
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+                Vista a Camisa Oficial do <span class="text-red-500">Poeirão F.C.</span>
+              </h2>
+
+              <p class="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed font-medium">
+                <strong class="text-white font-bold">Para que serve este espaço?</strong> Aqui é a loja oficial do clube! Cada camisa ou produto adquirido ajuda diretamente a custear as viagens, arbitragens, inscrições nos campeonatos e os uniformes dos nossos atletas. Você apoia o time da sua terra e veste as cores oficiais do Poeirão F.C.!
+              </p>
+
+              <div class="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs sm:text-sm text-slate-300 font-semibold">
+                <span class="flex items-center gap-1.5 text-emerald-400">
+                  ✓ Tecido Dry-Fit e Poliéster
+                </span>
+                <span class="flex items-center gap-1.5 text-emerald-400">
+                  ✓ Envio Rápido e Seguro
+                </span>
+                <span class="flex items-center gap-1.5 text-emerald-400">
+                  ✓ Camisas e Futuros Produtos
+                </span>
+              </div>
+            </div>
+
+            <!-- BOTÃO LOJA POEIRÃO QUE ABRE A ABA EXCLUSIVA -->
+            <div class="flex items-center justify-center lg:justify-end w-full lg:w-auto shrink-0">
+              <button
+                type="button"
+                id="banner-btn-store"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-base sm:text-lg px-8 py-5 rounded-2xl shadow-xl shadow-red-600/30 hover:shadow-red-600/50 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
+              >
+                <span>🛒 LOJA POEIRÃO</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 5. SEÇÃO DE PATROCINADORES (FUNDO CLARO COM 25 CARDS EM 5 COLUNAS)       -->
+    <!-- ======================================================================= -->
+    <section id="patrocinadores" class="py-20 bg-slate-50 text-slate-900 border-t border-slate-200/80 scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-600 mb-2">
+            <span>Marcas que jogam junto com o Poeirão</span>
+          </div>
+          
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tight">
+            Nossos patrocinadores oficiais:
+          </h2>
+          <p class="mt-3 text-sm sm:text-base text-slate-600">
+            Empresas parceiras que apoiam o futebol tricolor e fortalecem o Poeirão F.C. dentro e fora de campo.
+          </p>
+        </div>
+
+        <!-- GRADE DE 25 PATROCINADORES (5 COLUNAS NO COMPUTADOR) -->
+        <div id="sponsors-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5 max-w-7xl mx-auto">
+          <!-- Renderizado dinamicamente via Firestore em tempo real -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 6. BANNER VERMELHO DE SUPORTE WHATSAPP (ACIMA DO RODAPÉ)                -->
+    <!-- ======================================================================= -->
+    <section class="bg-gradient-to-r from-red-700 via-red-600 to-rose-700 text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+        <div class="text-center md:text-left">
+          <div class="inline-flex items-center gap-2 bg-black/20 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+            <span>Atendimento Personalizado</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
+            Ficou com alguma dúvida? Fale conosco no WhatsApp!
+          </h2>
+          <p class="mt-2 text-sm sm:text-base text-red-100 max-w-xl">
+            Nossa equipe de atendimento ao sócio torcedor está pronta para ajudar você a escolher o melhor plano ou tirar dúvidas sobre pagamentos.
+          </p>
+        </div>
+
+        <a
+          href="https://wa.me/5577981677054?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20plano%20de%20S%C3%B3cio%20Torcedor%20do%20Poeir%C3%A3o%20F.C."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-base uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl hover:scale-105 transition-all duration-200 shrink-0"
+        >
+          <span>Falar no WhatsApp: (77) 98167-7054</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+
+  </div> <!-- FIM DO #home-view -->
+
+
+  <!-- ========================================================================= -->
+  <!-- 7. ABA / PÁGINA EXCLUSIVA DA LOJA POEIRÃO (STORE VIEW)                    -->
+  <!-- ========================================================================= -->
+  <div id="store-view" class="hidden flex-1 flex flex-col pt-20 bg-slate-950 text-slate-100">
+    
+    <!-- SUB-BARRA COM BOTÃO VOLTAR -->
+    <div class="bg-slate-900/90 border-b border-slate-800 py-4 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <button
+          type="button"
+          id="store-btn-back"
+          class="inline-flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white bg-slate-950 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl transition cursor-pointer"
+        >
+          <span>← Voltar ao Site Principal</span>
+        </button>
+        <span class="text-xs text-red-500 font-black uppercase tracking-wider">
+          Loja Oficial Poeirão F.C.
+        </span>
+      </div>
+    </div>
+
+    <!-- HERO EXCLUSIVO DA LOJA -->
+    <section class="py-12 sm:py-16 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border-b border-slate-800 text-center px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/20 border border-red-500/40 text-red-400 text-xs font-black uppercase tracking-wider mb-4">
+          Loja Oficial do Poeirão Futebol Clube
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+          VISTA AS CORES DO <span class="text-red-500">POEIRÃO F.C.</span>
+        </h1>
+        <p class="mt-4 text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          Aqui você adquire os produtos oficiais do time. <strong>100% da renda das vendas</strong> é revertida diretamente para o clube, ajudando no custeio das viagens, uniformes, arbitragens e materiais esportivos dos atletas.
+        </p>
+
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-slate-300 font-semibold">
+          <span class="text-emerald-400 font-bold">✓ Tecido Dry-Fit e Poliéster</span>
+          <span class="text-emerald-400 font-bold">✓ Envio Rápido e Seguro</span>
+          <span class="text-emerald-400 font-bold">✓ Atendimento Direto no WhatsApp</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUTOS / CAMISAS NA LOJA -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
+      <div id="store-shirts-grid">
+        <!-- Renderizado dinamicamente via Firestore -->
+      </div>
+
+      <!-- CARD DE FUTUROS PRODUTOS (EM BREVE) -->
+      <div class="mt-14 bg-slate-900/60 border border-slate-800 rounded-3xl p-8 sm:p-10 text-center max-w-2xl mx-auto shadow-xl">
+        <span class="text-4xl">⏳</span>
+        <h4 class="text-xl sm:text-2xl font-black text-white uppercase mt-3">
+          Mais Produtos Oficiais em Breve!
+        </h4>
+        <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-relaxed">
+          Estamos preparando a linha completa do torcedor tricolor: <strong>bonés oficiais, copos térmicos, agasalhos e chaveiros</strong>. Assim que estiverem prontos, a diretoria adicionará todos aqui na loja!
+        </p>
+        <button
+          type="button"
+          id="store-btn-back-bottom"
+          class="mt-6 inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl border border-slate-700 transition cursor-pointer"
+        >
+          <span>← Voltar para a Página Principal</span>
+        </button>
+      </div>
+    </div>
+  </div> <!-- FIM DO #store-view -->
+
+
+  <!-- ========================================================================= -->
+  <!-- 7.5. ABA / PÁGINA EXCLUSIVA DA ÁREA DO SÓCIO (SOCIO VIEW)                 -->
+  <!-- ========================================================================= -->
+  <div id="socio-view" class="hidden flex-1 flex flex-col pt-20 bg-slate-50 text-slate-900 pb-20">
+    <!-- SUB-BARRA COM BOTÃO VOLTAR -->
+    <div class="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white border-b border-slate-800 py-6 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+        <button
+          type="button"
+          id="socio-btn-back"
+          class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-300 hover:text-white bg-slate-850 hover:bg-slate-800 border border-slate-700 px-4 py-2 rounded-xl transition cursor-pointer"
+        >
+          <span>← Voltar ao Site Principal</span>
+        </button>
+        <div id="socio-user-info" class="hidden items-center gap-3">
+          <span class="text-xs text-slate-300 font-bold" id="socio-welcome-name"></span>
+          <button type="button" id="socio-btn-logout" class="text-xs font-bold text-slate-400 hover:text-red-400 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 cursor-pointer">Sair</button>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center max-w-2xl mx-auto">
+        <span class="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-red-500 bg-red-950/60 border border-red-800/60 px-3 py-1 rounded-full mb-2">
+          Portal Oficial do Torcedor
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-black uppercase tracking-tight text-white">
+          Área do Sócio Torcedor
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-2">
+          Acesse seu Cartão Virtual Oficial, consulte seus benefícios e apresente nos jogos.
+        </p>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO DINÂMICO DO SÓCIO -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-10 w-full">
+      <!-- 1. SEÇÃO DE LOGIN EXCLUSIVA DO SÓCIO -->
+      <div id="socio-auth-box" class="max-w-md mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white p-6 text-center">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-2 text-xl">
+            👤
+          </div>
+          <h3 class="text-xl font-black uppercase text-white">Acessar Carteirinha</h3>
+          <p class="text-xs text-white/90 mt-1">Informe o celular cadastrado e sua senha de acesso.</p>
+        </div>
+
+        <div class="p-6 sm:p-8">
+          <!-- FORM LOGIN -->
+          <form id="form-socio-login" class="space-y-4">
+            <div id="socio-login-error" class="hidden text-xs text-red-600 bg-red-50 border border-red-200 p-2.5 rounded-xl font-bold"></div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Celular / WhatsApp</label>
+              <input type="tel" id="input-socio-login-phone" placeholder="(11) 99999-8888" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-600" required>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Senha de Acesso</label>
+              <input type="password" id="input-socio-login-pass" placeholder="Digite sua senha..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-600" required>
+            </div>
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase py-3.5 rounded-xl shadow-lg transition cursor-pointer">
+              Entrar na Área do Sócio
+            </button>
+          </form>
+
+          <div class="mt-6 pt-5 border-t border-slate-100 text-center space-y-2">
+            <p class="text-xs text-slate-500">
+              Ainda não possui senha ou acabou de assinar?
+            </p>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              O acesso é liberado pela diretoria logo após a confirmação do pagamento no Stripe ou Pix.
+            </p>
+            <a href="https://wa.me/5577981677054" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-700 pt-1">
+              <span>💬 Falar com a Diretoria no WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. SEÇÃO DA CARTEIRINHA VIRTUAL (QUANDO LOGADO) -->
+      <div id="socio-dashboard-box" class="hidden space-y-8">
+        <!-- ÁREA DO CARTÃO VIRTUAL COM PERSPECTIVA 3D -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-10">
+          <div class="text-center mb-6">
+            <span class="text-xs font-black tracking-widest text-red-600 uppercase">Identificação Digital Oficial</span>
+            <h2 class="text-2xl sm:text-3xl font-black uppercase text-slate-900 mt-1">Cartão do Sócio Torcedor</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">Apresente este cartão digital nos jogos do clube e na Loja Oficial.</p>
+          </div>
+
+          <div id="virtual-card-wrapper" class="w-full max-w-md mx-auto">
+            <!-- Gerado via JavaScript dinamicamente -->
+          </div>
+
+          <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <button type="button" id="btn-print-card" class="bg-slate-900 hover:bg-black text-white text-xs font-black uppercase py-3 px-5 rounded-xl shadow transition hover:scale-105 cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span id="btn-print-card-text">Salvar PNG</span>
+            </button>
+            <button type="button" id="btn-flip-card" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-3 px-5 rounded-xl border border-slate-200 transition cursor-pointer">
+              🔄 Girar Cartão (Frente/Verso)
+            </button>
+          </div>
+        </div>
+
+        <!-- PAINEL DE BENEFÍCIOS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-md">
+            <div>
+              <span class="text-xs font-black uppercase text-red-600 block mb-2">Situação da Conta</span>
+              <h3 id="card-plan-name" class="text-2xl font-black text-slate-900 uppercase">SÓCIO OURO+</h3>
+              <div class="mt-4 pt-4 border-t border-slate-100 space-y-2.5 text-xs sm:text-sm">
+                <div class="flex justify-between"><span class="text-slate-500">Matrícula:</span><span id="card-mat" class="font-mono font-bold text-slate-900">POE-2026-0001</span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Celular:</span><span id="card-phone" class="font-mono font-bold text-slate-900"></span></div>
+                <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                  <span class="text-slate-600 font-bold">Dia que Pagou:</span>
+                  <span id="card-paid-date" class="font-mono font-bold text-slate-900"></span>
+                </div>
+                <div class="flex justify-between items-center bg-emerald-50/70 p-2 rounded-lg border border-emerald-200">
+                  <span class="text-emerald-950 font-bold">Vencimento:</span>
+                  <span id="card-valid-until" class="font-mono font-black text-emerald-700"></span>
+                </div>
+                <div class="flex justify-between"><span class="text-slate-500">Situação:</span><span id="card-status-badge" class="font-bold text-emerald-600">ATIVO</span></div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-2">
+              <a id="card-stripe-link" href="https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02" target="_blank" class="w-full text-center bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase py-4 rounded-xl shadow transition">
+                Renovar Mensalidade no Stripe ➔
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between shadow-md">
+            <div>
+              <span class="text-xs font-black uppercase text-amber-600 block mb-2">Vantagens Desbloqueadas</span>
+              <h3 class="text-xl font-black text-slate-900 uppercase">Benefícios do Torcedor</h3>
+              <ul class="mt-4 space-y-3 text-xs sm:text-sm text-slate-700">
+                <li class="flex items-center gap-2"><span>✓</span><strong id="card-discount-text">30% de desconto</strong> na Loja Oficial</li>
+                <li class="flex items-center gap-2"><span>✓</span><span>Carteirinha Virtual Oficial com Selo Dourado</span></li>
+                <li class="flex items-center gap-2"><span>✓</span><span>Entrada liberada nos jogos e sorteios exclusivos</span></li>
+              </ul>
+            </div>
+            <div class="mt-6 pt-6 border-t border-slate-100">
+              <button type="button" id="btn-socio-go-store" class="w-full bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase py-3 rounded-xl transition cursor-pointer">
+                🛒 Ir à Loja Oficial com Desconto
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTÃO NA PARTE DE BAIXO EXIGINDO SENHA PADRÃO '22232425' DA DIRETORIA -->
+      <div class="mt-16 pt-8 border-t border-slate-200/80 w-full text-center">
+        <button
+          type="button"
+          id="btn-socio-admin-access"
+          class="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase py-3.5 px-6 rounded-2xl shadow-md transition-all duration-200 hover:scale-[1.02] cursor-pointer"
+        >
+          <span>🔒 Acesso da Diretoria • Cadastrar e Editar Sócios</span>
+        </button>
+        <p class="text-[11px] text-slate-400 mt-2">
+          Área restrita aos administradores do clube (Exige senha padrão).
+        </p>
+      </div>
+    </div>
+  </div> <!-- FIM DO #socio-view -->
+
+
+
+  <!-- ========================================================================= -->
+  <!-- 8. RODAPÉ COMPLETO COM OS CRÉDITOS OFICIAIS DO JPX STUDIO                 -->
+  <!-- ========================================================================= -->
+  <footer class="bg-slate-950 text-slate-400 py-14 border-t border-slate-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- GRID SUPERIOR DO FOOTER -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-3">
+            <img id="footer-escudo" src="./escudo-oficial.png" alt="Escudo Poeirão F.C." class="h-12 w-auto object-contain" onerror="this.src='https://via.placeholder.com/100?text=PFC'">
+            <div>
+              <span class="font-black text-xl text-white tracking-tight">POEIRÃO F.C.</span>
+              <p class="text-xs text-red-500 font-bold uppercase">Sócio Torcedor Oficial 2026</p>
+            </div>
+          </div>
+          <p class="mt-4 text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
+            O clube da nossa terra, o orgulho da nossa gente. Seja sócio e fortaleça as categorias e o esporte de toda a nossa região.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 mb-3">Links Rápidos</h4>
+          <ul class="space-y-2 text-xs font-semibold">
+            <li><button type="button" id="footer-link-inicio" class="hover:text-white transition">Início</button></li>
+            <li><button type="button" id="footer-link-planos" class="hover:text-white transition">Planos de Sócio</button></li>
+            <li><button type="button" id="footer-link-store" class="hover:text-white transition">Loja Poeirão</button></li>
+            <li><button type="button" id="footer-link-sponsors" class="hover:text-white transition">Patrocinadores</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 mb-3">Atendimento Oficial</h4>
+          <p class="text-xs text-slate-400">WhatsApp Oficial:</p>
+          <a href="https://wa.me/5577981677054" target="_blank" class="text-emerald-400 font-bold text-sm hover:underline block mt-0.5">
+            (77) 98167-7054
+          </a>
+          <p class="text-[11px] text-slate-500 mt-2">Segunda a Sexta das 08h às 18h</p>
+        </div>
+      </div>
+
+      <!-- BLOCO GRANDIOSO E OFICIAL DE CRÉDITOS JPX STUDIO -->
+      <div class="py-8 my-6 px-6 sm:px-8 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Logo e Texto JPX Studio -->
+        <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
+          <div class="flex flex-col items-center shrink-0">
+            <div class="h-16 w-36 flex items-center justify-center p-2 bg-slate-950/80 rounded-xl border border-slate-800 shadow-inner">
+              <img
+                id="footer-jpx-logo"
+                src="./patrocinador-jpx-studio-white.png"
+                alt="JPX Studio"
+                class="max-h-12 max-w-full object-contain drop-shadow"
+                onerror="this.src='https://via.placeholder.com/120x30?text=JPX+Studio'"
+              />
+            </div>
+          </div>
+
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-red-400 mb-1">
+              <span>Desenvolvimento & Design Oficial</span>
+            </div>
+            <h4 class="text-base sm:text-lg font-black text-white tracking-tight">
+              Site Criado e Desenvolvido por JPX STUDIO
+            </h4>
+            <p class="text-xs text-slate-400 mt-0.5 max-w-md">
+              Especialistas em identidade visual, desenvolvimento web de alta performance e soluções digitais completas.
+            </p>
+          </div>
+        </div>
+
+        <!-- Botões de Contato JPX Studio -->
+        <div class="flex flex-wrap items-center justify-center gap-3 shrink-0">
+          <a
+            href="https://wa.me/5577981677054?text=Ol%C3%A1%20JPX%20Studio!%20Vi%20o%20site%20do%20Poeir%C3%A3o%20F.C.%20e%20gostaria%20de%20um%20or%C3%A7amento."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider py-3 px-4 sm:px-5 rounded-xl transition-all shadow-md"
+          >
+            <span>WhatsApp: (77) 98167-7054</span>
+          </a>
+
+          <a
+            href="https://instagram.com/jpxstudio9"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:opacity-95 text-white text-xs font-bold uppercase tracking-wider py-3 px-4 sm:px-5 rounded-xl transition-all shadow-md"
+          >
+            <span>@jpxstudio9</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- COPYRIGHT -->
+      <div class="text-center pt-4 text-xs text-slate-500">
+        © 2026 Poeirão Futebol Clube • Todos os direitos reservados.
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ========================================================================= -->
+  <!-- 8.5. MODAL DE INFORMAÇÕES DO PLANO & OPÇÕES DE PAGAMENTO (PIX & CARTÃO)     -->
+  <!-- ========================================================================= -->
+  <div id="modal-plan-payment" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full text-slate-900 shadow-2xl border border-slate-200 overflow-hidden relative my-auto animate-scale-in">
+      
+      <!-- TOPO COM IDENTIDADE DO PLANO -->
+      <div id="modal-plan-header" class="p-6 sm:p-7 text-white relative bg-[#18212f]">
+        <button type="button" id="btn-close-plan-modal" class="absolute right-4 top-4 text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition cursor-pointer text-base">✕</button>
+        <span id="modal-plan-badge" class="text-[11px] font-black uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full border border-white/30 inline-block mb-2">PLANO DE ENTRADA</span>
+        <h3 id="modal-plan-title" class="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">SÓCIO PRATA+</h3>
+        <div class="mt-3 flex items-baseline gap-2">
+          <span id="modal-plan-price" class="text-4xl sm:text-5xl font-black text-white tracking-tight">R$ 14,99</span>
+          <span id="modal-plan-period" class="text-sm text-white/80 font-medium">/ mês</span>
+        </div>
+      </div>
+
+      <!-- CORPO COM BENEFÍCIOS E OPÇÕES DE PAGAMENTO -->
+      <div class="p-6 sm:p-7 space-y-6">
+        <!-- BENEFÍCIOS -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-800 mb-3 flex items-center gap-1.5">
+            <span class="text-amber-500 font-bold">✨</span>
+            <span>Benefícios inclusos no plano:</span>
+          </h4>
+          <ul id="modal-plan-benefits" class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+            <!-- Inserido dinamicamente via JS -->
+          </ul>
+        </div>
+
+        <!-- ESCOLHA DA FORMA DE PAGAMENTO -->
+        <div>
+          <div class="text-center mb-3.5">
+            <span class="text-xs font-black uppercase tracking-wider text-slate-800 block">
+              Escolha a forma de pagamento:
+            </span>
+            <p class="text-[11px] text-slate-500 mt-0.5">
+              Checkout 100% seguro processado pelo Stripe Oficial
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <!-- OPÇÃO 1: VIA PIX -->
+            <a
+              id="modal-plan-link-pix"
+              href="https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center justify-between p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/60 hover:bg-emerald-100/70 text-emerald-950 transition-all duration-200 hover:scale-[1.01] active:scale-98 shadow-sm cursor-pointer"
+            >
+              <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md text-xl">
+                  ⚡
+                </div>
+                <div class="text-left">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm sm:text-base font-black uppercase tracking-wide text-emerald-950">
+                      Opção via Pix
+                    </span>
+                    <span class="text-[10px] bg-emerald-600 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">
+                      Instantâneo
+                    </span>
+                  </div>
+                  <p class="text-xs text-emerald-800 font-medium mt-0.5">
+                    Pague no Pix com aprovação imediata
+                  </p>
+                </div>
+              </div>
+              <span class="text-emerald-700 font-bold text-lg pr-1">➔</span>
+            </a>
+
+            <!-- OPÇÃO 2: CARTÃO DE CRÉDITO -->
+            <a
+              id="modal-plan-link-card"
+              href="https://buy.stripe.com/bJe28j7946hecV3fcRfrW06"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center justify-between p-4 rounded-2xl border-2 border-slate-900 bg-slate-900 hover:bg-black text-white transition-all duration-200 hover:scale-[1.01] active:scale-98 shadow-lg shadow-slate-900/20 cursor-pointer"
+            >
+              <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 flex items-center justify-center shrink-0 shadow-md text-xl">
+                  💳
+                </div>
+                <div class="text-left">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm sm:text-base font-black uppercase tracking-wide text-white">
+                      Opção Cartão de Crédito
+                    </span>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold px-2 py-0.5 rounded-full">
+                      SSL Seguro
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-300 font-medium mt-0.5">
+                    Pague no cartão de crédito em ambiente criptografado
+                  </p>
+                </div>
+              </div>
+              <span class="text-white/90 font-bold text-lg pr-1">➔</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- AVISO PÓS-PAGAMENTO -->
+        <div class="pt-2 border-t border-slate-100 text-center space-y-2">
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            🔒 Ao finalizar o pagamento no Stripe, seu acesso à <strong>Carteirinha Virtual</strong> será liberado na <strong>Área do Sócio</strong> com seu número de WhatsApp.
+          </p>
+          <button
+            type="button"
+            id="btn-back-from-plan-modal"
+            class="text-xs font-bold text-slate-600 hover:text-slate-900 hover:underline pt-1 cursor-pointer"
+          >
+            ← Voltar aos Planos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 9. MODAL DA ÁREA RESTRITA (SENHA 22232425)                                -->
+  <!-- ========================================================================= -->
+  <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- HEADER DO MODAL -->
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center font-bold">⚙️</div>
+          <div>
+            <h3 class="text-lg font-black text-white">Painel Administrativo do Poeirão F.C.</h3>
+            <p class="text-xs text-slate-400">Gerencie a Loja Poeirão, o Escudo e os Patrocinadores</p>
+          </div>
+        </div>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-sm">✕</button>
+      </div>
+
+      <!-- TELA DE LOGIN COM SENHA -->
+      <div id="modal-login-view" class="p-8 text-center flex-1 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 bg-red-950/60 border border-red-800/40 rounded-2xl flex items-center justify-center text-2xl mb-4">
+          🔒
+        </div>
+        <h4 class="text-xl font-black text-white">Área Restrita da Diretoria</h4>
+        <p class="text-sm text-slate-400 mt-1 mb-6">Digite a senha administrativa para acessar.</p>
+        
+        <form id="form-login" class="w-full max-w-sm flex flex-col gap-3">
+          <input id="input-password" type="password" placeholder="Digite a senha..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-center tracking-widest text-lg focus:outline-none focus:border-red-500 transition">
+          <p id="password-error" class="text-xs text-red-400 font-bold hidden">Senha incorreta. Tente novamente.</p>
+          <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition">
+            Acessar Painel
+          </button>
+        </form>
+      </div>
+
+      <!-- TELA PRINCIPAL DO PAINEL -->
+      <div id="modal-admin-view" class="p-6 overflow-y-auto flex-1 space-y-6 hidden">
+        <div id="toast-success" class="p-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-bold rounded-xl text-center hidden">
+          Alteração salva e sincronizada com sucesso no Firebase!
+        </div>
+
+        <!-- ABAS DO PAINEL -->
+        <div class="flex gap-2 border-b border-slate-800 pb-2">
+          <button id="tab-btn-store" class="tab-btn bg-red-600 text-white text-xs font-extrabold px-4 py-2 rounded-xl transition">
+            👕 Loja Poeirão (Produtos)
+          </button>
+          <button id="tab-btn-escudo" class="tab-btn bg-slate-800 text-slate-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+            🛡️ Escudo & JPX
+          </button>
+          <button id="tab-btn-sponsors" class="tab-btn bg-slate-800 text-slate-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+            🤝 Patrocinadores (25)
+          </button>
+          <button id="tab-btn-members" class="tab-btn bg-slate-800 text-slate-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+            💳 Sócios Torcedores
+          </button>
+          <button id="tab-btn-netlify" class="tab-btn bg-slate-800 text-cyan-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl border border-cyan-500/30 transition">
+            🚀 Netlify & Código
+          </button>
+        </div>
+
+        <!-- ABA 1: GERENCIAR LOJA POEIRÃO -->
+        <div id="tab-content-store" class="space-y-4">
+          <!-- CONTROLE PEDIR NO ZAP EM TODOS OS PRODUTOS -->
+          <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            <div>
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs sm:text-sm font-black text-white uppercase">Botão "Pedir no Zap" em todos os produtos:</h5>
+                <span id="badge-orders-status" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full border"></span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Desative quando estiver sem estoque para os clientes não mandarem mensagens no WhatsApp.</p>
+            </div>
+            <button type="button" id="btn-toggle-orders-status" class="text-xs font-black uppercase px-4 py-2.5 rounded-xl border transition cursor-pointer shadow">
+              Alternar Status
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-slate-400">Edite as camisas e produtos da loja. As mudanças sincronizam em tempo real.</p>
+            <button id="btn-add-shirt" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+              + Adicionar Produto
+            </button>
+          </div>
+          <div id="admin-shirts-list" class="space-y-3">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </div>
+
+        <!-- ABA 2: ESCUDO DO CLUBE & JPX -->
+        <div id="tab-content-escudo" class="space-y-5 hidden">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+            <h4 class="text-xs font-black text-white uppercase tracking-wider mb-3">🛡️ Escudo Oficial do Poeirão F.C.</h4>
+            <div class="flex items-center gap-4">
+              <img id="admin-escudo-preview" src="./escudo-oficial.png" class="h-16 w-16 object-contain bg-slate-900 border border-slate-800 rounded-xl p-2" onerror="this.src='https://via.placeholder.com/80?text=PFC'">
+              <div class="flex-1">
+                <label class="cursor-pointer inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+                  <span>📁 Escolher Novo Escudo</span>
+                  <input type="file" id="file-escudo" accept="image/*" class="hidden">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+            <h4 class="text-xs font-black text-white uppercase tracking-wider mb-3">💻 Logo JPX Studio (Rodapé)</h4>
+            <div class="flex items-center gap-4">
+              <img id="admin-jpx-preview" src="./patrocinador-jpx-studio-white.png" class="h-10 w-24 object-contain bg-slate-900 border border-slate-800 rounded-xl p-1" onerror="this.src='https://via.placeholder.com/120x30?text=JPX'">
+              <div class="flex-1 flex gap-2">
+                <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-700 transition">
+                  <span>📁 Trocar Logo</span>
+                  <input type="file" id="file-jpx" accept="image/*" class="hidden">
+                </label>
+                <button id="btn-reset-jpx" class="bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl border border-slate-800 transition">
+                  Restaurar Padrão
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 3: 25 VAGAS DE PATROCINADORES -->
+        <div id="tab-content-sponsors" class="space-y-3 hidden">
+          <p class="text-xs text-slate-400">Gerencie as logos das 25 empresas parceiras do clube.</p>
+          <div id="admin-sponsors-list" class="space-y-3">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </div>
+
+        <!-- ABA 4: GERENCIAR SÓCIOS TORCEDORES -->
+        <div id="tab-content-members" class="space-y-4 hidden">
+          <!-- CONTROLE RÁPIDO DO PEDIR NO ZAP NA ÁREA DO SÓCIO -->
+          <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            <div>
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs sm:text-sm font-black text-white uppercase">Botão "Pedir no Zap" (Loja):</h5>
+                <span id="badge-orders-status-2" class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full border"></span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Ative ou desative o botão de pedir no WhatsApp em todos os produtos da loja oficial.</p>
+            </div>
+            <button type="button" id="btn-toggle-orders-status-2" class="text-xs font-black uppercase px-4 py-2.5 rounded-xl border transition cursor-pointer shadow">
+              Alternar Status
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-slate-400">Aprove mensalidades com 1 clique para ativar o cartão virtual.</p>
+            <button id="btn-admin-add-member" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition cursor-pointer">
+              + Novo Sócio
+            </button>
+          </div>
+
+          <!-- FORM NOVO / EDITAR SÓCIO ADMIN -->
+          <form id="form-admin-new-member" class="bg-slate-950 border-2 border-red-500/50 rounded-2xl p-4 space-y-3 hidden">
+            <input type="hidden" id="admin-mem-id" value="">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h5 id="admin-form-title" class="text-xs font-black text-red-500 uppercase">Adicionar Sócio Torcedor (Pós-Pagamento)</h5>
+              <button type="button" id="btn-cancel-new-member" class="text-xs text-slate-400 hover:text-white px-2 py-1">✕ Fechar</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome Completo</label>
+                <input type="text" id="admin-new-mem-name" placeholder="Ex: Gabriel Moreira" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white" required>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Celular / WhatsApp (Login)</label>
+                <input type="tel" id="admin-new-mem-phone" placeholder="(11) 98765-4321" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono" required>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Senha de Acesso</label>
+                <input type="text" id="admin-new-mem-pass" placeholder="Ex: 123" value="123" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono" required>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Plano Contratado</label>
+                <select id="admin-new-mem-plan" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                  <option value="prata">Sócio Prata+ (R$ 14,99)</option>
+                  <option value="ouro" selected>Sócio Ouro+ (R$ 24,99)</option>
+                  <option value="patrocinador">Patrocinador+ (R$ 49,99)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Situação / Status</label>
+                <select id="admin-new-mem-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+                  <option value="active" selected>🟢 Ativo (Liberado)</option>
+                  <option value="pending">🟡 Pendente</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Dia que Pagou (Data do Pagamento)</label>
+                <input type="text" id="admin-new-mem-paid" placeholder="DD/MM/AAAA" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Vencimento da Carteirinha</label>
+                <input type="text" id="admin-new-mem-valid" placeholder="DD/MM/AAAA" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono">
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <button type="button" id="btn-cancel-new-member-2" class="text-xs text-slate-400 hover:text-white px-3 py-1.5">Cancelar</button>
+              <button type="submit" id="btn-save-member-submit" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer">Salvar Sócio ➔</button>
+            </div>
+          </form>
+
+          <div class="flex items-center justify-between gap-2">
+            <input type="text" id="admin-search-members" placeholder="Buscar por nome ou celular..." class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white w-full sm:w-64">
+            <span id="admin-members-count" class="text-xs text-slate-400 font-bold shrink-0"></span>
+          </div>
+
+          <div id="admin-members-list" class="space-y-3">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </div>
+
+        <!-- ABA 5: EXPORTAÇÃO PARA NETLIFY & NOTAS -->
+        <div id="tab-content-netlify" class="space-y-4 hidden">
+          <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+              </div>
+              <div>
+                <h4 class="text-sm font-black text-white uppercase tracking-wider">Publicar Site Idêntico no Netlify</h4>
+                <p class="text-xs text-slate-400 mt-1">Este arquivo reúne 100% das páginas, fotos, carteirinha PNG com salvamento na galeria, controle de estoque do WhatsApp e banco de dados Firebase.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <button type="button" id="btn-copy-standalone-code" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-3 px-4 rounded-xl border border-slate-700 transition cursor-pointer">
+                📋 Copiar Código para Notas
+              </button>
+              <button type="button" id="btn-download-standalone-file" class="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-black uppercase py-3 px-4 rounded-xl transition cursor-pointer shadow shadow-cyan-600/30">
+                📥 Baixar index.html (Netlify)
+              </button>
+            </div>
+
+            <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2">
+              <p class="font-bold text-white flex items-center gap-1.5">⚡ Como colocar no ar no Netlify em 3 passos:</p>
+              <ol class="list-decimal list-inside space-y-1.5 text-slate-400">
+                <li>Clique no botão acima <strong class="text-cyan-400">"Baixar index.html"</strong> ou copie o código e salve em um arquivo chamado <code class="text-white bg-slate-800 px-1 py-0.5 rounded">index.html</code>.</li>
+                <li>Acesse <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" class="text-cyan-400 underline font-semibold">app.netlify.com/drop</a> no seu navegador.</li>
+                <li>Arraste o arquivo <code class="text-white bg-slate-800 px-1 py-0.5 rounded">index.html</code> (ou pasta com ele) para a tela do Netlify. Pronto! Seu site estará publicado na internet instantaneamente com link grátis e certificado HTTPS.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 10. JAVASCRIPT: NAVEGAÇÃO ENTRE ABAS + FIREBASE REAL-TIME                 -->
+  <!-- ========================================================================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      doc, 
+      onSnapshot, 
+      setDoc, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+    // 1. CONFIGURAÇÃO OFICIAL DO SEU PROJETO FIREBASE (poeirao-futsal)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWdlrVmG3y2sBJucOqMx1ZHnJNL2NPJn0",
+      authDomain: "poeirao-futsal.firebaseapp.com",
+      projectId: "poeirao-futsal",
+      storageBucket: "poeirao-futsal.firebasestorage.app",
+      messagingSenderId: "210079988053",
+      appId: "1:210079988053:web:9c23af6a6dc009ea25d7dc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // PRODUTO INICIAL DA LOJA (1 CAMISA OFICIAL POR PADRÃO)
+    const INITIAL_SHIRTS = [
+      {
+        id: 'shirt_oficial_2026',
+        name: 'Camisa Oficial 2026 - Poeirão F.C.',
+        price: 'R$ 89,90',
+        badge: 'Oficial 2026',
+        imageSrc: '',
+        description: 'Camisa oficial de jogo em tecido Dry-Fit e poliéster com acabamento premium.'
+      }
+    ];
+
+    // 25 VAGAS DE PATROCINADORES
+    const INITIAL_SPONSORS = [
+      { id: 'jpx', order: 1, name: 'JPX Studio', logoSrc: './patrocinador-jpx-studio.png' },
+      { id: 'proton', order: 2, name: 'Próton Serviços Contábeis', logoSrc: './patrocinador-proton-contabeis.png' },
+      { id: 'nato', order: 3, name: 'NATO GYM', logoSrc: './patrocinador-nato-gym.png' },
+      ...Array.from({ length: 22 }, (_, i) => ({
+        id: `slot_${i + 1}`,
+        order: i + 4,
+        name: `Patrocinador #${i + 4}`,
+        logoSrc: ''
+      }))
+    ];
+
+    let currentShirts = [...INITIAL_SHIRTS];
+    let currentSponsors = [...INITIAL_SPONSORS];
+    const WHATSAPP_NUMERO = '5577981677054';
+
+    // SÓCIOS TORCEDORES
+    const INITIAL_MEMBERS = [
+      {
+        id: 'mem_1',
+        matricula: 'POE-2026-0001',
+        name: 'João Pedro da Silva',
+        phone: '11999887766',
+        password: '123',
+        plan: 'ouro',
+        status: 'active',
+        createdAt: '01/01/2026',
+        validUntil: '31/12/2026'
+      },
+      {
+        id: 'mem_2',
+        matricula: 'POE-2026-0002',
+        name: 'Carlos Eduardo Rocha',
+        phone: '11988776655',
+        password: '123',
+        plan: 'prata',
+        status: 'active',
+        createdAt: '15/01/2026',
+        validUntil: '31/12/2026'
+      }
+    ];
+
+    let currentMembers = [...INITIAL_MEMBERS];
+    let loggedMemberId = localStorage.getItem('poeirao_standalone_logged_mem') || null;
+    let isCardFlipped = false;
+
+    // SISTEMA DE TROCA DE ABAS (HOME vs LOJA vs ÁREA DO SÓCIO)
+    const homeView = document.getElementById('home-view');
+    const storeView = document.getElementById('store-view');
+    const socioView = document.getElementById('socio-view');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function closeMobileMenu() {
+      mobileMenu.classList.add('hidden');
+    }
+
+    function showHomeView(targetSectionId = null) {
+      storeView.classList.add('hidden');
+      socioView.classList.add('hidden');
+      homeView.classList.remove('hidden');
+      closeMobileMenu();
+
+      if (targetSectionId) {
+        window.location.hash = '#' + targetSectionId;
+        setTimeout(() => {
+          const el = document.getElementById(targetSectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      } else {
+        window.location.hash = '#inicio';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function showStoreView() {
+      homeView.classList.add('hidden');
+      socioView.classList.add('hidden');
+      storeView.classList.remove('hidden');
+      closeMobileMenu();
+      window.location.hash = '#loja';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSocioView() {
+      homeView.classList.add('hidden');
+      storeView.classList.add('hidden');
+      socioView.classList.remove('hidden');
+      closeMobileMenu();
+      window.location.hash = '#socio';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderSocioPortal();
+    }
+
+    // EVENTOS DE NAVEGAÇÃO DO TOPO E DO RODAPÉ
+    document.getElementById('nav-brand-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      showHomeView('inicio');
+    });
+
+    document.getElementById('nav-btn-inicio').addEventListener('click', () => showHomeView('inicio'));
+    document.getElementById('nav-btn-planos').addEventListener('click', () => showHomeView('planos'));
+    document.getElementById('nav-btn-store').addEventListener('click', () => showStoreView());
+    document.getElementById('nav-btn-sponsors').addEventListener('click', () => showHomeView('patrocinadores'));
+    document.getElementById('nav-btn-socio').addEventListener('click', () => showSocioView());
+
+    // HERO & BANNER BOTÕES
+    document.getElementById('hero-btn-store').addEventListener('click', () => showStoreView());
+    document.getElementById('hero-btn-planos').addEventListener('click', () => showHomeView('planos'));
+    document.getElementById('banner-btn-store').addEventListener('click', () => showStoreView());
+
+    // BOTÕES DE VOLTAR NA LOJA E SÓCIO
+    document.getElementById('store-btn-back').addEventListener('click', () => showHomeView('inicio'));
+    document.getElementById('store-btn-back-bottom').addEventListener('click', () => showHomeView('inicio'));
+    document.getElementById('socio-btn-back').addEventListener('click', () => showHomeView('inicio'));
+
+    // FOOTER LINKS
+    document.getElementById('footer-link-inicio').addEventListener('click', () => showHomeView('inicio'));
+    document.getElementById('footer-link-planos').addEventListener('click', () => showHomeView('planos'));
+    document.getElementById('footer-link-store').addEventListener('click', () => showStoreView());
+    document.getElementById('footer-link-sponsors').addEventListener('click', () => showHomeView('patrocinadores'));
+
+    // MOBILE MENU TOGGLE
+    document.getElementById('btn-toggle-mobile').addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    document.getElementById('m-btn-inicio').addEventListener('click', () => showHomeView('inicio'));
+    document.getElementById('m-btn-planos').addEventListener('click', () => showHomeView('planos'));
+    document.getElementById('m-btn-store').addEventListener('click', () => showStoreView());
+    document.getElementById('m-btn-sponsors').addEventListener('click', () => showHomeView('patrocinadores'));
+    document.getElementById('m-btn-socio').addEventListener('click', () => showSocioView());
+
+    // HISTÓRICO DE HASH NA URL
+    if (window.location.hash === '#loja') {
+      showStoreView();
+    } else if (window.location.hash === '#socio') {
+      showSocioView();
+    } else if (window.location.hash) {
+      showHomeView(window.location.hash.replace('#', ''));
+    }
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#loja') {
+        showStoreView();
+      } else if (window.location.hash === '#socio') {
+        showSocioView();
+      } else {
+        const sec = window.location.hash.replace('#', '') || 'inicio';
+        showHomeView(sec);
+      }
+    });
+
+    // COMPRESSOR DE IMAGENS
+    function compressImage(file, maxDim = 500) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let w = img.width, h = img.height;
+            if (w > h) {
+              if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            } else {
+              if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+            }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/png', 0.9));
+          };
+          img.onerror = () => resolve('');
+          img.src = e.target.result;
+        };
+        reader.onerror = () => resolve('');
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-success');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // CONTROLE DE VENDAS NO WHATSAPP (LOJA)
+    let storeOrdersEnabled = localStorage.getItem('poeirao_standalone_store_orders') !== null 
+      ? localStorage.getItem('poeirao_standalone_store_orders') === 'true' 
+      : true;
+
+    // RENDERIZAR CAMISAS NA ABA DEDICADA DA LOJA
+    function renderStoreShirts(shirts) {
+      const grid = document.getElementById('store-shirts-grid');
+      grid.innerHTML = '';
+
+      // Banner de aviso caso os pedidos estejam desativados
+      const noticeId = 'store-orders-disabled-banner';
+      let notice = document.getElementById(noticeId);
+      if (!storeOrdersEnabled) {
+        if (!notice) {
+          notice = document.createElement('div');
+          notice.id = noticeId;
+          notice.className = "mb-8 bg-amber-500/10 border-2 border-amber-500/40 rounded-2xl p-4 sm:p-5 flex items-start gap-3";
+          notice.innerHTML = `
+            <span class="text-xl">⚠️</span>
+            <div>
+              <h4 class="text-sm font-black text-amber-300 uppercase tracking-wide">Pedidos pelo WhatsApp Temporariamente Pausados</h4>
+              <p class="text-xs text-amber-200/90 mt-1 leading-relaxed">No momento nossos produtos estão aguardando reposição de estoque. Os pedidos via WhatsApp foram pausados pela diretoria para não acumular mensagens. Assim que novas unidades chegarem, as vendas serão reativadas imediatamente!</p>
+            </div>
+          `;
+          grid.parentNode.insertBefore(notice, grid);
+        }
+      } else {
+        if (notice) notice.remove();
+      }
+
+      if (shirts.length === 1) {
+        grid.className = "max-w-md mx-auto grid grid-cols-1 gap-6 sm:gap-8";
+      } else if (shirts.length === 2) {
+        grid.className = "max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8";
+      } else {
+        grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8";
+      }
+
+      shirts.forEach(sh => {
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-red-500/50 transition-all shadow-xl flex flex-col justify-between group";
+
+        const buyMsg = encodeURIComponent(`Olá! Gostaria de comprar o produto oficial "${sh.name}" do Poeirão F.C. no valor de ${sh.price}.`);
+        const buyUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${buyMsg}`;
+
+        card.innerHTML = `
+          <div>
+            <div class="relative h-64 sm:h-72 bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center p-6 border-b border-slate-800">
+              ${sh.badge ? `<span class="absolute top-4 left-4 z-10 bg-red-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">${sh.badge}</span>` : ''}
+              ${sh.imageSrc 
+                ? `<img src="${sh.imageSrc}" alt="${sh.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">`
+                : `<div class="text-center p-4">
+                     <span class="text-6xl">👕</span>
+                     <p class="text-xs font-bold text-slate-400 mt-2">Camisa Oficial Poeirão F.C.</p>
+                   </div>`
+              }
+              <div class="absolute bottom-3 right-3 text-[11px] font-bold text-slate-400 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-lg">
+                Dry-Fit e Poliéster
+              </div>
+            </div>
+
+            <div class="p-6">
+              <h3 class="text-xl font-black text-white group-hover:text-red-400 transition-colors">${sh.name}</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">${sh.description || 'Camisa oficial do Poeirão F.C. em tecido Dry-Fit e poliéster de alta durabilidade.'}</p>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0">
+            <div class="pt-5 border-t border-slate-800 flex items-center justify-between gap-4">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Preço</span>
+                <span class="text-2xl font-black text-emerald-400 tracking-tight">${sh.price}</span>
+              </div>
+
+              ${storeOrdersEnabled ? `
+                <a
+                  href="${buyUrl}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm px-4 sm:px-5 py-3 rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                >
+                  <span>Pedir no Zap</span>
+                  <span>→</span>
+                </a>
+              ` : `
+                <div class="inline-flex items-center gap-1.5 bg-slate-950 text-slate-400 font-bold text-xs sm:text-sm px-4 py-3 rounded-xl border border-slate-800 opacity-80 cursor-not-allowed select-none">
+                  <span>Esgotado</span>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // RENDERIZAR PATROCINADORES NO SITE (CARDS BRANCOS E ELEGANTES COMO NO REACT)
+    function renderPublicSponsors(sponsors) {
+      const grid = document.getElementById('sponsors-grid');
+      grid.innerHTML = '';
+
+      sponsors.forEach(s => {
+        const div = document.createElement('div');
+        div.className = "group relative bg-white rounded-2xl border border-slate-200/90 hover:border-red-500/50 p-4 transition-all duration-300 hover:shadow-lg flex flex-col items-center justify-center min-h-[145px] text-center";
+
+        if (s.logoSrc) {
+          div.innerHTML = `
+            <div class="h-16 w-full flex items-center justify-center p-1">
+              <img src="${s.logoSrc}" alt="${s.name}" class="max-h-full max-w-full object-contain filter group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <p class="text-xs font-bold text-slate-900 mt-2 truncate w-full px-1">${s.name}</p>
+            <span class="text-[10px] text-red-600 font-extrabold uppercase tracking-wider mt-0.5">Patrocinador Oficial</span>
+          `;
+        } else {
+          div.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-bold mb-1.5">
+              #${s.order}
+            </div>
+            <p class="text-[11px] font-black text-slate-500 uppercase tracking-tight">Divulgue sua marca</p>
+            <span class="text-[9px] text-slate-400 mt-0.5">Espaço Disponível</span>
+          `;
+        }
+        grid.appendChild(div);
+      });
+    }
+
+    // RENDERIZAR ITENS NO PAINEL ADMIN
+    function renderAdminShirts(shirts) {
+      const list = document.getElementById('admin-shirts-list');
+      list.innerHTML = '';
+
+      shirts.forEach(sh => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3";
+
+        item.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center p-1 overflow-hidden shrink-0">
+              ${sh.imageSrc 
+                ? `<img src="${sh.imageSrc}" class="max-h-full max-w-full object-contain">`
+                : `<span class="text-2xl">👕</span>`
+              }
+            </div>
+            <div class="flex-1 flex flex-wrap gap-2">
+              <label class="cursor-pointer bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                <span>${sh.imageSrc ? 'Trocar Foto' : 'Enviar Foto'}</span>
+                <input type="file" accept="image/*" class="shirt-file-input hidden" data-id="${sh.id}">
+              </label>
+              ${sh.imageSrc ? `<button class="btn-remove-shirt-photo text-xs text-slate-400 hover:text-white px-2 py-1.5 rounded-lg border border-slate-800" data-id="${sh.id}">Remover Foto</button>` : ''}
+              <button class="btn-delete-shirt text-xs text-red-400 hover:text-red-300 ml-auto" data-id="${sh.id}">Excluir</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Nome do Produto ou Camisa:</label>
+              <input type="text" value="${sh.name}" data-id="${sh.id}" class="shirt-name-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-red-500">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Valor (R$):</label>
+              <input type="text" value="${sh.price}" data-id="${sh.id}" class="shirt-price-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-emerald-400 font-black focus:outline-none focus:border-red-500">
+            </div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+
+      // Upload de imagem da camisa
+      document.querySelectorAll('.shirt-file-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const id = e.target.getAttribute('data-id');
+          const dataUrl = await compressImage(file, 600);
+          if (!dataUrl) return;
+
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, imageSrc: dataUrl } : sh);
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), {
+            items: currentShirts,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Foto atualizada e sincronizada com todos os celulares!');
+        });
+      });
+
+      // Edição de nome
+      document.querySelectorAll('.shirt-name-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const newName = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, name: newName } : sh);
+          renderStoreShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), {
+            items: currentShirts,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Nome atualizado!');
+        });
+      });
+
+      // Edição de preço
+      document.querySelectorAll('.shirt-price-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const newPrice = e.target.value.trim();
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, price: newPrice } : sh);
+          renderStoreShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), {
+            items: currentShirts,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Preço atualizado!');
+        });
+      });
+
+      // Remover foto
+      document.querySelectorAll('.btn-remove-shirt-photo').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          currentShirts = currentShirts.map(sh => sh.id === id ? { ...sh, imageSrc: '' } : sh);
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), {
+            items: currentShirts,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Foto removida.');
+        });
+      });
+
+      // Excluir camisa
+      document.querySelectorAll('.btn-delete-shirt').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          if (currentShirts.length <= 1) {
+            alert('A loja precisa ter pelo menos 1 item cadastrado.');
+            return;
+          }
+          const id = e.target.getAttribute('data-id');
+          currentShirts = currentShirts.filter(sh => sh.id !== id);
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+
+          await setDoc(doc(db, 'settings', 'store_shirts'), {
+            items: currentShirts,
+            updatedAt: serverTimestamp()
+          });
+          showToast('Produto excluído.');
+        });
+      });
+    }
+
+    // Botão Adicionar Produto
+    document.getElementById('btn-add-shirt').addEventListener('click', async () => {
+      const newShirt = {
+        id: `shirt_${Date.now()}`,
+        name: `Novo Produto Oficial #${currentShirts.length + 1}`,
+        price: 'R$ 89,90',
+        badge: 'Lançamento',
+        imageSrc: '',
+        description: 'Produto oficial do Poeirão F.C. de alta qualidade.'
+      };
+      currentShirts.push(newShirt);
+      renderStoreShirts(currentShirts);
+      renderAdminShirts(currentShirts);
+
+      await setDoc(doc(db, 'settings', 'store_shirts'), {
+        items: currentShirts,
+        updatedAt: serverTimestamp()
+      });
+      showToast('Novo item cadastrado na loja!');
+    });
+
+    // RENDERIZAR PATROCINADORES NO ADMIN
+    function renderAdminSponsors(sponsors) {
+      const list = document.getElementById('admin-sponsors-list');
+      list.innerHTML = '';
+
+      sponsors.forEach(s => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between gap-4";
+        
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center p-1 overflow-hidden">
+              ${s.logoSrc 
+                ? `<img src="${s.logoSrc}" class="max-h-full max-w-full object-contain">`
+                : `<span class="text-xs font-bold text-slate-600">#${s.order}</span>`
+              }
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-extrabold text-red-500">Vaga #${s.order}</span>
+                <input type="text" value="${s.name}" data-id="${s.id}" class="sponsor-name-input bg-transparent text-sm font-bold text-white border-b border-transparent hover:border-slate-700 focus:border-red-500 focus:outline-none px-1 py-0.5 transition">
+              </div>
+              <p class="text-[11px] text-slate-500">${s.logoSrc ? 'Logo Ativa' : 'Vaga Disponível'}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition">
+              <span>${s.logoSrc ? 'Trocar' : '+ Adicionar'}</span>
+              <input type="file" accept="image/*" class="sponsor-file-input hidden" data-id="${s.id}">
+            </label>
+            ${s.logoSrc ? `<button class="btn-remove-logo text-xs text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-900/60 px-2.5 py-1.5 rounded-lg border border-red-900/50 transition" data-id="${s.id}">Remover</button>` : ''}
+          </div>
+        `;
+        list.appendChild(item);
+      });
+
+      document.querySelectorAll('.sponsor-file-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const id = e.target.getAttribute('data-id');
+          const dataUrl = await compressImage(file);
+          if (!dataUrl) return;
+
+          currentSponsors = currentSponsors.map(item => item.id === id ? { ...item, logoSrc: dataUrl } : item);
+          renderPublicSponsors(currentSponsors);
+          renderAdminSponsors(currentSponsors);
+
+          await setDoc(doc(db, 'settings', 'sponsors_list'), {
+            items: currentSponsors,
+            updatedAt: serverTimestamp()
+          });
+          showToast(`Logo do patrocinador atualizada!`);
+        });
+      });
+
+      document.querySelectorAll('.sponsor-name-input').forEach(input => {
+        input.addEventListener('change', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          const newName = e.target.value.trim();
+          currentSponsors = currentSponsors.map(item => item.id === id ? { ...item, name: newName } : item);
+          renderPublicSponsors(currentSponsors);
+
+          await setDoc(doc(db, 'settings', 'sponsors_list'), {
+            items: currentSponsors,
+            updatedAt: serverTimestamp()
+          });
+          showToast(`Nome do patrocinador atualizado!`);
+        });
+      });
+
+      document.querySelectorAll('.btn-remove-logo').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          currentSponsors = currentSponsors.map(item => item.id === id ? { ...item, logoSrc: '' } : item);
+          renderPublicSponsors(currentSponsors);
+          renderAdminSponsors(currentSponsors);
+
+          await setDoc(doc(db, 'settings', 'sponsors_list'), {
+            items: currentSponsors,
+            updatedAt: serverTimestamp()
+          });
+          showToast(`Logo removida.`);
+        });
+      });
+    }
+
+    // SINCRONIZAÇÃO EM TEMPO REAL VIA FIRESTORE (TODOS OS DISPOSITIVOS SIMULTANEAMENTE)
+    // 1. Catálogo de Produtos da Loja
+    onSnapshot(doc(db, 'settings', 'store_shirts'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          currentShirts = data.items;
+          renderStoreShirts(currentShirts);
+          renderAdminShirts(currentShirts);
+        }
+      } else {
+        renderStoreShirts(INITIAL_SHIRTS);
+        renderAdminShirts(INITIAL_SHIRTS);
+      }
+    });
+
+    // 2. Escudo Oficial, Logo JPX Studio e Vendas da Loja
+    onSnapshot(doc(db, 'settings', 'club'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (data.escudo) {
+          document.getElementById('nav-escudo').src = data.escudo;
+          document.getElementById('hero-escudo').src = data.escudo;
+          document.getElementById('footer-escudo').src = data.escudo;
+          document.getElementById('admin-escudo-preview').src = data.escudo;
+        }
+        if (data.jpxFooter !== undefined) {
+          const jpxSrc = data.jpxFooter || './patrocinador-jpx-studio-white.png';
+          document.getElementById('footer-jpx-logo').src = jpxSrc;
+          document.getElementById('admin-jpx-preview').src = jpxSrc;
+        }
+        if (data.storeOrdersEnabled !== undefined) {
+          storeOrdersEnabled = data.storeOrdersEnabled;
+          localStorage.setItem('poeirao_standalone_store_orders', String(storeOrdersEnabled));
+          renderStoreShirts(currentShirts);
+          updateAdminOrdersToggleBtn();
+        }
+      }
+    });
+
+    function updateAdminOrdersToggleBtn() {
+      const b1 = document.getElementById('badge-orders-status');
+      const btn1 = document.getElementById('btn-toggle-orders-status');
+      const b2 = document.getElementById('badge-orders-status-2');
+      const btn2 = document.getElementById('btn-toggle-orders-status-2');
+
+      const text = storeOrdersEnabled ? '🟢 Ativado (Recebendo Pedidos)' : '🔴 Desativado (Sem Estoque)';
+      const btnText = storeOrdersEnabled ? 'Desativar "Pedir no Zap"' : 'Ativar "Pedir no Zap"';
+      const badgeClass = storeOrdersEnabled 
+        ? 'text-[10px] font-black uppercase px-2 py-0.5 rounded-full border bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+        : 'text-[10px] font-black uppercase px-2 py-0.5 rounded-full border bg-red-500/20 text-red-400 border-red-500/30';
+      const btnClass = storeOrdersEnabled
+        ? 'text-xs font-black uppercase px-4 py-2.5 rounded-xl border transition cursor-pointer shadow bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/40'
+        : 'text-xs font-black uppercase px-4 py-2.5 rounded-xl border transition cursor-pointer shadow bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 shadow-emerald-600/30';
+
+      if (b1) { b1.textContent = text; b1.className = badgeClass; }
+      if (btn1) { btn1.textContent = btnText; btn1.className = btnClass; }
+      if (b2) { b2.textContent = text; b2.className = badgeClass; }
+      if (btn2) { btn2.textContent = btnText; btn2.className = btnClass; }
+    }
+
+    async function toggleStoreOrders() {
+      storeOrdersEnabled = !storeOrdersEnabled;
+      localStorage.setItem('poeirao_standalone_store_orders', String(storeOrdersEnabled));
+      renderStoreShirts(currentShirts);
+      updateAdminOrdersToggleBtn();
+
+      try {
+        await setDoc(doc(db, 'settings', 'club'), {
+          storeOrdersEnabled: storeOrdersEnabled,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        showToast(storeOrdersEnabled ? 'Botão "Pedir no Zap" ATIVADO em todos os produtos!' : 'Botão "Pedir no Zap" DESATIVADO (Produtos Esgotados).');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    document.getElementById('btn-toggle-orders-status').addEventListener('click', toggleStoreOrders);
+    document.getElementById('btn-toggle-orders-status-2').addEventListener('click', toggleStoreOrders);
+    updateAdminOrdersToggleBtn();
+
+    // 3. Os 25 Patrocinadores Oficiais
+    onSnapshot(doc(db, 'settings', 'sponsors_list'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          const cloudMap = new Map(data.items.map(s => [s.id, s]));
+          currentSponsors = INITIAL_SPONSORS.map(init => {
+            const found = cloudMap.get(init.id);
+            return found ? { ...init, ...found } : init;
+          });
+          renderPublicSponsors(currentSponsors);
+          renderAdminSponsors(currentSponsors);
+        }
+      } else {
+        renderPublicSponsors(INITIAL_SPONSORS);
+        renderAdminSponsors(INITIAL_SPONSORS);
+      }
+    });
+
+    // UPLOAD DE NOVO ESCUDO
+    document.getElementById('file-escudo').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const dataUrl = await compressImage(file);
+      if (!dataUrl) return;
+
+      document.getElementById('nav-escudo').src = dataUrl;
+      document.getElementById('hero-escudo').src = dataUrl;
+      document.getElementById('footer-escudo').src = dataUrl;
+      document.getElementById('admin-escudo-preview').src = dataUrl;
+
+      await setDoc(doc(db, 'settings', 'club'), {
+        escudo: dataUrl,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      showToast("Escudo oficial atualizado para todos os visitantes!");
+    });
+
+    // UPLOAD LOGO JPX STUDIO
+    document.getElementById('file-jpx').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const dataUrl = await compressImage(file);
+      if (!dataUrl) return;
+
+      document.getElementById('footer-jpx-logo').src = dataUrl;
+      document.getElementById('admin-jpx-preview').src = dataUrl;
+
+      await setDoc(doc(db, 'settings', 'club'), {
+        jpxFooter: dataUrl,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      showToast("Logo JPX Studio atualizada!");
+    });
+
+    // RESTAURAR LOGO JPX
+    document.getElementById('btn-reset-jpx').addEventListener('click', async () => {
+      const defaultLogo = './patrocinador-jpx-studio-white.png';
+      document.getElementById('footer-jpx-logo').src = defaultLogo;
+      document.getElementById('admin-jpx-preview').src = defaultLogo;
+
+      await setDoc(doc(db, 'settings', 'club'), {
+        jpxFooter: '',
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      showToast("Logo JPX Studio restaurada.");
+    });
+
+    // TABS DO PAINEL ADMIN
+    const tabBtnStore = document.getElementById('tab-btn-store');
+    const tabBtnEscudo = document.getElementById('tab-btn-escudo');
+    const tabBtnSponsors = document.getElementById('tab-btn-sponsors');
+    const tabBtnMembers = document.getElementById('tab-btn-members');
+    const tabBtnNetlify = document.getElementById('tab-btn-netlify');
+
+    const contentStore = document.getElementById('tab-content-store');
+    const contentEscudo = document.getElementById('tab-content-escudo');
+    const contentSponsors = document.getElementById('tab-content-sponsors');
+    const contentMembers = document.getElementById('tab-content-members');
+    const contentNetlify = document.getElementById('tab-content-netlify');
+
+    function switchAdminTab(activeBtn, activeContent) {
+      [tabBtnStore, tabBtnEscudo, tabBtnSponsors, tabBtnMembers, tabBtnNetlify].forEach(b => {
+        if (b) b.className = "tab-btn bg-slate-800 text-slate-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition";
+      });
+      activeBtn.className = "tab-btn bg-red-600 text-white text-xs font-extrabold px-4 py-2 rounded-xl transition";
+
+      [contentStore, contentEscudo, contentSponsors, contentMembers, contentNetlify].forEach(c => {
+        if (c) c.classList.add('hidden');
+      });
+      activeContent.classList.remove('hidden');
+    }
+
+    tabBtnStore.addEventListener('click', () => switchAdminTab(tabBtnStore, contentStore));
+    tabBtnEscudo.addEventListener('click', () => switchAdminTab(tabBtnEscudo, contentEscudo));
+    tabBtnSponsors.addEventListener('click', () => switchAdminTab(tabBtnSponsors, contentSponsors));
+    tabBtnMembers.addEventListener('click', () => switchAdminTab(tabBtnMembers, contentMembers));
+    if (tabBtnNetlify) {
+      tabBtnNetlify.addEventListener('click', () => switchAdminTab(tabBtnNetlify, contentNetlify));
+    }
+
+    // BOTÕES DE CÓDIGO E DOWNLOAD PARA O NETLIFY
+    const btnCopyCode = document.getElementById('btn-copy-standalone-code');
+    if (btnCopyCode) {
+      btnCopyCode.addEventListener('click', async () => {
+        try {
+          const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+          await navigator.clipboard.writeText(html);
+          showToast('✅ Código copiado! Pronto para colar nas Notas ou no Netlify.');
+        } catch {
+          window.open(window.location.href, '_blank');
+          showToast('Abra o código-fonte (Ctrl+U) e copie tudo.');
+        }
+      });
+    }
+
+    const btnDownloadCode = document.getElementById('btn-download-standalone-file');
+    if (btnDownloadCode) {
+      btnDownloadCode.addEventListener('click', () => {
+        try {
+          const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+          const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'index.html';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast('✅ Arquivo index.html baixado! Só arrastar no Netlify.');
+        } catch {
+          showToast('Erro ao baixar o arquivo.');
+        }
+      });
+    }
+
+    // FORMATADOR DE CELULAR
+    function formatPhoneNumber(phone) {
+      const clean = phone.replace(/\D/g, '');
+      if (clean.length === 11) return `(${clean.slice(0, 2)}) ${clean.slice(2, 7)}-${clean.slice(7)}`;
+      if (clean.length === 10) return `(${clean.slice(0, 2)}) ${clean.slice(2, 6)}-${clean.slice(6)}`;
+      return phone;
+    }
+
+    // RENDERIZAR PORTAL DO SÓCIO
+    function renderSocioPortal() {
+      const authBox = document.getElementById('socio-auth-box');
+      const dashBox = document.getElementById('socio-dashboard-box');
+      const userInfo = document.getElementById('socio-user-info');
+      const welcomeName = document.getElementById('socio-welcome-name');
+
+      const logged = currentMembers.find(m => m.id === loggedMemberId);
+
+      if (!logged) {
+        authBox.classList.remove('hidden');
+        dashBox.classList.add('hidden');
+        userInfo.classList.add('hidden');
+        userInfo.classList.remove('flex');
+      } else {
+        authBox.classList.add('hidden');
+        dashBox.classList.remove('hidden');
+        userInfo.classList.remove('hidden');
+        userInfo.classList.add('flex');
+        welcomeName.textContent = logged.name;
+
+        // Render card
+        renderVirtualCard(logged);
+
+        // Preenche info
+        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+' };
+        const discountTexts = { prata: '10% de desconto', ouro: '30% de desconto', patrocinador: 'Logo Oficial no Site & Redes' };
+        const stripeLinks = {
+          prata: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
+          ouro: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
+          patrocinador: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01'
+        };
+
+        document.getElementById('card-plan-name').textContent = planTitles[logged.plan] || 'SÓCIO TORCEDOR';
+        document.getElementById('card-mat').textContent = logged.matricula;
+        document.getElementById('card-phone').textContent = formatPhoneNumber(logged.phone);
+        document.getElementById('card-status-badge').textContent = logged.status === 'active' ? '🟢 ATIVO / REGULARIZADO' : '🟡 AGUARDANDO CONFIRMAÇÃO';
+        document.getElementById('card-status-badge').className = logged.status === 'active' ? 'font-bold text-emerald-600' : 'font-bold text-amber-600';
+        document.getElementById('card-discount-text').textContent = discountTexts[logged.plan] || 'Desconto Exclusivo';
+        document.getElementById('card-stripe-link').href = stripeLinks[logged.plan] || '#';
+      }
+    }
+
+    function renderVirtualCard(member) {
+      const wrapper = document.getElementById('virtual-card-wrapper');
+      const planGradients = {
+        prata: 'from-slate-900 via-slate-800 to-zinc-900 border-slate-400',
+        ouro: 'from-amber-900 via-amber-700 to-yellow-800 border-amber-300',
+        patrocinador: 'from-slate-950 via-cyan-950 to-blue-950 border-cyan-400'
+      };
+      const planBadges = { prata: 'PRATA+', ouro: 'OURO+ POPULAR', patrocinador: '💎 CORPORATIVO' };
+
+      const escudoSrc = document.getElementById('nav-escudo').src || './escudo-oficial.png';
+
+      wrapper.innerHTML = `
+        <div class="relative [perspective:1000px] select-none">
+          <div id="virtual-card-inner" class="relative w-full aspect-[1.586/1] rounded-3xl transition-transform duration-700 cursor-pointer [transform-style:preserve-3d] shadow-2xl ${isCardFlipped ? '[transform:rotateY(180deg)]' : ''}">
+            <!-- FRENTE -->
+            <div class="absolute inset-0 w-full h-full rounded-3xl overflow-hidden [backface-visibility:hidden] p-5 sm:p-6 flex flex-col justify-between border-2 bg-gradient-to-br ${planGradients[member.plan] || planGradients.prata} text-white">
+              <div class="relative z-10 flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md p-1 border border-white/20 flex items-center justify-center">
+                    <img src="${escudoSrc}" class="w-full h-full object-contain">
+                  </div>
+                  <div>
+                    <h4 class="text-white font-black text-sm sm:text-base uppercase flex items-center gap-1.5 leading-none">
+                      <span>POEIRÃO F.C.</span>
+                      <span class="text-[9px] bg-red-600 px-1.5 py-0.5 rounded font-black">OFICIAL</span>
+                    </h4>
+                    <p class="text-[10px] font-bold text-white/80 uppercase tracking-widest mt-1">SÓCIO TORCEDOR 2026</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-7 rounded-md bg-gradient-to-tr from-amber-300 via-yellow-200 to-amber-400 border border-amber-500/60 shadow-inner p-1 flex flex-col justify-between">
+                    <div class="w-full h-[1px] bg-amber-600/40"></div>
+                    <div class="flex justify-between items-center h-full py-0.5">
+                      <div class="w-1.5 h-full border-r border-amber-600/40"></div>
+                      <div class="w-1.5 h-full border-l border-amber-600/40"></div>
+                    </div>
+                    <div class="w-full h-[1px] bg-amber-600/40"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative z-10 my-auto pt-2">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] font-mono tracking-widest text-white/70 uppercase">MATRÍCULA OFICIAL</span>
+                  <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-white/20 border border-white/30 text-white">
+                    ★ ${planBadges[member.plan] || 'OFICIAL'}
+                  </span>
+                </div>
+                <p class="text-xl sm:text-2xl font-mono font-black text-white tracking-widest drop-shadow">${member.matricula}</p>
+              </div>
+
+              <div class="relative z-10 flex items-end justify-between border-t border-white/15 pt-3">
+                <div>
+                  <span class="text-[9px] font-bold uppercase text-white/60 block">TITULAR / SÓCIO</span>
+                  <p class="text-sm sm:text-base font-black text-white tracking-wide uppercase truncate max-w-[210px]">${member.name}</p>
+                  <p class="text-[10px] font-mono text-white/75 mt-0.5">${formatPhoneNumber(member.phone)}</p>
+                </div>
+                <div class="text-right">
+                  <span class="text-[9px] font-bold uppercase text-white/60 block">VALIDADE</span>
+                  <p class="text-xs font-mono font-bold text-white">${member.validUntil || '12/2026'}</p>
+                  <div class="mt-1">
+                    ${member.status === 'active' 
+                      ? `<span class="text-[9px] font-black uppercase text-emerald-300 bg-emerald-950/80 border border-emerald-400/50 px-2 py-0.5 rounded-full">ATIVO</span>`
+                      : `<span class="text-[9px] font-black uppercase text-amber-300 bg-amber-950/80 border border-amber-400/50 px-2 py-0.5 rounded-full">PENDENTE</span>`
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VERSO -->
+            <div class="absolute inset-0 w-full h-full rounded-3xl overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] p-5 flex flex-col justify-between border-2 bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-white border-slate-500">
+              <div class="absolute top-4 left-0 right-0 h-10 bg-black/90 border-y border-white/10"></div>
+              <div class="pt-12 relative z-10 flex items-center justify-between gap-4">
+                <div class="flex-1 bg-white/95 rounded-lg p-2.5 text-slate-900 flex items-center justify-between border border-white">
+                  <div>
+                    <span class="text-[8px] font-bold text-slate-500 uppercase block">ASSINATURA DO TITULAR</span>
+                    <p class="text-xs font-serif italic text-slate-800 tracking-wider truncate max-w-[150px]">${member.name}</p>
+                  </div>
+                  <div class="border-l border-slate-300 pl-2 text-right">
+                    <span class="text-[8px] font-mono font-bold text-slate-400 block">CVC</span>
+                    <span class="text-xs font-mono font-black text-slate-900">${member.matricula.slice(-3) || '001'}</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-1.5 rounded-xl shadow-md border border-white shrink-0 flex flex-col items-center">
+                  <div class="w-12 h-12 bg-slate-950 p-1 rounded flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" class="w-full h-full text-white fill-current"><path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v3h-3v-3zm-5 0h3v3h-3v-3zm2 5h3v3h-3v-3zm-2 0h-2v-2h2v2zm4 2h2v2h-2v-2zm-8-4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+                  </div>
+                  <span class="text-[7px] font-mono font-bold text-slate-800 mt-0.5 uppercase">VALIDAÇÃO</span>
+                </div>
+              </div>
+
+              <div class="relative z-10 text-[9px] text-slate-400 leading-tight space-y-1">
+                <p>• Cartão pessoal e intransferível. Apresente na bilheteria e na Loja Poeirão para obter descontos.</p>
+                <p>• Válido mediante comprovação da mensalidade regularizada.</p>
+              </div>
+
+              <div class="relative z-10 pt-1 border-t border-white/10 flex items-center justify-between">
+                <div class="flex gap-[2px] items-end h-4">
+                  ${[3,1,2,4,1,3,2,1,4,2,3,1,2,4,1,2,3,1,4,2].map(v => `<div style="width:${v}px" class="h-full bg-white/80"></div>`).join('')}
+                </div>
+                <span class="text-[9px] font-mono text-white/70">${member.matricula}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('virtual-card-inner').addEventListener('click', toggleCardFlip);
+    }
+
+    function toggleCardFlip() {
+      isCardFlipped = !isCardFlipped;
+      const inner = document.getElementById('virtual-card-inner');
+      if (inner) {
+        if (isCardFlipped) inner.classList.add('[transform:rotateY(180deg)]');
+        else inner.classList.remove('[transform:rotateY(180deg)]');
+      }
+    }
+
+    // BOTÕES DE GIRO E SALVAR PNG
+    document.getElementById('btn-flip-card').addEventListener('click', toggleCardFlip);
+    document.getElementById('btn-print-card').addEventListener('click', downloadStandaloneCardPNG);
+    document.getElementById('btn-socio-go-store').addEventListener('click', () => showStoreView());
+
+    // GERADOR E DOWNLOAD REAL DE CARTEIRINHA EM ALTA DEFINIÇÃO (PNG)
+    async function downloadStandaloneCardPNG() {
+      const member = currentMembers.find(m => m.id === loggedMemberId);
+      if (!member) {
+        alert('Nenhum sócio logado para emitir carteirinha.');
+        return;
+      }
+
+      const btnText = document.getElementById('btn-print-card-text');
+      if (btnText) btnText.textContent = 'Gerando PNG...';
+
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const width = 1200;
+        const height = 756;
+        canvas.width = width;
+        canvas.height = height;
+
+        function roundRect(c, x, y, w, h, r) {
+          c.beginPath();
+          c.moveTo(x + r, y);
+          c.lineTo(x + w - r, y);
+          c.quadraticCurveTo(x + w, y, x + w, y + r);
+          c.lineTo(x + w, y + h - r);
+          c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+          c.lineTo(x + r, y + h);
+          c.quadraticCurveTo(x, y + h, x, y + h - r);
+          c.lineTo(x, y + r);
+          c.quadraticCurveTo(x, y, x + r, y);
+          c.closePath();
+        }
+
+        const cardPadding = 12;
+        const cardW = width - cardPadding * 2;
+        const cardH = height - cardPadding * 2;
+        const cardRadius = 36;
+
+        // Fundo
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        if (member.plan === 'ouro') {
+          bgGrad.addColorStop(0, '#2d1802');
+          bgGrad.addColorStop(0.5, '#78350f');
+          bgGrad.addColorStop(1, '#451a03');
+        } else if (member.plan === 'patrocinador') {
+          bgGrad.addColorStop(0, '#021024');
+          bgGrad.addColorStop(0.5, '#083344');
+          bgGrad.addColorStop(1, '#0f172a');
+        } else {
+          bgGrad.addColorStop(0, '#0a0f1d');
+          bgGrad.addColorStop(0.5, '#1e293b');
+          bgGrad.addColorStop(1, '#0f172a');
+        }
+
+        ctx.save();
+        roundRect(ctx, cardPadding, cardPadding, cardW, cardH, cardRadius);
+        ctx.fillStyle = bgGrad;
+        ctx.fill();
+        ctx.clip();
+
+        // Brilho
+        const radGrad = ctx.createRadialGradient(cardW * 0.75, 100, 20, cardW * 0.75, 100, 450);
+        radGrad.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
+        radGrad.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+        ctx.fillStyle = radGrad;
+        ctx.fillRect(cardPadding, cardPadding, cardW, cardH);
+
+        // Borda
+        ctx.strokeStyle = member.plan === 'ouro' ? 'rgba(251, 191, 36, 0.75)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.75)' : 'rgba(148, 163, 184, 0.65)';
+        ctx.lineWidth = 5;
+        roundRect(ctx, cardPadding + 3, cardPadding + 3, cardW - 6, cardH - 6, cardRadius - 2);
+        ctx.stroke();
+
+        // Escudo
+        const topY = 60;
+        const leftX = 60;
+        roundRect(ctx, leftX, topY, 100, 100, 22);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const crestSrc = document.getElementById('nav-escudo').src || './escudo-oficial.png';
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        await new Promise((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = crestSrc;
+        });
+
+        if (img.complete && img.naturalWidth) {
+          ctx.drawImage(img, leftX + 10, topY + 10, 80, 80);
+        } else {
+          ctx.fillStyle = '#dc2626';
+          ctx.font = 'bold 32px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('PFC', leftX + 50, topY + 62);
+        }
+
+        // Títulos
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 36px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('POEIRÃO F.C.', leftX + 120, topY + 46);
+
+        const titleWidth = ctx.measureText('POEIRÃO F.C.').width;
+        roundRect(ctx, leftX + 130 + titleWidth, topY + 20, 90, 30, 8);
+        ctx.fillStyle = '#dc2626';
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 15px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('OFICIAL', leftX + 130 + titleWidth + 45, topY + 41);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.font = '700 17px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('SÓCIO TORCEDOR 2026', leftX + 120, topY + 80);
+
+        // Chip
+        const chipX = width - 180;
+        const chipY = topY + 12;
+        const chipW = 96;
+        const chipH = 72;
+        const chipGrad = ctx.createLinearGradient(chipX, chipY, chipX + chipW, chipY + chipH);
+        chipGrad.addColorStop(0, '#fef08a');
+        chipGrad.addColorStop(0.5, '#f59e0b');
+        chipGrad.addColorStop(1, '#b45309');
+        roundRect(ctx, chipX, chipY, chipW, chipH, 12);
+        ctx.fillStyle = chipGrad;
+        ctx.fill();
+        ctx.strokeStyle = '#d97706';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Matrícula
+        const midY = 270;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.font = '700 18px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText('MATRÍCULA OFICIAL', leftX, midY);
+
+        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+' };
+        const planNameStr = `★ ${planTitles[member.plan] || 'SÓCIO TORCEDOR'}`;
+        ctx.font = '900 19px "Plus Jakarta Sans", sans-serif';
+        const badgeW = ctx.measureText(planNameStr).width + 36;
+        const badgeX = width - leftX - badgeW;
+        const badgeY = midY - 24;
+
+        roundRect(ctx, badgeX, badgeY, badgeW, 36, 18);
+        ctx.fillStyle = member.plan === 'ouro' ? 'rgba(251, 191, 36, 0.95)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.95)' : 'rgba(226, 232, 240, 0.95)';
+        ctx.fill();
+        ctx.fillStyle = member.plan === 'ouro' ? '#451a03' : member.plan === 'patrocinador' ? '#082f49' : '#0f172a';
+        ctx.textAlign = 'center';
+        ctx.fillText(planNameStr, badgeX + badgeW / 2, badgeY + 25);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 54px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(member.matricula, leftX, midY + 68);
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(leftX, midY + 110);
+        ctx.lineTo(width - leftX, midY + 110);
+        ctx.stroke();
+
+        // Titular & Validade
+        const bottomY = midY + 160;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.font = '700 17px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('TITULAR / SÓCIO', leftX, bottomY);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 36px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText((member.name || '').toUpperCase(), leftX, bottomY + 45);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.font = '700 20px monospace';
+        ctx.fillText(formatPhoneNumber(member.phone), leftX, bottomY + 80);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.font = '700 17px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('VALIDADE', width - leftX, bottomY);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 30px monospace';
+        ctx.fillText(member.validUntil || '31/12/2026', width - leftX, bottomY + 45);
+
+        const statusText = member.status === 'active' ? 'ATIVO' : 'PENDENTE';
+        const statusW = 115;
+        const statusX = width - leftX - statusW;
+        const statusY = bottomY + 60;
+        roundRect(ctx, statusX, statusY, statusW, 30, 15);
+        ctx.fillStyle = member.status === 'active' ? '#059669' : '#d97706';
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 14px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(statusText, statusX + statusW / 2, statusY + 20);
+
+        ctx.restore();
+
+        const safeName = (member.name || 'socio').toLowerCase().replace(/[^a-z0-9]/g, '-');
+        const filename = `carteirinha-poeirao-${safeName}.png`;
+
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            try {
+              const dataUrl = canvas.toDataURL('image/png');
+              const a = document.createElement('a');
+              a.href = dataUrl;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              if (btnText) btnText.textContent = 'Salvar PNG';
+              return;
+            } catch (canvasErr) {
+              console.error('Canvas tainted fallback:', canvasErr);
+              alert('Não foi possível gerar imagem.');
+              if (btnText) btnText.textContent = 'Salvar PNG';
+              return;
+            }
+          }
+
+          // Se estiver em celular (iOS Safari / Android Chrome), permite salvar direto nas Fotos/Galeria via folha nativa
+          try {
+            const file = new File([blob], filename, { type: 'image/png' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: `Carteirinha Oficial - ${member.name}`,
+                text: `Carteirinha de Sócio Torcedor Oficial do Poeirão F.C. - Matrícula ${member.matricula}`,
+              });
+              if (btnText) btnText.textContent = 'Salvar PNG';
+              return;
+            }
+          } catch (shareErr) {
+            if (shareErr.name === 'AbortError') {
+              if (btnText) btnText.textContent = 'Salvar PNG';
+              return;
+            }
+          }
+
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = blobUrl;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+            if (btnText) btnText.textContent = 'Salvar PNG';
+          }, 1000);
+        }, 'image/png');
+      } catch (err) {
+        console.error('Erro ao gerar PNG:', err);
+        alert('Erro ao salvar carteirinha em PNG.');
+        if (btnText) btnText.textContent = 'Salvar PNG';
+      }
+    }
+
+    // SUBMIT LOGIN SÓCIO (CELULAR + SENHA)
+    formSocioLogin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const phoneInput = document.getElementById('input-socio-login-phone').value.replace(/\D/g, '');
+      const passInput = document.getElementById('input-socio-login-pass').value.trim();
+      const errBox = document.getElementById('socio-login-error');
+
+      const found = currentMembers.find(m => m.phone.replace(/\D/g, '') === phoneInput && m.password === passInput);
+
+      if (found) {
+        errBox.classList.add('hidden');
+        loggedMemberId = found.id;
+        localStorage.setItem('poeirao_standalone_logged_mem', found.id);
+        renderSocioPortal();
+      } else {
+        errBox.textContent = 'Celular ou senha incorretos. O acesso é liberado pela diretoria logo após a confirmação do pagamento no Stripe ou Pix.';
+        errBox.classList.remove('hidden');
+      }
+    });
+
+    // DADOS DOS PLANOS E LINKS OFICIAIS (PIX & CARTÃO)
+    const PLAN_MODAL_DATA = {
+      prata: {
+        name: 'SÓCIO PRATA+',
+        badge: 'PLANO DE ENTRADA',
+        price: 'R$ 14,99',
+        period: '/ mês',
+        bgClass: 'bg-[#18212f]',
+        benefits: [
+          '10% de desconto nas camisas do time',
+          'Carteirinha Virtual Oficial do Sócio',
+          'Acesso à Área do Sócio pelo celular'
+        ],
+        pixUrl: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
+        cardUrl: 'https://buy.stripe.com/6oU28j2SOeNK6wFc0FfrW04'
+      },
+      ouro: {
+        name: 'SÓCIO OURO+',
+        badge: '★ PLANO OURO - MAIS POPULAR',
+        price: 'R$ 24,99',
+        period: '/ mês',
+        bgClass: 'bg-gradient-to-b from-[#d97706] to-[#b45309]',
+        benefits: [
+          '30% de desconto em camisas do time',
+          'Carteirinha Virtual Oficial com Selo Dourado',
+          'Acesso liberado nos jogos e sorteios exclusivos',
+          'Acesso à Área do Sócio pelo celular'
+        ],
+        pixUrl: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
+        cardUrl: 'https://buy.stripe.com/4gMcMXfFA20Yg7ffcRfrW07'
+      },
+      patrocinador: {
+        name: 'PATROCINADOR+',
+        badge: '💎 PLANO CORPORATIVO & PARCERIAS',
+        price: 'R$ 49,99',
+        period: '/ mês',
+        bgClass: 'bg-[#0b192c]',
+        benefits: [
+          'Divulgação da logo no site oficial do clube',
+          'Divulgação nas redes sociais (feed, stories e artes de jogo)',
+          'Direito a uma camisa oficial do time personalizada',
+          'Carteirinha Virtual Oficial Nível Corporativo'
+        ],
+        pixUrl: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
+        cardUrl: 'https://buy.stripe.com/dRm14f0KGeNKdZ7c0FfrW08'
+      }
+    };
+
+    function openPlanPaymentModal(planKey) {
+      const data = PLAN_MODAL_DATA[planKey] || PLAN_MODAL_DATA.prata;
+      const modal = document.getElementById('modal-plan-payment');
+      const header = document.getElementById('modal-plan-header');
+      const badge = document.getElementById('modal-plan-badge');
+      const title = document.getElementById('modal-plan-title');
+      const price = document.getElementById('modal-plan-price');
+      const period = document.getElementById('modal-plan-period');
+      const benefitsList = document.getElementById('modal-plan-benefits');
+      const linkPix = document.getElementById('modal-plan-link-pix');
+      const linkCard = document.getElementById('modal-plan-link-card');
+
+      if (!modal) return;
+      header.className = 'p-6 sm:p-7 text-white relative ' + data.bgClass;
+      if (badge) badge.textContent = data.badge;
+      if (title) title.textContent = data.name;
+      if (price) price.textContent = data.price;
+      if (period) period.textContent = data.period;
+      if (linkPix) linkPix.href = data.pixUrl;
+      if (linkCard) linkCard.href = data.cardUrl;
+
+      if (benefitsList) {
+        benefitsList.innerHTML = data.benefits.map(b => {
+          const isShirt = b.includes('camisa oficial');
+          if (isShirt) {
+            return `<li class="flex items-start gap-2.5 text-cyan-950 font-bold bg-cyan-50 p-2 rounded-xl border border-cyan-200"><span class="text-cyan-600 font-bold">👕</span> <span>${b}</span></li>`;
+          }
+          return `<li class="flex items-start gap-2.5"><span class="text-emerald-500 font-bold">✓</span> <span>${b}</span></li>`;
+        }).join('');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePlanPaymentModal() {
+      const modal = document.getElementById('modal-plan-payment');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    const btnClosePlanModal = document.getElementById('btn-close-plan-modal');
+    const btnBackPlanModal = document.getElementById('btn-back-from-plan-modal');
+    const modalPlanPayment = document.getElementById('modal-plan-payment');
+
+    if (btnClosePlanModal) btnClosePlanModal.addEventListener('click', closePlanPaymentModal);
+    if (btnBackPlanModal) btnBackPlanModal.addEventListener('click', closePlanPaymentModal);
+    if (modalPlanPayment) {
+      modalPlanPayment.addEventListener('click', (e) => {
+        if (e.target === modalPlanPayment) closePlanPaymentModal();
+      });
+    }
+
+    // BOTÕES DE PLANOS: ABREM O MODAL COM INFORMAÇÕES E OPÇÕES PIX / CARTÃO
+    const btnLandingPrata = document.getElementById('btn-landing-prata');
+    const btnLandingOuro = document.getElementById('btn-landing-ouro');
+    const btnLandingPatrocinador = document.getElementById('btn-landing-patrocinador');
+
+    if (btnLandingPrata) {
+      btnLandingPrata.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('prata');
+      });
+    }
+    if (btnLandingOuro) {
+      btnLandingOuro.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('ouro');
+      });
+    }
+    if (btnLandingPatrocinador) {
+      btnLandingPatrocinador.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('patrocinador');
+      });
+    }
+
+    // Botões na aba do Sócio (também abrem o modal de opções de pagamento)
+    const btnSocioPrata = document.getElementById('btn-socio-choose-prata');
+    const btnSocioOuro = document.getElementById('btn-socio-choose-ouro');
+    const btnSocioPatrocinador = document.getElementById('btn-socio-choose-patrocinador');
+
+    if (btnSocioPrata) {
+      btnSocioPrata.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('prata');
+      });
+    }
+    if (btnSocioOuro) {
+      btnSocioOuro.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('ouro');
+      });
+    }
+    if (btnSocioPatrocinador) {
+      btnSocioPatrocinador.addEventListener('click', (e) => {
+        e.preventDefault();
+        openPlanPaymentModal('patrocinador');
+      });
+    }
+
+    // Abas de pagamento no checkout
+    const tabStripe = document.getElementById('checkout-tab-stripe');
+    const tabPix = document.getElementById('checkout-tab-pix');
+    const boxStripe = document.getElementById('checkout-box-stripe');
+    const boxPix = document.getElementById('checkout-box-pix');
+
+    tabStripe.addEventListener('click', () => {
+      tabStripe.className = 'py-2.5 px-3 rounded-xl border text-xs font-black uppercase bg-slate-900 text-white cursor-pointer';
+      tabPix.className = 'py-2.5 px-3 rounded-xl border text-xs font-black uppercase bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer';
+      boxStripe.classList.remove('hidden');
+      boxPix.classList.add('hidden');
+    });
+
+    tabPix.addEventListener('click', () => {
+      tabPix.className = 'py-2.5 px-3 rounded-xl border text-xs font-black uppercase bg-emerald-600 text-white cursor-pointer';
+      tabStripe.className = 'py-2.5 px-3 rounded-xl border text-xs font-black uppercase bg-slate-50 text-slate-700 hover:bg-slate-100 cursor-pointer';
+      boxPix.classList.remove('hidden');
+      boxStripe.classList.add('hidden');
+    });
+
+    document.getElementById('btn-copy-checkout-pix').addEventListener('click', () => {
+      navigator.clipboard.writeText('5577981677054');
+      const btn = document.getElementById('btn-copy-checkout-pix');
+      btn.textContent = 'Copiado!';
+      setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+    });
+
+    // Submit do modal de checkout com vinculação direta ao plano pago
+    document.getElementById('form-plan-checkout').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('checkout-name').value.trim();
+      const phone = document.getElementById('checkout-phone').value.replace(/\D/g, '');
+      const pass = document.getElementById('checkout-pass').value.trim();
+      const errBox = document.getElementById('checkout-error');
+
+      if (!name || phone.length < 10 || pass.length < 3) {
+        errBox.textContent = 'Preencha todos os campos corretamente (mínimo 10 dígitos no celular e 3 na senha).';
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      const existingIndex = currentMembers.findIndex(m => m.phone.replace(/\D/g, '') === phone);
+      const today = new Date().toLocaleDateString('pt-BR');
+      let memberToSave;
+
+      if (existingIndex >= 0) {
+        memberToSave = {
+          ...currentMembers[existingIndex],
+          name: name,
+          password: pass || currentMembers[existingIndex].password,
+          plan: checkoutSelectedPlan,
+          status: 'active',
+          lastPaymentDate: today
+        };
+        currentMembers[existingIndex] = memberToSave;
+      } else {
+        const newId = 'mem_' + Date.now();
+        const pad = String(currentMembers.length + 1).padStart(4, '0');
+        memberToSave = {
+          id: newId,
+          matricula: `POE-2026-${pad}`,
+          name: name,
+          phone: phone,
+          password: pass,
+          plan: checkoutSelectedPlan,
+          status: 'active',
+          createdAt: today,
+          validUntil: '31/12/2026',
+          lastPaymentDate: today
+        };
+        currentMembers = [memberToSave, ...currentMembers];
+      }
+
+      loggedMemberId = memberToSave.id;
+      localStorage.setItem('poeirao_standalone_logged_mem', memberToSave.id);
+
+      await setDoc(doc(db, 'settings', 'members_list'), {
+        items: currentMembers,
+        updatedAt: serverTimestamp()
+      });
+
+      closePlanCheckout();
+      showSocioView();
+      renderSocioPortal();
+      showToast(`🎉 Pagamento confirmado! Seu Cartão Oficial ${planConfigs[checkoutSelectedPlan].name} foi emitido com sucesso!`);
+    });
+
+    // LOGOUT DO SÓCIO
+    document.getElementById('socio-btn-logout').addEventListener('click', () => {
+      loggedMemberId = null;
+      localStorage.removeItem('poeirao_standalone_logged_mem');
+      renderSocioPortal();
+    });
+
+    // RENDERIZAR SÓCIOS NO PAINEL ADMIN
+    function renderAdminMembers() {
+      const list = document.getElementById('admin-members-list');
+      const countLabel = document.getElementById('admin-members-count');
+      const searchInput = document.getElementById('admin-search-members');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      const filtered = currentMembers.filter(m => {
+        if (!query) return true;
+        return m.name.toLowerCase().includes(query) || m.phone.includes(query) || m.matricula.toLowerCase().includes(query);
+      });
+
+      if (countLabel) {
+        const activeCount = currentMembers.filter(m => m.status === 'active').length;
+        countLabel.textContent = `Total: ${currentMembers.length} | Ativos: ${activeCount}`;
+      }
+
+      list.innerHTML = '';
+      filtered.forEach(m => {
+        const row = document.createElement('div');
+        row.className = "bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3";
+
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center font-bold text-white text-xs">
+              ${m.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-white">${m.name}</span>
+                <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">${m.matricula}</span>
+                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${m.status === 'active' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800/60' : 'bg-amber-950 text-amber-400 border border-amber-800/60'}">
+                  ${m.status === 'active' ? 'ATIVO' : 'PENDENTE'}
+                </span>
+              </div>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-400 mt-0.5">
+                <span class="font-mono">📱 ${formatPhoneNumber(m.phone)}</span>
+                <span class="font-mono bg-slate-900 px-1.5 py-0.2 rounded border border-slate-800 text-amber-400">🔑 ${m.password || '123'}</span>
+                <span class="capitalize font-bold text-slate-300">Plano: ${m.plan}</span>
+              </div>
+              <div class="text-[10px] text-slate-500 mt-0.5 flex gap-3">
+                <span>💳 Pagou: <strong class="text-slate-300">${m.lastPaymentDate || m.createdAt || 'Hoje'}</strong></span>
+                <span>⏳ Vencimento: <strong class="text-emerald-400">${m.validUntil || '31/12/2026'}</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="btn-copy-member-access text-xs font-bold text-slate-300 hover:text-white bg-slate-900 border border-slate-700 px-2.5 py-1.5 rounded-lg transition cursor-pointer" data-id="${m.id}" title="Copiar mensagem para WhatsApp">
+              📋 Copiar Acesso
+            </button>
+
+            <button class="btn-edit-member text-xs font-bold text-amber-400 hover:text-amber-300 bg-amber-950/40 border border-amber-800/60 px-2.5 py-1.5 rounded-lg transition cursor-pointer" data-id="${m.id}">
+              ✏️ Editar
+            </button>
+
+            <button class="btn-toggle-member-status text-xs font-bold px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
+              m.status === 'active' 
+                ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/50' 
+                : 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-black animate-pulse'
+            }" data-id="${m.id}">
+              ${m.status === 'active' ? 'Ativo ✓' : 'Aprovar'}
+            </button>
+
+            <button class="btn-delete-member text-xs text-red-400 hover:text-red-300 bg-red-950/30 border border-red-900/40 px-2 py-1.5 rounded-lg" data-id="${m.id}" title="Excluir sócio">
+              🗑️
+            </button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+
+      // EVENTOS DOS BOTÕES DA LISTA DE SÓCIOS ADMIN
+      document.querySelectorAll('.btn-copy-member-access').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const m = currentMembers.find(item => item.id === id);
+          if (!m) return;
+          const text = `🎉 Olá, ${m.name}! Seu cadastro como Sócio Torcedor Oficial do Poeirão F.C. está ativo!\n\n📋 Matrícula: ${m.matricula}\n⭐ Plano: ${m.plan.toUpperCase()}\n📅 Vencimento: ${m.validUntil || '31/12/2026'}\n\n📲 Para ver sua Carteirinha Virtual Oficial:\n1. Acesse o site do clube\n2. Vá em "Área do Sócio"\n3. Entre com:\n   • Celular: ${formatPhoneNumber(m.phone)}\n   • Senha: ${m.password || '123'}\n\nSaudações Tricolores! 🔴⚪⚫`;
+          navigator.clipboard.writeText(text);
+          showToast(`Dados de acesso do sócio ${m.name} copiados!`);
+        });
+      });
+
+      document.querySelectorAll('.btn-edit-member').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const m = currentMembers.find(item => item.id === id);
+          if (!m) return;
+          
+          document.getElementById('admin-mem-id').value = m.id;
+          document.getElementById('admin-new-mem-name').value = m.name;
+          document.getElementById('admin-new-mem-phone').value = formatPhoneNumber(m.phone);
+          document.getElementById('admin-new-mem-pass').value = m.password || '123';
+          document.getElementById('admin-new-mem-plan').value = m.plan;
+          document.getElementById('admin-new-mem-status').value = m.status;
+          document.getElementById('admin-new-mem-paid').value = m.lastPaymentDate || m.createdAt || '';
+          document.getElementById('admin-new-mem-valid').value = m.validUntil || '31/12/2026';
+
+          document.getElementById('admin-form-title').textContent = `Editar Dados do Sócio: ${m.name}`;
+          document.getElementById('btn-save-member-submit').textContent = 'Salvar Alterações ➔';
+          document.getElementById('form-admin-new-member').classList.remove('hidden');
+          document.getElementById('form-admin-new-member').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // EVENTOS DOS BOTÕES DA LISTA DE SÓCIOS ADMIN
+      document.querySelectorAll('.btn-toggle-member-status').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const target = currentMembers.find(m => m.id === id);
+          if (!target) return;
+          const newStatus = target.status === 'active' ? 'pending' : 'active';
+          currentMembers = currentMembers.map(m => m.id === id ? { ...m, status: newStatus } : m);
+          renderAdminMembers();
+          renderSocioPortal();
+
+          await setDoc(doc(db, 'settings', 'members_list'), {
+            items: currentMembers,
+            updatedAt: serverTimestamp()
+          });
+          showToast(newStatus === 'active' ? `Pagamento de ${target.name} Aprovado!` : `Status alterado.`);
+        });
+      });
+
+      document.querySelectorAll('.btn-delete-member').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          if (!confirm("Remover sócio torcedor?")) return;
+          currentMembers = currentMembers.filter(m => m.id !== id);
+          renderAdminMembers();
+          renderSocioPortal();
+
+          await setDoc(doc(db, 'settings', 'members_list'), {
+            items: currentMembers,
+            updatedAt: serverTimestamp()
+          });
+          showToast(`Sócio removido.`);
+        });
+      });
+    }
+
+    // FORM NOVO SÓCIO ADMIN
+    let adminTargetTab = 'store';
+
+    function resetAdminMemberForm() {
+      document.getElementById('admin-mem-id').value = '';
+      document.getElementById('admin-new-mem-name').value = '';
+      document.getElementById('admin-new-mem-phone').value = '';
+      document.getElementById('admin-new-mem-pass').value = '123';
+      document.getElementById('admin-new-mem-plan').value = 'ouro';
+      document.getElementById('admin-new-mem-status').value = 'active';
+      document.getElementById('admin-new-mem-paid').value = new Date().toLocaleDateString('pt-BR');
+      
+      const future = new Date();
+      future.setDate(future.getDate() + 30);
+      document.getElementById('admin-new-mem-valid').value = future.toLocaleDateString('pt-BR');
+
+      document.getElementById('admin-form-title').textContent = 'Adicionar Sócio Torcedor (Pós-Pagamento)';
+      document.getElementById('btn-save-member-submit').textContent = 'Salvar Sócio ➔';
+    }
+
+    document.getElementById('btn-admin-add-member').addEventListener('click', () => {
+      resetAdminMemberForm();
+      document.getElementById('form-admin-new-member').classList.toggle('hidden');
+    });
+
+    const closeMemberForm = () => {
+      document.getElementById('form-admin-new-member').classList.add('hidden');
+    };
+    document.getElementById('btn-cancel-new-member').addEventListener('click', closeMemberForm);
+    const cancelBtn2 = document.getElementById('btn-cancel-new-member-2');
+    if (cancelBtn2) cancelBtn2.addEventListener('click', closeMemberForm);
+
+    document.getElementById('form-admin-new-member').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('admin-mem-id').value;
+      const name = document.getElementById('admin-new-mem-name').value.trim();
+      const phone = document.getElementById('admin-new-mem-phone').value.replace(/\D/g, '');
+      const pass = document.getElementById('admin-new-mem-pass').value.trim() || '123';
+      const plan = document.getElementById('admin-new-mem-plan').value;
+      const status = document.getElementById('admin-new-mem-status').value;
+      const paid = document.getElementById('admin-new-mem-paid').value.trim() || new Date().toLocaleDateString('pt-BR');
+      const valid = document.getElementById('admin-new-mem-valid').value.trim() || '31/12/2026';
+
+      if (!name || phone.length < 10) {
+        alert('Preencha o nome e um celular válido com DDD.');
+        return;
+      }
+
+      if (editId) {
+        // EDIÇÃO DE SÓCIO EXISTENTE
+        currentMembers = currentMembers.map(m => {
+          if (m.id === editId) {
+            return {
+              ...m,
+              name,
+              phone,
+              password: pass,
+              plan,
+              status,
+              lastPaymentDate: paid,
+              validUntil: valid,
+            };
+          }
+          return m;
+        });
+        showToast(`Sócio "${name}" atualizado com sucesso!`);
+      } else {
+        // CADASTRO DE NOVO SÓCIO
+        const newId = 'mem_' + Date.now();
+        const pad = String(currentMembers.length + 1).padStart(4, '0');
+        const matricula = `POE-2026-${pad}`;
+
+        const newMem = {
+          id: newId,
+          matricula,
+          name,
+          phone,
+          password: pass,
+          plan,
+          status,
+          createdAt: paid,
+          lastPaymentDate: paid,
+          validUntil: valid,
+        };
+
+        currentMembers = [newMem, ...currentMembers];
+        showToast(`Novo sócio "${newMem.name}" cadastrado com sucesso!`);
+      }
+
+      document.getElementById('form-admin-new-member').classList.add('hidden');
+      resetAdminMemberForm();
+      renderAdminMembers();
+      renderSocioPortal();
+
+      await setDoc(doc(db, 'settings', 'members_list'), {
+        items: currentMembers,
+        updatedAt: serverTimestamp()
+      });
+    });
+
+    document.getElementById('admin-search-members').addEventListener('input', () => {
+      renderAdminMembers();
+    });
+
+    // 4. Sincronização em Tempo Real dos Sócios no Firestore
+    onSnapshot(doc(db, 'settings', 'members_list'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          currentMembers = data.items;
+          renderSocioPortal();
+          renderAdminMembers();
+        }
+      } else {
+        renderSocioPortal();
+        renderAdminMembers();
+      }
+    });
+
+    // MODAL DE LOGIN / ADMIN (SENHA 22232425)
+    const modal = document.getElementById('admin-modal');
+    const loginView = document.getElementById('modal-login-view');
+    const adminView = document.getElementById('modal-admin-view');
+    const inputPass = document.getElementById('input-password');
+    const passError = document.getElementById('password-error');
+    let isAuthed = false;
+
+    function openAdminModal(preferredTab = 'store') {
+      adminTargetTab = preferredTab;
+      modal.classList.remove('hidden');
+      if (!isAuthed) {
+        loginView.classList.remove('hidden');
+        adminView.classList.add('hidden');
+        inputPass.value = '';
+        passError.classList.add('hidden');
+        inputPass.focus();
+      } else {
+        loginView.classList.add('hidden');
+        adminView.classList.remove('hidden');
+        if (preferredTab === 'members') {
+          switchAdminTab(tabBtnMembers, contentMembers);
+        }
+      }
+    }
+
+    document.getElementById('nav-btn-admin').addEventListener('click', () => openAdminModal('store'));
+    document.getElementById('m-btn-admin').addEventListener('click', () => {
+      closeMobileMenu();
+      openAdminModal('store');
+    });
+
+    const btnSocioAdminAccess = document.getElementById('btn-socio-admin-access');
+    if (btnSocioAdminAccess) {
+      btnSocioAdminAccess.addEventListener('click', () => {
+        openAdminModal('members');
+      });
+    }
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    document.getElementById('form-login').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (inputPass.value.trim() === '22232425') {
+        isAuthed = true;
+        loginView.classList.add('hidden');
+        adminView.classList.remove('hidden');
+        passError.classList.add('hidden');
+        renderAdminShirts(currentShirts);
+        renderAdminSponsors(currentSponsors);
+        renderAdminMembers();
+        if (adminTargetTab === 'members') {
+          switchAdminTab(tabBtnMembers, contentMembers);
+        }
+      } else {
+        passError.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

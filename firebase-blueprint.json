@@ -1,0 +1,148 @@
+{
+  "entities": {
+    "ClubSettings": {
+      "title": "ClubSettings",
+      "description": "Club visual assets and configuration shared across all devices",
+      "type": "object",
+      "properties": {
+        "escudo": {
+          "type": "string",
+          "description": "Club crest base64 dataUrl or path"
+        },
+        "jpxFooter": {
+          "type": "string",
+          "description": "JPX Studio footer logo base64 dataUrl or path"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["updatedAt"]
+    },
+    "Sponsor": {
+      "title": "Sponsor",
+      "description": "Official sponsor slot",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Sponsor identifier"
+        },
+        "order": {
+          "type": "number",
+          "description": "Slot order from 1 to 25"
+        },
+        "name": {
+          "type": "string",
+          "description": "Company name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category title"
+        },
+        "logoSrc": {
+          "type": "string",
+          "description": "Sponsor logo dataUrl or empty"
+        },
+        "description": {
+          "type": "string",
+          "description": "Sponsor tagline or description"
+        }
+      },
+      "required": ["id", "order", "name"]
+    },
+    "Shirt": {
+      "title": "Shirt",
+      "description": "Club store product item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Product identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Product title"
+        },
+        "price": {
+          "type": "string",
+          "description": "Price string"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Promotional badge"
+        }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "Member": {
+      "title": "Member",
+      "description": "Club registered member with card info",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique member identifier"
+        },
+        "matricula": {
+          "type": "string",
+          "description": "Official membership number"
+        },
+        "name": {
+          "type": "string",
+          "description": "Member full name"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number"
+        },
+        "password": {
+          "type": "string",
+          "description": "Access password"
+        },
+        "plan": {
+          "type": "string",
+          "enum": ["prata", "ouro", "patrocinador"],
+          "description": "Membership tier"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "pending"],
+          "description": "Payment status"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation date"
+        },
+        "validUntil": {
+          "type": "string",
+          "description": "Expiration date"
+        }
+      },
+      "required": ["id", "matricula", "name", "phone", "plan", "status"]
+    }
+  },
+  "firestore": {
+    "/settings/club": {
+      "schema": "ClubSettings",
+      "description": "Global club visual settings and crest"
+    },
+    "/settings/sponsors_list": {
+      "schema": "Sponsor",
+      "description": "All 25 sponsor slots in order"
+    },
+    "/settings/store_shirts": {
+      "schema": "Shirt",
+      "description": "Club official store products"
+    },
+    "/settings/members_list": {
+      "schema": "Member",
+      "description": "Registered club members list"
+    },
+    "/sponsors/{sponsorId}": {
+      "schema": "Sponsor",
+      "description": "Direct sponsor slots"
+    }
+  }
+}

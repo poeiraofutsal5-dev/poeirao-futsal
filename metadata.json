@@ -1,0 +1,6 @@
+{
+  "name": "Sócio Torcedor Poeirão",
+  "description": "Landing page oficial do programa Sócio Torcedor Poeirão Futebol Clube. Escolha seu plano, apoie o time e garanta vantagens exclusivas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

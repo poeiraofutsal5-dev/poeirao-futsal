@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <!-- Estrelas Douradas Padrão com 5 pontas -->
+    <!-- Clip da área interna do escudo (dentro da borda dupla) -->
+    <clipPath id="inner-shield-clip">
+      <path d="M 88,156 
+               Q 200,188 312,156 
+               L 312,238 
+               C 312,316 276,382 200,448 
+               C 124,382 88,316 88,238 
+               Z" />
+    </clipPath>
+  </defs>
+
+  <!-- ===================================================================== -->
+  <!-- 1. AS 5 ESTRELAS DOURADAS (ARCO SUPERIOR)                            -->
+  <!-- ===================================================================== -->
+  <g id="estrelas" fill="#FFC400" stroke="#000000" stroke-width="1.8" stroke-linejoin="round">
+    <!-- Estrela Central (Maior, no topo do arco) -->
+    <!-- Centro: 200, 68 | R=26, r=10 -->
+    <polygon points="
+      200,42 
+      206.2,58.2 224.7,58.2 
+      209.8,69.1 215.5,85.3 
+      200,74.5 
+      184.5,85.3 190.2,69.1 
+      175.3,58.2 193.8,58.2" />
+
+    <!-- Estrela Intermediária Esquerda -->
+    <!-- Centro: 148, 86 | R=22, r=8.5 | Tilted ~ -10° -->
+    <g transform="translate(148, 86) rotate(-10)">
+      <polygon points="
+        0,-22 
+        5.2,-8.3 19,-8.3 
+        7.8,0.8 12.1,14.5 
+        0,5.7 
+        -12.1,14.5 -7.8,0.8 
+        -19,-8.3 -5.2,-8.3" />
+    </g>
+
+    <!-- Estrela Intermediária Direita -->
+    <!-- Centro: 252, 86 | R=22, r=8.5 | Tilted ~ +10° -->
+    <g transform="translate(252, 86) rotate(10)">
+      <polygon points="
+        0,-22 
+        5.2,-8.3 19,-8.3 
+        7.8,0.8 12.1,14.5 
+        0,5.7 
+        -12.1,14.5 -7.8,0.8 
+        -19,-8.3 -5.2,-8.3" />
+    </g>
+
+    <!-- Estrela Externa Esquerda -->
+    <!-- Centro: 104, 122 | R=20, r=7.7 | Tilted ~ -22° -->
+    <g transform="translate(104, 122) rotate(-22)">
+      <polygon points="
+        0,-20 
+        4.7,-7.5 17.3,-7.5 
+        7.1,0.7 11,13.2 
+        0,5.2 
+        -11,13.2 -7.1,0.7 
+        -17.3,-7.5 -4.7,-7.5" />
+    </g>
+
+    <!-- Estrela Externa Direita -->
+    <!-- Centro: 296, 122 | R=20, r=7.7 | Tilted ~ +22° -->
+    <g transform="translate(296, 122) rotate(22)">
+      <polygon points="
+        0,-20 
+        4.7,-7.5 17.3,-7.5 
+        7.1,0.7 11,13.2 
+        0,5.2 
+        -11,13.2 -7.1,0.7 
+        -17.3,-7.5 -4.7,-7.5" />
+    </g>
+  </g>
+
+  <!-- ===================================================================== -->
+  <!-- 2. BORDA EXTERNA DO ESCUDO (LINHA PRETA MAIS EXTERNA)                 -->
+  <!-- Topo côncavo (desce ao centro), cantos altos e ponta inferior nítida   -->
+  <!-- ===================================================================== -->
+  <path d="M 80,148 
+           Q 200,182 320,148 
+           L 320,240 
+           C 320,322 282,392 200,460 
+           C 118,392 80,322 80,240 
+           Z" 
+        fill="#FFFFFF" 
+        stroke="#000000" 
+        stroke-width="5" 
+        stroke-linejoin="miter" />
+
+  <!-- ===================================================================== -->
+  <!-- 3. BORDA INTERNA (ESPAÇO BRANCO + SEGUNDA LINHA PRETA)               -->
+  <!-- ===================================================================== -->
+  <path d="M 88,156 
+           Q 200,188 312,156 
+           L 312,238 
+           C 312,316 276,382 200,448 
+           C 124,382 88,316 88,238 
+           Z" 
+        fill="#FFFFFF" 
+        stroke="#000000" 
+        stroke-width="4" 
+        stroke-linejoin="miter" />
+
+  <!-- ===================================================================== -->
+  <!-- 4. CONTEÚDO DENTRO DO ESCUDO (P.F.C. + LISTRAS + POEIRÃO)             -->
+  <!-- ===================================================================== -->
+  <g clip-path="url(#inner-shield-clip)">
+    
+    <!-- ÁREA SUPERIOR (BRANCA COM LETRAS P.F.C.) -->
+    <rect x="80" y="145" width="240" height="95" fill="#FFFFFF" />
+
+    <!-- TEXTO P.F.C. COM PONTOS (PESADO, SANS-SERIF BLACK) -->
+    <text x="200" y="222" 
+          font-family="Arial Black, Impact, Montserrat, sans-serif" 
+          font-weight="900" 
+          font-size="34" 
+          letter-spacing="3" 
+          text-anchor="middle" 
+          fill="#000000">P.F.C.</text>
+
+    <!-- LINHA DIVISÓRIA HORIZONTAL PRETA -->
+    <line x1="85" y1="238" x2="315" y2="238" stroke="#000000" stroke-width="4.5" />
+
+    <!-- PARTE INFERIOR: AS 3 FAIXAS -->
+    
+    <!-- Faixa 1 (Esquerda): VERMELHO -->
+    <rect x="80" y="238" width="87" height="175" fill="#E51919" />
+
+    <!-- Faixa 3 (Direita): PRETO -->
+    <rect x="233" y="238" width="87" height="175" fill="#000000" />
+
+    <!-- Faixa 2 (Centro): BRANCO COM CONTORNO PRETO RETANGULAR -->
+    <rect x="167" y="238" width="66" height="175" fill="#FFFFFF" stroke="#000000" stroke-width="4" />
+
+    <!-- LINHA HORIZONTAL INFERIOR FECHANDO AS FAIXAS (O fundo do bico fica branco) -->
+    <line x1="80" y1="413" x2="320" y2="413" stroke="#000000" stroke-width="4" />
+
+    <!-- TEXTO VERTICAL POEIRÃO NA FAIXA CENTRAL -->
+    <g fill="#000000" 
+       font-family="Arial Black, Impact, Montserrat, sans-serif" 
+       font-weight="900" 
+       font-size="16.5" 
+       text-anchor="middle">
+      <text x="200" y="260">P</text>
+      <text x="200" y="284">O</text>
+      <text x="200" y="308">E</text>
+      <text x="200" y="332">I</text>
+      <text x="200" y="356">R</text>
+      <text x="200" y="380">Ã</text>
+      <text x="200" y="404">O</text>
+    </g>
+
+  </g>
+</svg>
