@@ -24,7 +24,7 @@ import { Crest } from './Crest';
 
 interface StorePageProps {
   onBack: () => void;
-  onOpenAdmin: () => void;
+  onOpenAdmin: (tab?: 'store' | 'escudo_jpx' | 'sponsors' | 'members') => void;
   shirts: ShirtItem[];
   teamPhotos?: TeamPhotoItem[];
   storeOrdersEnabled?: boolean;
@@ -38,6 +38,9 @@ export const StorePage: React.FC<StorePageProps> = ({
   storeOrdersEnabled = true,
 }) => {
   const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({});
+  const [customNames, setCustomNames] = useState<Record<string, string>>({});
+  const [customNumbers, setCustomNumbers] = useState<Record<string, string>>({});
+  const [isCustomizing, setIsCustomizing] = useState<Record<string, boolean>>({});
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [zoomedPhoto, setZoomedPhoto] = useState<TeamPhotoItem | null>(null);
@@ -46,9 +49,30 @@ export const StorePage: React.FC<StorePageProps> = ({
     setSelectedSizes((prev) => ({ ...prev, [shirtId]: size }));
   };
 
+  const handleToggleCustomize = (shirtId: string) => {
+    setIsCustomizing((prev) => ({ ...prev, [shirtId]: !prev[shirtId] }));
+  };
+
+  const handleUpdateCustomName = (shirtId: string, name: string) => {
+    setCustomNames((prev) => ({ ...prev, [shirtId]: name.toUpperCase().slice(0, 16) }));
+  };
+
+  const handleUpdateCustomNumber = (shirtId: string, num: string) => {
+    const cleanNum = num.replace(/\D/g, '').slice(0, 3);
+    setCustomNumbers((prev) => ({ ...prev, [shirtId]: cleanNum }));
+  };
+
   const getWhatsAppBuyLink = (shirt: ShirtItem) => {
     const size = selectedSizes[shirt.id] || (shirt.sizes && shirt.sizes[0]) || 'M';
-    const msg = `Olá! Gostaria de comprar o produto oficial "${shirt.name}" do Poeirão F.C. no valor de ${shirt.price} (Tamanho: ${size}). Como faço para combinar entrega e pagamento?`;
+    const name = (customNames[shirt.id] || '').trim();
+    const num = (customNumbers[shirt.id] || '').trim();
+    const hasCustom = (isCustomizing[shirt.id] || name || num) && (name || num);
+
+    let msg = `Olá! Gostaria de comprar o produto oficial "${shirt.name}" do Poeirão F.C. no valor de ${shirt.price} (Tamanho: ${size}`;
+    if (hasCustom) {
+      msg += `, Personalização: [Nome nas costas: ${name || 'Nenhum'}, Número: ${num || 'Nenhum'}]`;
+    }
+    msg += `). Como faço para combinar entrega e pagamento?`;
     return `https://wa.me/${SITE_CONFIG.whatsapp.numero}?text=${encodeURIComponent(msg)}`;
   };
 
@@ -126,9 +150,10 @@ export const StorePage: React.FC<StorePageProps> = ({
 
           <button
             type="button"
-            onClick={onOpenAdmin}
-            className="text-[11px] font-bold text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-850 border border-slate-800 px-3 py-1.5 rounded-lg transition hidden sm:inline-flex items-center gap-1.5 cursor-pointer"
+            onClick={() => onOpenAdmin('store')}
+            className="text-xs font-bold text-slate-300 hover:text-white bg-slate-900/90 hover:bg-red-950/60 border border-slate-800 hover:border-red-600/50 px-3.5 py-2 rounded-xl transition inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-red-500" />
             <span>Gerenciar Loja</span>
           </button>
         </div>
@@ -193,10 +218,11 @@ export const StorePage: React.FC<StorePageProps> = ({
             </span>
             <button
               type="button"
-              onClick={onOpenAdmin}
-              className="text-[11px] font-bold text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/80 border border-red-900/50 px-3 py-1 rounded-lg transition cursor-pointer"
+              onClick={() => onOpenAdmin('store')}
+              className="text-xs font-bold text-red-300 hover:text-white bg-red-950/70 hover:bg-red-900/80 border border-red-700/60 px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow"
             >
-              Trocar Fotos na Área Restrita
+              <Camera className="w-3.5 h-3.5 text-red-400" />
+              <span>Trocar Fotos (Área Restrita)</span>
             </button>
           </div>
         </div>
@@ -318,25 +344,36 @@ export const StorePage: React.FC<StorePageProps> = ({
               </h3>
             </div>
 
-            {/* Campo de Busca Rápida */}
-            <div className="relative w-full md:w-72">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar por nome, modelo..."
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-red-500 transition"
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setSearchTerm('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
-                >
-                  ✕
-                </button>
-              )}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+              {/* Campo de Busca Rápida */}
+              <div className="relative w-full sm:w-64">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Buscar por nome, modelo..."
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-red-500 transition"
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Botão de Adicionar Produto (Abre Área Restrita da Loja) */}
+              <button
+                type="button"
+                onClick={() => onOpenAdmin('store')}
+                className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition cursor-pointer shrink-0"
+              >
+                <span>+ Adicionar Produto</span>
+              </button>
             </div>
           </div>
 
@@ -500,6 +537,70 @@ export const StorePage: React.FC<StorePageProps> = ({
                           ))}
                         </div>
                       </div>
+
+                      {/* PERSONALIZAÇÃO: NOME E NÚMERO */}
+                      {shirt.allowCustomization !== false && (
+                        <div className="mt-4 pt-3 border-t border-slate-800/60">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                              <span>Personalização Oficial</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleCustomize(shirt.id)}
+                              className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg transition-all cursor-pointer border ${
+                                isCustomizing[shirt.id]
+                                  ? 'bg-red-600/20 text-red-300 border-red-500/40'
+                                  : 'bg-slate-900 text-slate-400 hover:text-white border-slate-800'
+                              }`}
+                            >
+                              {isCustomizing[shirt.id] ? '✓ Personalizando' : '+ Adicionar Nome e Número'}
+                            </button>
+                          </div>
+
+                          {isCustomizing[shirt.id] && (
+                            <div className="bg-slate-950/80 border border-red-950/60 rounded-2xl p-3 space-y-2.5 animate-fade-in">
+                              <div className="grid grid-cols-3 gap-2">
+                                <div className="col-span-2">
+                                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Nome na Camisa (Costas)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={customNames[shirt.id] || ''}
+                                    onChange={(e) => handleUpdateCustomName(shirt.id, e.target.value)}
+                                    placeholder="Ex: SILVA"
+                                    maxLength={15}
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs font-bold text-white uppercase focus:outline-none focus:border-red-500"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                    Número (Nº)
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={customNumbers[shirt.id] || ''}
+                                    onChange={(e) => handleUpdateCustomNumber(shirt.id, e.target.value)}
+                                    placeholder="10"
+                                    maxLength={3}
+                                    className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs font-black text-amber-400 text-center focus:outline-none focus:border-red-500"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* PRÉVIA VISUAL DO MANTO PERSONALIZADO */}
+                              <div className="flex items-center justify-between text-[10px] text-slate-300 bg-black/40 border border-slate-800/80 rounded-xl px-2.5 py-1">
+                                <span className="text-slate-400 font-medium">Prévia:</span>
+                                <span className="font-mono font-black text-white tracking-widest uppercase">
+                                  {customNames[shirt.id] || 'SEU NOME'} • #{customNumbers[shirt.id] || '10'}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {/* PREÇOS E BOTÃO INDIVIDUAL DE COMPRA */}
@@ -538,7 +639,12 @@ export const StorePage: React.FC<StorePageProps> = ({
                           className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
                         >
                           <MessageCircle className="w-4 h-4 fill-white" />
-                          <span>Pedir no Zap ({currentSize})</span>
+                          <span>
+                            Pedir no Zap ({currentSize}
+                            {(customNames[shirt.id] || customNumbers[shirt.id])
+                              ? ` • ${customNames[shirt.id] ? customNames[shirt.id] + ' ' : ''}#${customNumbers[shirt.id] || ''}`
+                              : ''})
+                          </span>
                         </a>
                       ) : (
                         <div className="space-y-1.5">
