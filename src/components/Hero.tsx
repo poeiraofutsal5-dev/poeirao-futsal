@@ -5,9 +5,10 @@ import { ArrowDown, ShieldCheck, Shirt, Users, Sparkles } from 'lucide-react';
 
 interface HeroProps {
   editMode?: boolean;
+  onNavigateToHistory?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = () => {
+export const Hero: React.FC<HeroProps> = ({ onNavigateToHistory }) => {
   // Lista de imagens candidatas da torcida
   const candidateImages = [
     SITE_CONFIG.torcidaBannerUrl,
@@ -104,8 +105,8 @@ export const Hero: React.FC<HeroProps> = () => {
           Apoie diretamente o crescimento do nosso clube, garanta descontos exclusivos em camisas oficiais e faça parte dessa história que dinheiro nenhum compra.
         </p>
 
-        {/* BOTÃO PRINCIPAL COM ROLAGEM SUAVE ATÉ A SEÇÃO DE PLANOS */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        {/* BOTÕES PRINCIPAIS: SEJA SÓCIO, PARCEIROS E HISTÓRIA DO POEIRÃO */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
           <a
             href="#planos"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-extrabold text-base sm:text-lg uppercase tracking-wider px-8 py-4 rounded-xl shadow-lg shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-0.5 transition-all duration-200"
@@ -116,10 +117,25 @@ export const Hero: React.FC<HeroProps> = () => {
 
           <a
             href="#patrocinadores"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 active:bg-white/30 text-white border border-white/20 font-bold text-base px-6 py-4 rounded-xl backdrop-blur-sm transition-all duration-200"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 active:bg-white/30 text-white border border-white/20 font-bold text-base px-6 py-4 rounded-xl backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5"
           >
             <span>Conhecer Nossos Parceiros</span>
           </a>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (onNavigateToHistory) {
+                onNavigateToHistory();
+              } else {
+                window.location.hash = '#historia';
+              }
+            }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-slate-900/90 hover:bg-slate-800 active:bg-slate-950 text-white border border-slate-700/80 hover:border-red-500/60 font-bold text-base px-6 py-4 rounded-xl shadow-lg backdrop-blur-sm transition-all duration-200 cursor-pointer group hover:-translate-y-0.5"
+          >
+            <Sparkles className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform" />
+            <span>História do Poeirão</span>
+          </button>
         </div>
 
         {/* BARRA DE DESTAQUES RÁPIDOS (ESTATÍSTICAS / VALORES) */}

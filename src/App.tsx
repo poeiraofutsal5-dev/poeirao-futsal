@@ -312,7 +312,7 @@ export default function App() {
         /* ========================================================================= */
         <main className="flex-1">
           {/* 2. SEÇÃO HERO (BANNER IMPACTANTE DA TORCIDA COM CTA E ESCUDO) */}
-          <Hero />
+          <Hero onNavigateToHistory={handleNavigateToHistory} />
 
           {/* 3. SEÇÃO DE PLANOS (PAGAMENTO SEGURO DIRETO NO STRIPE) */}
           <Plans />
