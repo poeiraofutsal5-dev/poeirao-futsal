@@ -81,6 +81,10 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
         bgGrad.addColorStop(0, '#021024');
         bgGrad.addColorStop(0.5, '#083344');
         bgGrad.addColorStop(1, '#0f172a');
+      } else if (member.plan === 'patrocinador_gold') {
+        bgGrad.addColorStop(0, '#291305');
+        bgGrad.addColorStop(0.5, '#78350f');
+        bgGrad.addColorStop(1, '#0f172a');
       } else {
         bgGrad.addColorStop(0, '#0a0f1d');
         bgGrad.addColorStop(0.5, '#1e293b');
@@ -134,6 +138,8 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
           ? 'rgba(251, 191, 36, 0.75)'
           : member.plan === 'patrocinador'
           ? 'rgba(56, 189, 248, 0.75)'
+          : member.plan === 'patrocinador_gold'
+          ? 'rgba(245, 158, 11, 0.9)'
           : 'rgba(148, 163, 184, 0.65)';
       ctx.lineWidth = 5;
       roundRect(ctx, cardPadding + 3, cardPadding + 3, cardW - 6, cardH - 6, cardRadius - 2);
@@ -221,6 +227,10 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
         ctx.fillStyle = 'rgba(56, 189, 248, 0.95)';
         ctx.fill();
         ctx.fillStyle = '#082f49';
+      } else if (member.plan === 'patrocinador_gold') {
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.95)';
+        ctx.fill();
+        ctx.fillStyle = '#451a03';
       } else {
         ctx.fillStyle = 'rgba(226, 232, 240, 0.95)';
         ctx.fill();
@@ -392,6 +402,8 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
                 ? 'bg-gradient-to-br from-amber-900 via-amber-700 to-yellow-800 border-amber-300/80 shadow-amber-500/20'
                 : member.plan === 'patrocinador'
                 ? 'bg-gradient-to-br from-slate-950 via-cyan-950 to-blue-950 border-cyan-400/80 shadow-cyan-500/20'
+                : member.plan === 'patrocinador_gold'
+                ? 'bg-gradient-to-br from-slate-950 via-[#3a1d04] to-amber-950 border-amber-400/90 shadow-amber-500/30'
                 : 'bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 border-slate-400/80 shadow-slate-900/30'
             }`}
           >
@@ -472,6 +484,8 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
                       ? 'bg-amber-300 text-amber-950 border-amber-200'
                       : member.plan === 'patrocinador'
                       ? 'bg-cyan-300 text-cyan-950 border-cyan-100'
+                      : member.plan === 'patrocinador_gold'
+                      ? 'bg-gradient-to-r from-amber-400 to-yellow-300 text-amber-950 border-amber-200 shadow-amber-400/30'
                       : 'bg-slate-200 text-slate-900 border-white'
                   }`}
                 >
@@ -530,6 +544,8 @@ export const MemberCardVirtual: React.FC<MemberCardVirtualProps> = ({
                 ? 'border-amber-400/70'
                 : member.plan === 'patrocinador'
                 ? 'border-cyan-400/70'
+                : member.plan === 'patrocinador_gold'
+                ? 'border-amber-400/90 shadow-amber-500/20'
                 : 'border-slate-500/70'
             }`}
           >

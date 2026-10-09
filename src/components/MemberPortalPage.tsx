@@ -125,6 +125,7 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
   const getStripeLink = (plan: MemberPlan) => {
     if (plan === 'ouro') return SITE_CONFIG.stripeLinks.ouro;
     if (plan === 'patrocinador') return SITE_CONFIG.stripeLinks.diamante;
+    if (plan === 'patrocinador_gold') return SITE_CONFIG.stripeLinks.pix.patrocinador_gold;
     return SITE_CONFIG.stripeLinks.prata;
   };
 
@@ -341,22 +342,48 @@ export const MemberPortalPage: React.FC<MemberPortalPageProps> = ({
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-2">
+                  <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-2.5">
+                    {/* BOTÃO 1: RENOVAR VIA PIX */}
                     <a
                       href={
                         currentMember.plan === 'ouro'
-                          ? SITE_CONFIG.stripeLinks.ouro
+                          ? SITE_CONFIG.stripeLinks.pix.ouro
                           : currentMember.plan === 'patrocinador'
-                          ? SITE_CONFIG.stripeLinks.diamante
-                          : SITE_CONFIG.stripeLinks.prata
+                          ? SITE_CONFIG.stripeLinks.pix.diamante
+                          : currentMember.plan === 'patrocinador_gold'
+                          ? SITE_CONFIG.stripeLinks.pix.patrocinador_gold
+                          : SITE_CONFIG.stripeLinks.pix.prata
                       }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase py-4 px-4 rounded-2xl shadow-md transition-all hover:scale-[1.01] active:scale-98 cursor-pointer"
+                      className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-black uppercase py-3.5 px-4 rounded-2xl shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01] active:scale-98 cursor-pointer"
                     >
-                      <CreditCard className="w-4 h-4 text-emerald-400" />
-                      <span>Renovar Mensalidade no Stripe</span>
+                      <Sparkles className="w-4 h-4 text-emerald-100" />
+                      <span>Renovar Mensalidade via Pix</span>
                     </a>
+
+                    {/* BOTÃO 2: RENOVAR VIA CARTÃO (SE DISPONÍVEL NO PLANO) */}
+                    {currentMember.plan !== 'patrocinador_gold' ? (
+                      <a
+                        href={
+                          currentMember.plan === 'ouro'
+                            ? SITE_CONFIG.stripeLinks.cartao.ouro
+                            : currentMember.plan === 'patrocinador'
+                            ? SITE_CONFIG.stripeLinks.cartao.diamante
+                            : SITE_CONFIG.stripeLinks.cartao.prata
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase py-3.5 px-4 rounded-2xl shadow-md transition-all hover:scale-[1.01] active:scale-98 cursor-pointer"
+                      >
+                        <CreditCard className="w-4 h-4 text-emerald-400" />
+                        <span>Renovar Mensalidade via Cartão</span>
+                      </a>
+                    ) : (
+                      <div className="text-center py-2 px-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] font-bold text-amber-900">
+                        ⚡ Plano Gold+: Renovação disponível exclusivamente via Pix.
+                      </div>
+                    )}
                   </div>
                 </div>
 

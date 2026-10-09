@@ -57,6 +57,8 @@ export const PlanCheckoutModal: React.FC<PlanCheckoutModalProps> = ({
       ? SITE_CONFIG.stripeLinks.ouro
       : selectedPlan === 'patrocinador'
       ? SITE_CONFIG.stripeLinks.diamante
+      : selectedPlan === 'patrocinador_gold'
+      ? SITE_CONFIG.stripeLinks.pix.patrocinador_gold
       : SITE_CONFIG.stripeLinks.prata;
 
   const pixKey = SITE_CONFIG.whatsapp.numero; // Chave Pix celular oficial (77) 98167-7054

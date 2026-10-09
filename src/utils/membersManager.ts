@@ -1,4 +1,4 @@
-export type MemberPlan = 'prata' | 'ouro' | 'patrocinador';
+export type MemberPlan = 'prata' | 'ouro' | 'patrocinador' | 'patrocinador_gold';
 export type MemberStatus = 'active' | 'pending';
 
 export interface MemberItem {
@@ -162,14 +162,26 @@ export const PLAN_DETAILS: Record<
   patrocinador: {
     name: 'Patrocinador+',
     badge: '💎 CORPORATIVO',
-    price: 'R$ 49,99/mês',
+    price: 'R$ 59,99/mês',
     bgGradient: 'from-cyan-900 via-blue-900 to-slate-950',
     borderAccent: 'border-cyan-400',
     benefits: [
       'Divulgação da Logo Oficial no site do Poeirão F.C.',
       'Divulgação nas redes sociais oficiais do clube',
-      'Direito a 1 camisa oficial do time personalizada',
       'Carteirinha Virtual Oficial Nível Corporativo',
+    ],
+  },
+  patrocinador_gold: {
+    name: 'Patrocinador Gold+',
+    badge: '👑 GOLD+ CORPORATIVO',
+    price: 'A partir de R$ 99,99/mês',
+    bgGradient: 'from-amber-900 via-yellow-950 to-slate-950',
+    borderAccent: 'border-amber-400',
+    benefits: [
+      'Divulgação da Logo Oficial no site do Poeirão F.C.',
+      'Divulgação nas redes sociais oficiais do clube',
+      'Direito a 1 camisa oficial do time personalizada',
+      'Carteirinha Virtual Oficial Nível Gold Corporativo',
     ],
   },
 };

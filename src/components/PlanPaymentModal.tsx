@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { SITE_CONFIG } from '../siteConfig';
 
-export type PlanId = 'prata' | 'ouro' | 'diamante';
+export type PlanId = 'prata' | 'ouro' | 'diamante' | 'patrocinador_gold';
 
 interface PlanPaymentModalProps {
   isOpen: boolean;
@@ -75,18 +75,33 @@ export const PlanPaymentModal: React.FC<PlanPaymentModalProps> = ({
     diamante: {
       name: 'PATROCINADOR+',
       badge: '💎 PLANO CORPORATIVO & PARCERIAS',
-      price: 'R$ 49,99',
+      price: 'R$ 59,99',
       period: '/ mês',
       bgGradient: 'bg-gradient-to-r from-cyan-900 via-blue-900 to-slate-950',
       accentColor: 'border-cyan-400',
       benefits: [
         'Divulgação da logo no site oficial do clube',
-        'Divulgação nas redes sociais (feed, stories e artes de dia de jogo)',
-        'Direito a uma camisa oficial do time personalizada',
+        'Divulgação nas redes sociais (feed, stories)',
         'Carteirinha Virtual Oficial Nível Corporativo',
       ],
       pixUrl: SITE_CONFIG.stripeLinks.pix.diamante,
       cardUrl: SITE_CONFIG.stripeLinks.cartao.diamante,
+    },
+    patrocinador_gold: {
+      name: 'SÓCIO PATROCINADOR GOLD+',
+      badge: '👑 VIP CORPORATIVO GOLD',
+      price: 'A partir de R$ 99,99',
+      period: '/ mês',
+      bgGradient: 'bg-gradient-to-r from-amber-950 via-yellow-900 to-zinc-950',
+      accentColor: 'border-amber-400',
+      benefits: [
+        'Divulgação da logo no site oficial do clube',
+        'Divulgação nas redes sociais (feed, stories)',
+        'Direito a uma camisa oficial do time personalizada',
+        'Carteirinha Virtual Oficial Nível Gold Corporativo',
+      ],
+      pixUrl: SITE_CONFIG.stripeLinks.pix.patrocinador_gold,
+      cardUrl: '', // Somente via Pix
     },
   };
 
@@ -207,35 +222,51 @@ export const PlanPaymentModal: React.FC<PlanPaymentModalProps> = ({
                 </div>
               </a>
 
-              {/* OPÇÃO 2: CARTÃO DE CRÉDITO */}
-              <a
-                href={current.cardUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between p-4 sm:p-4.5 rounded-2xl border-2 border-slate-900 bg-slate-900 hover:bg-black text-white transition-all duration-200 hover:scale-[1.01] active:scale-98 shadow-lg shadow-slate-900/20 cursor-pointer"
-              >
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
-                    <CreditCard className="w-6 h-6" />
-                  </div>
-                  <div className="text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-black uppercase tracking-wide text-white">
-                        Opção Cartão de Crédito
-                      </span>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold px-2 py-0.5 rounded-full">
-                        SSL Seguro
-                      </span>
+              {/* OPÇÃO 2: CARTÃO DE CRÉDITO (QUANDO DISPONÍVEL) */}
+              {current.cardUrl ? (
+                <a
+                  href={current.cardUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between p-4 sm:p-4.5 rounded-2xl border-2 border-slate-900 bg-slate-900 hover:bg-black text-white transition-all duration-200 hover:scale-[1.01] active:scale-98 shadow-lg shadow-slate-900/20 cursor-pointer"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 text-amber-400 flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                      <CreditCard className="w-6 h-6" />
                     </div>
-                    <p className="text-xs text-slate-300 font-medium mt-0.5">
-                      Pague no cartão de crédito em ambiente criptografado
+                    <div className="text-left">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm sm:text-base font-black uppercase tracking-wide text-white">
+                          Opção Cartão de Crédito
+                        </span>
+                        <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold px-2 py-0.5 rounded-full">
+                          SSL Seguro
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-300 font-medium mt-0.5">
+                        Pague no cartão de crédito em ambiente criptografado
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-white/90 font-bold group-hover:translate-x-1 transition-transform pl-2">
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                </a>
+              ) : (
+                <div className="p-4 rounded-2xl border border-amber-300 bg-amber-50/80 text-amber-950 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center shrink-0 font-black text-lg">
+                    ⚡
+                  </div>
+                  <div>
+                    <h5 className="text-xs font-black uppercase text-amber-950">
+                      Pagamento Exclusivo via Pix
+                    </h5>
+                    <p className="text-[11px] text-amber-900 mt-0.5">
+                      Este plano corporativo Gold+ possui adesão simplificada exclusivamente via chave/checkout Pix no Stripe.
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center text-white/90 font-bold group-hover:translate-x-1 transition-transform pl-2">
-                  <ArrowRight className="w-5 h-5" />
-                </div>
-              </a>
+              )}
             </div>
           </div>
 

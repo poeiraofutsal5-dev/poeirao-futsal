@@ -19,6 +19,8 @@ import {
   Camera,
   Key,
   RefreshCw,
+  PauseCircle,
+  PlayCircle,
 } from 'lucide-react';
 import escudoOficialImg from '../assets/escudo-oficial.png';
 import jpxWhiteLogoImg from '../assets/patrocinador-jpx-studio-white.png';
@@ -1139,63 +1141,32 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                     </div>
                   </div>
 
-                  {/* SEÇÃO 2: CONTROLE GLOBAL DE EMERGÊNCIA (PAUSA GERAL) */}
+                  {/* SEÇÃO 2: CONTROLE DE PAUSA INDIVIDUAL POR PRODUTO */}
                   <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
                     <div className="flex items-center gap-3.5">
-                      <div
-                        className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border ${
-                          storeOrdersEnabled
-                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                            : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                        }`}
-                      >
+                      <div className="w-11 h-11 rounded-2xl bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center shrink-0">
                         <ShoppingBag className="w-5 h-5" />
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">
-                            Pausa Geral de Emergência (Todos os Produtos)
-                          </h4>
-                          <span
-                            className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                              storeOrdersEnabled
-                                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                                : 'bg-red-500/20 text-red-400 border-red-500/30'
-                            }`}
-                          >
-                            {storeOrdersEnabled ? '🟢 Loja Aberta' : '🔴 Pedidos Gerais Pausados'}
-                          </span>
-                        </div>
+                        <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">
+                          Controle de Pausa Individual por Produto
+                        </h4>
                         <p className="text-xs text-slate-400 mt-0.5">
-                          {storeOrdersEnabled
-                            ? 'A loja está aberta. Cada produto abaixo controla o seu próprio botão de WhatsApp individualmente.'
-                            : 'Pausa geral ativada: todos os botões do WhatsApp estão suspensos de uma só vez.'}
+                          Pause ou reative os pedidos de cada produto de forma 100% individual nos botões de cada item abaixo.
                         </p>
                       </div>
                     </div>
 
-                    {onToggleStoreOrders && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const nextVal = !storeOrdersEnabled;
-                          onToggleStoreOrders(nextVal);
-                          setSuccessMessage(
-                            nextVal
-                              ? 'Loja REABERTA! Cada produto segue seu próprio estoque individual.'
-                              : 'Pausa geral ATIVADA em toda a loja.'
-                          );
-                          setTimeout(() => setSuccessMessage(null), 3500);
-                        }}
-                        className={`font-black text-xs uppercase px-4 py-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2 shadow ${
-                          storeOrdersEnabled
-                            ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/40'
-                            : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 shadow-emerald-600/30'
-                        }`}
-                      >
-                        {storeOrdersEnabled ? 'Pausar Toda a Loja' : 'Reabrir Toda a Loja'}
-                      </button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-900/60 px-3 py-1.5 rounded-xl">
+                        🟢 {shirts.filter((s) => s.inStock !== false).length} Ativos
+                      </span>
+                      {shirts.filter((s) => s.inStock === false).length > 0 && (
+                        <span className="text-xs font-bold text-red-400 bg-red-950/60 border border-red-900/60 px-3 py-1.5 rounded-xl">
+                          🔴 {shirts.filter((s) => s.inStock === false).length} Pausados
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* SEÇÃO 3: CATÁLOGO DE PRODUTOS COM CONTROLE INDIVIDUAL DE ESTOQUE/WHATSAPP */}
@@ -1207,7 +1178,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                           Catálogo de Produtos ({shirts.length} Itens Cadastrados)
                         </h4>
                         <p className="text-xs text-slate-400 mt-1">
-                          Cada item possui seu próprio botão para ligar ou desligar pedidos no WhatsApp sem afetar os outros produtos.
+                          Cada item possui seu próprio botão para ligar ou desligar pedidos no WhatsApp individualmente sem afetar os outros produtos.
                         </p>
                       </div>
 
@@ -1233,7 +1204,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                             className={`bg-slate-950 border rounded-3xl p-4 sm:p-5 flex flex-col gap-4 transition-all shadow-xl ${
                               isItemInStock
                                 ? 'border-slate-800 hover:border-slate-700'
-                                : 'border-red-950/70 bg-red-950/10'
+                                : 'border-red-600/60 bg-red-950/20'
                             }`}
                           >
                             {/* LINHA SUPERIOR: STATUS DO ESTOQUE INDIVIDUAL & PERSONALIZAÇÃO */}
@@ -1248,18 +1219,32 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                               </div>
 
                               <div className="flex flex-wrap items-center gap-2">
-                                {/* BOTÃO EXCLUSIVO: CONTROLE INDIVIDUAL DE ESTOQUE / WHATSAPP DESTE PRODUTO */}
+                                {/* BOTÃO EXCLUSIVO: CONTROLE INDIVIDUAL DE PAUSA DESTE PRODUTO */}
                                 <button
                                   type="button"
                                   onClick={() => handleToggleShirtStock(shirt.id)}
-                                  className={`text-[11px] font-black uppercase px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shadow-sm ${
+                                  className={`text-xs font-black uppercase px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 shadow-sm ${
                                     isItemInStock
-                                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
-                                      : 'bg-red-500/20 text-red-300 border-red-500/40 hover:bg-red-500/30'
+                                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-500/40'
+                                      : 'bg-red-600 text-white border-red-500 shadow-red-600/30 hover:bg-emerald-600 hover:border-emerald-500'
                                   }`}
-                                  title="Clique para alternar o botão do WhatsApp apenas para este produto"
+                                  title={
+                                    isItemInStock
+                                      ? 'Clique para pausar este produto individualmente'
+                                      : 'Clique para reativar este produto individualmente'
+                                  }
                                 >
-                                  <span>{isItemInStock ? '🟢 Pedir no Zap: ATIVO' : '🔴 Esgotado / Pausado'}</span>
+                                  {isItemInStock ? (
+                                    <>
+                                      <PauseCircle className="w-3.5 h-3.5 text-emerald-400" />
+                                      <span>🟢 Ativo (Pausar Item)</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <PlayCircle className="w-3.5 h-3.5 text-white" />
+                                      <span>🔴 Pausado (Ativar Item)</span>
+                                    </>
+                                  )}
                                 </button>
 
                                 {/* BOTÃO EXCLUSIVO: PERMITIR PERSONALIZAÇÃO (NOME E NÚMERO) */}
@@ -1287,6 +1272,16 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                                 </button>
                               </div>
                             </div>
+
+                            {/* AVISO QUANDO O PRODUTO ESTIVER PAUSADO */}
+                            {!isItemInStock && (
+                              <div className="bg-red-950/40 border border-red-900/60 rounded-xl p-2.5 text-xs text-red-300 flex items-center gap-2">
+                                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                                <span>
+                                  <strong>Produto Pausado Individualmente:</strong> O botão "Pedir no Zap" deste item está suspenso na loja. Os demais produtos continuam ativos normalmente.
+                                </span>
+                              </div>
+                            )}
 
                             {/* LINHA DO MEIO: FOTO DO PRODUTO & CAMPOS EDITÁVEIS */}
                             <div className="flex flex-col md:flex-row gap-5 items-start">
@@ -1739,7 +1734,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                           >
                             <option value="prata">Sócio Prata+ (R$ 14,99/mês)</option>
                             <option value="ouro">Sócio Ouro+ (R$ 24,99/mês)</option>
-                            <option value="patrocinador">Patrocinador+ (R$ 49,99/mês)</option>
+                            <option value="patrocinador">Patrocinador+ (R$ 59,99/mês)</option>
+                            <option value="patrocinador_gold">Patrocinador Gold+ (A partir de R$ 99,99/mês)</option>
                           </select>
                         </div>
 
@@ -1825,6 +1821,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                                     ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
                                     : mem.plan === 'patrocinador'
                                     ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
+                                    : mem.plan === 'patrocinador_gold'
+                                    ? 'bg-amber-500/20 text-amber-300 border-amber-400/50'
                                     : 'bg-slate-700/40 text-slate-300 border-slate-600/30'
                                 }`}
                               >
@@ -1954,6 +1952,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                                 <option value="prata">Prata+</option>
                                 <option value="ouro">Ouro+</option>
                                 <option value="patrocinador">Patrocinador+</option>
+                                <option value="patrocinador_gold">Gold+</option>
                               </select>
 
                               {/* Toggle Ativar / Pendente */}

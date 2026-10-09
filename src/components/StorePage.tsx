@@ -452,7 +452,7 @@ export const StorePage: React.FC<StorePageProps> = ({
                           : 'bg-red-500/20 text-red-300 border-red-500/40'
                       }`}
                     >
-                      {isAvailable ? '🟢 Em Estoque' : '🔴 Esgotado'}
+                      {isAvailable ? '🟢 Em Estoque' : '🔴 Pausado'}
                     </span>
 
                     {/* Imagem ou ilustração */}
@@ -648,17 +648,17 @@ export const StorePage: React.FC<StorePageProps> = ({
                         </a>
                       ) : (
                         <div className="space-y-1.5">
-                          <div className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 text-slate-400 font-bold text-xs py-3 px-4 rounded-xl border border-slate-800 select-none">
-                            <Clock className="w-4 h-4 text-amber-400" />
-                            <span>Esgotado no Momento</span>
+                          <div className="w-full inline-flex items-center justify-center gap-2 bg-red-950/40 text-red-300 font-bold text-xs py-3.5 px-4 rounded-xl border border-red-900/60 select-none">
+                            <Clock className="w-4 h-4 text-red-400" />
+                            <span>Produto Pausado no Momento</span>
                           </div>
                           <a
                             href={reserveLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 hover:underline block text-center pt-0.5 cursor-pointer"
+                            className="text-[11px] font-bold text-slate-400 hover:text-emerald-300 hover:underline block text-center pt-0.5 cursor-pointer"
                           >
-                            💬 Toque para reservar seu tamanho no WhatsApp
+                            💬 Toque para consultar disponibilidade no WhatsApp
                           </a>
                         </div>
                       )}

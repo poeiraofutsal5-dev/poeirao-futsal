@@ -364,62 +364,21 @@ export const AdminMembersModal: React.FC<AdminMembersModalProps> = ({
         ) : (
           /* PAINEL ADMINISTRATIVO AUTENTICADO */
           <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-            {/* CONTROLE GLOBAL: ATIVAR/DESATIVAR BOTÃO PEDIR NO ZAP EM TODOS OS PRODUTOS DA LOJA */}
+            {/* INFORMAÇÃO SOBRE PAUSA DE PRODUTOS */}
             <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-lg">
               <div className="flex items-center gap-3.5">
-                <div
-                  className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border ${
-                    storeOrdersEnabled
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                      : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                  }`}
-                >
+                <div className="w-11 h-11 rounded-2xl bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center shrink-0">
                   <ShoppingBag className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">
-                      Botão "Pedir no Zap" (Loja Oficial)
-                    </h4>
-                    <span
-                      className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                        storeOrdersEnabled
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                          : 'bg-red-500/20 text-red-400 border-red-500/30'
-                      }`}
-                    >
-                      {storeOrdersEnabled ? '🟢 Ativado (Recebendo Pedidos)' : '🔴 Desativado (Sem Estoque)'}
-                    </span>
-                  </div>
+                  <h4 className="text-xs sm:text-sm font-black text-white uppercase tracking-tight">
+                    Pausa Individual de Produtos da Loja
+                  </h4>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    {storeOrdersEnabled
-                      ? 'O botão de compra pelo WhatsApp está ativo em todos os produtos da loja.'
-                      : 'O botão de compra está desativado. Os produtos aparecem como "Esgotado".'}
+                    Os produtos agora são pausados de forma 100% individual na aba Loja do Painel Administrativo.
                   </p>
                 </div>
               </div>
-
-              {onToggleStoreOrders && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextVal = !storeOrdersEnabled;
-                    onToggleStoreOrders(nextVal);
-                    showNotification(
-                      nextVal
-                        ? 'Botão "Pedir no Zap" ativado em todos os produtos da loja!'
-                        : 'Botão "Pedir no Zap" pausado em todos os produtos (Produtos Esgotados).'
-                    );
-                  }}
-                  className={`font-black text-xs uppercase px-4 py-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2 shadow ${
-                    storeOrdersEnabled
-                      ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/40'
-                      : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 shadow-emerald-600/30'
-                  }`}
-                >
-                  {storeOrdersEnabled ? 'Desativar "Pedir no Zap"' : 'Ativar "Pedir no Zap"'}
-                </button>
-              )}
             </div>
 
             {/* PAINEL DE EXPORTAÇÃO COMPLETA: CÓDIGO PARA NOTAS E NETLIFY */}
@@ -604,7 +563,8 @@ export const AdminMembersModal: React.FC<AdminMembersModalProps> = ({
                       >
                         <option value="prata">Sócio Prata+ (R$ 14,99)</option>
                         <option value="ouro">Sócio Ouro+ (R$ 24,99)</option>
-                        <option value="patrocinador">Patrocinador+ (R$ 49,99)</option>
+                        <option value="patrocinador">Patrocinador+ (R$ 59,99)</option>
+                        <option value="patrocinador_gold">Patrocinador Gold+ (A partir de R$ 99,99)</option>
                       </select>
                     </div>
 
@@ -713,6 +673,8 @@ export const AdminMembersModal: React.FC<AdminMembersModalProps> = ({
                               ? 'bg-amber-950/60 text-amber-400 border-amber-500/50'
                               : m.plan === 'patrocinador'
                               ? 'bg-cyan-950/60 text-cyan-400 border-cyan-500/50'
+                              : m.plan === 'patrocinador_gold'
+                              ? 'bg-amber-950/80 text-amber-300 border-amber-400'
                               : 'bg-slate-900 text-slate-300 border-slate-700'
                           }`}
                         >

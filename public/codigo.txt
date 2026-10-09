@@ -325,7 +325,7 @@
                 PATROCINADOR+
               </h3>
               <div class="mt-5 flex items-baseline gap-1">
-                <span class="text-4xl font-black text-white">R$ 49,99</span>
+                <span class="text-4xl font-black text-white">R$ 59,99</span>
                 <span class="text-slate-300 text-sm font-medium">/ mês</span>
               </div>
             </div>
@@ -348,7 +348,7 @@
 
               <div class="pt-10">
                 <a
-                  href="https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01"
+                  href="https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09"
                   id="btn-landing-patrocinador"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -665,9 +665,12 @@
               </div>
             </div>
 
-            <div class="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-2">
-              <a id="card-stripe-link" href="https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02" target="_blank" class="w-full text-center bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase py-4 rounded-xl shadow transition">
-                Renovar Mensalidade no Stripe ➔
+            <div class="mt-6 pt-6 border-t border-slate-100 flex flex-col gap-2.5">
+              <a id="card-pix-link" href="https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02" target="_blank" class="w-full text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-black uppercase py-3.5 rounded-xl shadow transition">
+                ⚡ Renovar Mensalidade via Pix
+              </a>
+              <a id="card-stripe-link" href="https://buy.stripe.com/4gMcMXfFA20Yg7ffcRfrW07" target="_blank" class="w-full text-center bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-black uppercase py-3.5 rounded-xl shadow transition">
+                💳 Renovar Mensalidade via Cartão
               </a>
             </div>
           </div>
@@ -1107,7 +1110,7 @@
                 <select id="admin-new-mem-plan" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
                   <option value="prata">Sócio Prata+ (R$ 14,99)</option>
                   <option value="ouro" selected>Sócio Ouro+ (R$ 24,99)</option>
-                  <option value="patrocinador">Patrocinador+ (R$ 49,99)</option>
+                  <option value="patrocinador">Patrocinador+ (R$ 59,99)</option>
                 </select>
               </div>
               <div>
@@ -2030,10 +2033,15 @@
         // Preenche info
         const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+' };
         const discountTexts = { prata: '10% de desconto', ouro: '30% de desconto', patrocinador: 'Logo Oficial no Site & Redes' };
-        const stripeLinks = {
+        const pixLinks = {
           prata: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
           ouro: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
-          patrocinador: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01'
+          patrocinador: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a'
+        };
+        const cardLinks = {
+          prata: 'https://buy.stripe.com/6oU28j2SOeNK6wFc0FfrW04',
+          ouro: 'https://buy.stripe.com/4gMcMXfFA20Yg7ffcRfrW07',
+          patrocinador: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09'
         };
 
         document.getElementById('card-plan-name').textContent = planTitles[logged.plan] || 'SÓCIO TORCEDOR';
@@ -2042,7 +2050,8 @@
         document.getElementById('card-status-badge').textContent = logged.status === 'active' ? '🟢 ATIVO / REGULARIZADO' : '🟡 AGUARDANDO CONFIRMAÇÃO';
         document.getElementById('card-status-badge').className = logged.status === 'active' ? 'font-bold text-emerald-600' : 'font-bold text-amber-600';
         document.getElementById('card-discount-text').textContent = discountTexts[logged.plan] || 'Desconto Exclusivo';
-        document.getElementById('card-stripe-link').href = stripeLinks[logged.plan] || '#';
+        if (document.getElementById('card-pix-link')) document.getElementById('card-pix-link').href = pixLinks[logged.plan] || '#';
+        if (document.getElementById('card-stripe-link')) document.getElementById('card-stripe-link').href = cardLinks[logged.plan] || '#';
       }
     }
 
@@ -2499,7 +2508,7 @@
       patrocinador: {
         name: 'PATROCINADOR+',
         badge: '💎 PLANO CORPORATIVO & PARCERIAS',
-        price: 'R$ 49,99',
+        price: 'R$ 59,99',
         period: '/ mês',
         bgClass: 'bg-[#0b192c]',
         benefits: [
@@ -2508,8 +2517,8 @@
           'Direito a uma camisa oficial do time personalizada',
           'Carteirinha Virtual Oficial Nível Corporativo'
         ],
-        pixUrl: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
-        cardUrl: 'https://buy.stripe.com/dRm14f0KGeNKdZ7c0FfrW08'
+        pixUrl: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a',
+        cardUrl: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09'
       }
     };
 

@@ -41,18 +41,21 @@ export const SITE_CONFIG = {
     pix: {
       prata: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
       ouro: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
-      diamante: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
+      diamante: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a', // Sócio Patrocinador+ no Pix (R$ 59,99)
+      patrocinador_gold: 'https://buy.stripe.com/6oUbIT650fRO1cle8NfrW0b', // Sócio Patrocinador Gold+ no Pix (A partir de R$ 99,99)
     },
     // Links Cartão de Crédito Oficiais
     cartao: {
       prata: 'https://buy.stripe.com/6oU28j2SOeNK6wFc0FfrW04', // Sócio Prata+ no Cartão (R$ 14,99)
       ouro: 'https://buy.stripe.com/4gMcMXfFA20Yg7ffcRfrW07',   // Sócio Ouro+ no Cartão (R$ 24,99)
-      diamante: 'https://buy.stripe.com/dRm14f0KGeNKdZ7c0FfrW08', // Sócio Patrocinador+ no Cartão (R$ 49,99)
+      diamante: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09', // Sócio Patrocinador+ no Cartão (R$ 59,99)
+      patrocinador_gold: '', // Somente via Pix
     },
     // Compatibilidade direta
     prata: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
     ouro: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
-    diamante: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
+    diamante: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a',
+    patrocinador_gold: 'https://buy.stripe.com/6oUbIT650fRO1cle8NfrW0b',
   },
 
   // ---------------------------------------------------------------------------------------
@@ -98,22 +101,41 @@ export const SITE_CONFIG = {
     {
       id: 'diamante',
       nome: 'Sócio Poeirão Patrocinador+',
-      preco: 'R$ 49,99',
+      preco: 'R$ 59,99',
       periodo: '/ mês',
       destaque: false,
       tagPopular: 'PLANO CORPORATIVO 💎',
       corDestaque: 'border-cyan-400',
       badgeCor: 'bg-cyan-600',
-      linkStripe: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
-      linkPix: 'https://buy.stripe.com/7sYdR150WcFC8ENd4JfrW01',
-      linkCartao: 'https://buy.stripe.com/dRm14f0KGeNKdZ7c0FfrW08',
+      linkStripe: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09',
+      linkPix: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a',
+      linkCartao: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09',
       descricao: 'Visibilidade para sua marca no site oficial e nas redes sociais do clube.',
       beneficios: [
-        'Divulgação da logo nas redes sociais (feed, stories e artes de dia de jogo)',
-        'Divulgação e destaque da sua logo oficial no site do clube',
-        'Direito a uma camisa oficial do time personalizada',
+        'Divulgação da logo no site oficial do clube.',
+        'Divulgação nas redes sociais (feed, stories).',
       ],
       botaoTexto: 'Assinar Patrocinador+ Agora',
+    },
+    {
+      id: 'patrocinador_gold',
+      nome: 'Sócio Patrocinador Gold+',
+      preco: 'A partir de R$ 99,99',
+      periodo: '/ mês',
+      destaque: true,
+      tagPopular: 'PLANO MASTER GOLD 👑',
+      corDestaque: 'border-amber-400 ring-2 ring-amber-400/80',
+      badgeCor: 'bg-amber-500',
+      linkStripe: 'https://buy.stripe.com/6oUbIT650fRO1cle8NfrW0b',
+      linkPix: 'https://buy.stripe.com/6oUbIT650fRO1cle8NfrW0b',
+      linkCartao: '', // Somente via Pix
+      descricao: 'Visibilidade máxima para sua marca com camisa oficial personalizada do clube.',
+      beneficios: [
+        'Divulgação da logo no site oficial do clube.',
+        'Divulgação nas redes sociais (feed, stories).',
+        'Direito a uma camisa oficial do time personalizada',
+      ],
+      botaoTexto: 'Assinar Gold+ Agora (Pix)',
     },
   ],
 
