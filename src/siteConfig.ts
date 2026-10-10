@@ -18,6 +18,17 @@ export const SITE_CONFIG = {
   // O site tentará automaticamente '/IMG_1610.jpg' ou '/torcida.jpg' na pasta /public
   torcidaBannerUrl: '/IMG_1610.jpg',
 
+  // Configurações do Match Ticker (Estilo Sócio Esquadrão Bahia)
+  proximoJogo: {
+    campeonato: 'CAMPEONATO REGIONAL 2026',
+    data: '11/10',
+    horario: '19h30',
+    timeCasa: 'POEIRÃO F.C.',
+    timeVisitante: 'SELEÇÃO REGIONAL',
+    local: 'Estádio Municipal',
+    checkinHabilitado: true,
+  },
+
   // ---------------------------------------------------------------------------------------
   // 2. WHATSAPP DE SUPORTE
   // ---------------------------------------------------------------------------------------

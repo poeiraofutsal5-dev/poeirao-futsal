@@ -2,23 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Plans } from './components/Plans';
-import { StoreSection } from './components/StoreSection';
-import { StorePage } from './components/StorePage';
+import { FamiliaPoeirao } from './components/FamiliaPoeirao';
 import { MemberPortalPage } from './components/MemberPortalPage';
 import { HistoryPage } from './components/HistoryPage';
 import { Sponsors } from './components/Sponsors';
-import { SupportBanner } from './components/SupportBanner';
 import { Footer } from './components/Footer';
 import { AdminLogosModal } from './components/AdminLogosModal';
 import { getStoredSponsors, SponsorItem } from './utils/sponsorsManager';
-import {
-  getStoredShirts,
-  saveStoredShirts,
-  ShirtItem,
-  TeamPhotoItem,
-  getStoredTeamPhotos,
-  saveStoredTeamPhotos,
-} from './utils/storeManager';
 import {
   getStoredMembers,
   saveStoredMembers,
@@ -32,40 +22,46 @@ import {
   saveSubCategoriesToCloud,
 } from './utils/historyManager';
 import {
+  FamiliaPhotoItem,
+  getStoredFamiliaPhotos,
+  saveStoredFamiliaPhotos,
+} from './utils/familiaManager';
+import {
   subscribeToClubSettings,
   subscribeToSponsors,
-  subscribeToStoreShirts,
   subscribeToMembers,
-  subscribeToTeamPhotos,
+  subscribeToFamiliaPhotos,
   saveMembersToCloud,
   saveClubSettingsToCloud,
-  saveStoreShirtsToCloud,
-  saveTeamPhotosToCloud,
+  saveFamiliaPhotosToCloud,
 } from './services/firebase';
 
 export default function App() {
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [sponsors, setSponsors] = useState<SponsorItem[]>(getStoredSponsors);
-  const [shirts, setShirts] = useState<ShirtItem[]>(getStoredShirts);
-  const [teamPhotos, setTeamPhotos] = useState<TeamPhotoItem[]>(getStoredTeamPhotos);
   const [members, setMembers] = useState<MemberItem[]>(getStoredMembers);
   const [subCategories, setSubCategories] = useState<SubCategoryItem[]>(getStoredSubCategories);
-  const [storeOrdersEnabled, setStoreOrdersEnabled] = useState<boolean>(() => {
-    const saved = localStorage.getItem('poeirao_store_orders_enabled');
-    return saved !== null ? saved === 'true' : true;
+  const [familiaPhotos, setFamiliaPhotos] = useState<FamiliaPhotoItem[]>(getStoredFamiliaPhotos);
+  const [heroBgPhotos, setHeroBgPhotos] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('poeirao_hero_bg_photos_v1');
+      return saved ? JSON.parse(saved) : ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
+    } catch {
+      return ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
+    }
   });
-  const [adminInitialTab, setAdminInitialTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history'>('store');
+
+  const [adminInitialTab, setAdminInitialTab] = useState<'escudo_jpx' | 'sponsors' | 'familia' | 'members' | 'history'>('familia');
   
-  // Controle de visualização: 'home' (página inicial), 'loja' (loja poeirão), 'socio' (área do sócio) ou 'historia' (história do poeirão)
-  const [viewMode, setViewMode] = useState<'home' | 'loja' | 'socio' | 'historia'>(() => {
+  // Controle de visualização: 'home', 'socio' ou 'historia' (Loja removida conforme solicitação)
+  const [viewMode, setViewMode] = useState<'home' | 'socio' | 'historia'>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.has('plano') || searchParams.has('plan') || searchParams.get('status') === 'sucesso') {
       return 'socio';
     }
     const cleanHash = window.location.hash.split('?')[0];
     if (cleanHash === '#historia' || cleanHash === '#historia-do-poeirao' || cleanHash === '#historia-poeirao') return 'historia';
-    if (cleanHash === '#loja') return 'loja';
     if (cleanHash === '#socio' || cleanHash === '#area-do-socio' || cleanHash === '#carteirinha') return 'socio';
     return 'home';
   });
@@ -82,9 +78,6 @@ export default function App() {
       if (cleanHash === '#historia' || cleanHash === '#historia-do-poeirao' || cleanHash === '#historia-poeirao') {
         setViewMode('historia');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (cleanHash === '#loja') {
-        setViewMode('loja');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (cleanHash === '#socio' || cleanHash === '#area-do-socio' || cleanHash === '#carteirinha') {
         setViewMode('socio');
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -95,7 +88,7 @@ export default function App() {
 
     window.addEventListener('hashchange', handleHash);
 
-    // 1. Sincroniza lista de patrocinadores em tempo real para qualquer celular ou computador
+    // 1. Sincroniza patrocinadores (Parceiros Poeirão) em tempo real
     const unsubSponsors = subscribeToSponsors((cloudSponsors) => {
       setSponsors(cloudSponsors);
       try {
@@ -103,7 +96,7 @@ export default function App() {
       } catch {}
     });
 
-    // 2. Sincroniza Escudo Oficial, Logo JPX e Status da Loja em tempo real
+    // 2. Sincroniza Escudo Oficial e Logo JPX
     const unsubClub = subscribeToClubSettings((settings) => {
       if (settings.escudo) {
         try {
@@ -119,31 +112,28 @@ export default function App() {
         window.dispatchEvent(new Event('asset-updated'));
         window.dispatchEvent(new CustomEvent('jpx-logo-updated', { detail: settings.jpxFooter }));
       }
-      if (settings.storeOrdersEnabled !== undefined) {
-        setStoreOrdersEnabled(settings.storeOrdersEnabled);
+      if (settings.logoSocio !== undefined) {
         try {
-          localStorage.setItem('poeirao_store_orders_enabled', String(settings.storeOrdersEnabled));
+          if (settings.logoSocio) {
+            localStorage.setItem('poeirao_asset_logo_socio', settings.logoSocio);
+          } else {
+            localStorage.removeItem('poeirao_asset_logo_socio');
+          }
         } catch {}
+        window.dispatchEvent(new Event('asset-updated'));
+        window.dispatchEvent(new CustomEvent('logo-socio-updated', { detail: settings.logoSocio }));
       }
     });
 
-    // 3. Sincroniza catálogo de camisas da Loja Poeirão em tempo real
-    const unsubStore = subscribeToStoreShirts((cloudShirts) => {
-      setShirts(cloudShirts);
+    // 3. Sincroniza fotos da galeria #FAMÍLIAPOEIRÃO em tempo real
+    const unsubFamilia = subscribeToFamiliaPhotos((cloudPhotos) => {
+      setFamiliaPhotos(cloudPhotos);
       try {
-        localStorage.setItem('poeirao_store_shirts_v4', JSON.stringify(cloudShirts));
+        localStorage.setItem('poeirao_familia_photos_v1', JSON.stringify(cloudPhotos));
       } catch {}
     });
 
-    // 3.5. Sincroniza fotos oficiais do time em tempo real
-    const unsubTeamPhotos = subscribeToTeamPhotos((cloudPhotos) => {
-      setTeamPhotos(cloudPhotos);
-      try {
-        localStorage.setItem('poeirao_team_photos_v1', JSON.stringify(cloudPhotos));
-      } catch {}
-    });
-
-    // 4. Sincroniza lista de sócios torcedores em tempo real
+    // 4. Sincroniza sócios torcedores em tempo real
     const unsubMembers = subscribeToMembers((cloudMembers) => {
       setMembers(cloudMembers);
       try {
@@ -151,7 +141,7 @@ export default function App() {
       } catch {}
     });
 
-    // 5. Sincroniza categorias e histórias do clube em tempo real
+    // 5. Sincroniza categorias e história do clube em tempo real
     const unsubHistory = subscribeToSubCategories((cloudCats) => {
       setSubCategories(cloudCats);
       try {
@@ -163,18 +153,11 @@ export default function App() {
       window.removeEventListener('hashchange', handleHash);
       unsubSponsors();
       unsubClub();
-      unsubStore();
-      unsubTeamPhotos();
+      unsubFamilia();
       unsubMembers();
       unsubHistory();
     };
   }, []);
-
-  const handleNavigateToStore = () => {
-    setViewMode('loja');
-    window.location.hash = '#loja';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const handleNavigateToMemberPortal = () => {
     setViewMode('socio');
@@ -217,16 +200,17 @@ export default function App() {
     await saveMembersToCloud(updated);
   };
 
-  const handleUpdateShirts = async (updatedShirts: ShirtItem[]) => {
-    setShirts(updatedShirts);
-    saveStoredShirts(updatedShirts);
-    await saveStoreShirtsToCloud(updatedShirts);
+  const handleUpdateFamiliaPhotos = async (updatedPhotos: FamiliaPhotoItem[]) => {
+    setFamiliaPhotos(updatedPhotos);
+    saveStoredFamiliaPhotos(updatedPhotos);
+    await saveFamiliaPhotosToCloud(updatedPhotos);
   };
 
-  const handleUpdateTeamPhotos = async (updatedPhotos: TeamPhotoItem[]) => {
-    setTeamPhotos(updatedPhotos);
-    saveStoredTeamPhotos(updatedPhotos);
-    await saveTeamPhotosToCloud(updatedPhotos);
+  const handleUpdateHeroBgPhotos = (updatedPhotos: string[]) => {
+    setHeroBgPhotos(updatedPhotos);
+    try {
+      localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(updatedPhotos));
+    } catch {}
   };
 
   const handleUpdateSubCategories = async (updatedCategories: SubCategoryItem[]) => {
@@ -235,28 +219,20 @@ export default function App() {
     await saveSubCategoriesToCloud(updatedCategories);
   };
 
-  const handleToggleStoreOrders = async (enabled: boolean) => {
-    setStoreOrdersEnabled(enabled);
-    try {
-      localStorage.setItem('poeirao_store_orders_enabled', String(enabled));
-    } catch {}
-    await saveClubSettingsToCloud({ storeOrdersEnabled: enabled });
-  };
-
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-      {/* 1. CABEÇALHO FIXO COM BARRA VERMELHA, LOGO E LINKS (SEMPRE PRESENTE) */}
+      {/* 1. CABEÇALHO FIXO COM BARRA VERMELHA, LOGO E LINKS */}
       <Navbar
         onOpenAdminModal={() => {
-          setAdminInitialTab('escudo_jpx');
+          setAdminInitialTab('familia');
           setIsAdminModalOpen(true);
         }}
-        onNavigateToStore={handleNavigateToStore}
         onNavigateToMemberPortal={handleNavigateToMemberPortal}
         onNavigateToHistory={handleNavigateToHistory}
         onNavigateToHome={handleBackToHome}
         onNavigateToSection={handleNavigateToSection}
         activePage={viewMode}
+        members={members}
       />
 
       {viewMode === 'historia' ? (
@@ -267,28 +243,12 @@ export default function App() {
           <HistoryPage
             onBack={handleBackToHome}
             onOpenAdmin={(tab) => {
-              setAdminInitialTab(tab || 'history');
+              setAdminInitialTab((tab as any) || 'history');
               setIsAdminModalOpen(true);
             }}
             onNavigateToPlans={() => handleNavigateToSection('planos')}
             subCategories={subCategories}
             onUpdateSubCategories={handleUpdateSubCategories}
-          />
-        </main>
-      ) : viewMode === 'loja' ? (
-        /* ========================================================================= */
-        /* ABA EXCLUSIVA DEDICADA À LOJA POEIRÃO (PRODUTOS, CAMISAS E ACESSÓRIOS)    */
-        /* ========================================================================= */
-        <main className="flex-1 pt-20">
-          <StorePage
-            onBack={handleBackToHome}
-            onOpenAdmin={(tab) => {
-              setAdminInitialTab(tab || 'store');
-              setIsAdminModalOpen(true);
-            }}
-            shirts={shirts}
-            teamPhotos={teamPhotos}
-            storeOrdersEnabled={storeOrdersEnabled}
           />
         </main>
       ) : viewMode === 'socio' ? (
@@ -298,12 +258,9 @@ export default function App() {
         <main className="flex-1 pt-20">
           <MemberPortalPage
             onBackToHome={handleBackToHome}
-            onNavigateToStore={handleNavigateToStore}
             members={members}
             onSaveMember={handleSaveMember}
             onDeleteMember={handleDeleteMember}
-            storeOrdersEnabled={storeOrdersEnabled}
-            onToggleStoreOrders={handleToggleStoreOrders}
           />
         </main>
       ) : (
@@ -311,30 +268,35 @@ export default function App() {
         /* PÁGINA PRINCIPAL DO CLUBE                                                 */
         /* ========================================================================= */
         <main className="flex-1">
-          {/* 2. SEÇÃO HERO (BANNER IMPACTANTE DA TORCIDA COM CTA E ESCUDO) */}
-          <Hero onNavigateToHistory={handleNavigateToHistory} />
+          {/* 2. SEÇÃO HERO (SOMENTE AS INFORMAÇÕES DAS IMAGENS 1 E 2 + 3 FOTOS DE FUNDO) */}
+          <Hero
+            onNavigateToHistory={handleNavigateToHistory}
+            onNavigateToMemberPortal={handleNavigateToMemberPortal}
+            onNavigateToPlans={() => handleNavigateToSection('planos')}
+            backgroundPhotos={heroBgPhotos}
+          />
 
           {/* 3. SEÇÃO DE PLANOS (PAGAMENTO SEGURO DIRETO NO STRIPE) */}
           <Plans />
 
-          {/* 4. BANNER EXPLICATIVO ACIMA DE PATROCINADORES COM BOTÃO PARA ABRIR A LOJA */}
-          <StoreSection
-            shirts={shirts}
-            onNavigateToStore={handleNavigateToStore}
+          {/* 4. GALERIA #FAMÍLIAPOEIRÃO EDITÁVEL NO CADEADO (IMAGEM 7) */}
+          <FamiliaPoeirao
+            photos={familiaPhotos}
+            onOpenAdmin={() => {
+              setAdminInitialTab('familia');
+              setIsAdminModalOpen(true);
+            }}
           />
 
-          {/* 5. SEÇÃO DE PATROCINADORES OFICIAIS */}
+          {/* 5. SEÇÃO DE PATROCINADORES OFICIAIS (PARCEIROS POEIRÃO) */}
           <Sponsors sponsors={sponsors} />
-
-          {/* 6. BANNER RÁPIDO DE CONTATO NO WHATSAPP */}
-          <SupportBanner />
         </main>
       )}
 
-      {/* 7. RODAPÉ COM CRÉDITOS JPX STUDIO, TERMOS E DIREITOS (SEMPRE PRESENTE) */}
+      {/* 6. RODAPÉ COM CRÉDITOS JPX STUDIO, TERMOS E DIREITOS */}
       <Footer />
 
-      {/* 8. MODAL DE ADMINISTRAÇÃO COM SENHA '22232425' (ACESSÍVEL DE QUALQUER TELA) */}
+      {/* 7. MODAL DE ADMINISTRAÇÃO ("CADEADO DE DIREÇÃO") - SENHA '22232425' */}
       <AdminLogosModal
         isOpen={isAdminModalOpen}
         onClose={() => setIsAdminModalOpen(false)}
@@ -342,17 +304,15 @@ export default function App() {
         onAuthenticate={(auth) => setIsAuthenticated(auth)}
         sponsors={sponsors}
         onUpdateSponsors={(updatedSponsors) => setSponsors(updatedSponsors)}
-        shirts={shirts}
-        onUpdateShirts={handleUpdateShirts}
-        teamPhotos={teamPhotos}
-        onUpdateTeamPhotos={handleUpdateTeamPhotos}
+        familiaPhotos={familiaPhotos}
+        onUpdateFamiliaPhotos={handleUpdateFamiliaPhotos}
+        heroBgPhotos={heroBgPhotos}
+        onUpdateHeroBgPhotos={handleUpdateHeroBgPhotos}
         members={members}
         onUpdateMembers={(updatedMembers) => setMembers(updatedMembers)}
         subCategories={subCategories}
         onUpdateSubCategories={handleUpdateSubCategories}
         initialTab={adminInitialTab}
-        storeOrdersEnabled={storeOrdersEnabled}
-        onToggleStoreOrders={handleToggleStoreOrders}
       />
     </div>
   );

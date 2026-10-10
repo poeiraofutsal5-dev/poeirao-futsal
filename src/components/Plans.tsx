@@ -9,16 +9,18 @@ export const Plans: React.FC = () => {
   return (
     <section id="planos" className="py-20 bg-slate-50 text-slate-900 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* CABEÇALHO DA SEÇÃO DE PLANOS */}
+        {/* CABEÇALHO DA SEÇÃO DE PLANOS ESTILO SÓCIO ESQUADRÃO */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs sm:text-sm font-bold tracking-widest text-red-600 uppercase">
-            Planos Oficiais 2026
+          <span className="text-xs sm:text-sm font-black tracking-widest text-[#c8102e] uppercase inline-flex items-center gap-2">
+            <span>★</span>
+            <span>PROGRAMA OFICIAL DE SÓCIOS 2026</span>
+            <span>★</span>
           </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl md:text-5xl font-black uppercase text-slate-900 tracking-tight">
-            Escolha o seu Plano
+          <h2 className="mt-2 text-4xl sm:text-5xl md:text-6xl font-black uppercase text-slate-950 font-condensed tracking-tight">
+            ESCOLHA SEU PLANO E VISTA A CAMISA
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
-            Cada assinatura fortalece o Poeirão F.C. e garante benefícios exclusivos para você vibrar em cada lance. Escolha o seu e vista a camisa!
+          <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+            Cada assinatura fortalece o Poeirão F.C., garante descontos em camisas oficiais e dá acesso à sua Carteirinha Virtual Oficial.
           </p>
         </div>
 

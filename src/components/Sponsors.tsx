@@ -37,18 +37,18 @@ export const Sponsors: React.FC<SponsorsProps> = ({ sponsors: propSponsors }) =>
     <section id="patrocinadores" className="py-20 bg-slate-50 text-slate-900 border-t border-slate-200/80 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* CABEÇALHO DA SEÇÃO DE PATROCINADORES */}
+        {/* CABEÇALHO DA SEÇÃO DE PATROCINADORES (PARCEIROS POEIRÃO) */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-600 mb-2">
+          <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#c8102e] mb-2">
             <Handshake className="w-4 h-4" />
-            <span>Marcas que jogam junto com o Poeirão</span>
+            <span>PARCEIROS POEIRÃO · JOGAM JUNTO COM O POEIRÃO</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase text-slate-900 tracking-tight">
-            Nossos patrocinadores oficiais:
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase text-slate-900 tracking-tight font-condensed">
+            NOSSOS PARCEIROS OFICIAIS
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600">
-            Empresas parceiras que apoiam o futebol tricolor e fortalecem o Poeirão F.C. dentro e fora de campo.
+          <p className="mt-2 text-sm sm:text-base text-slate-600">
+            Marcas e empresas que apoiam o futebol tricolor e fortalecem o Poeirão F.C. dentro e fora de campo.
           </p>
         </div>
 

@@ -57,11 +57,18 @@ import {
   saveSubCategoriesToCloud,
 } from '../utils/historyManager';
 import {
+  FamiliaPhotoItem,
+  INITIAL_FAMILIA_PHOTOS,
+  getStoredFamiliaPhotos,
+  saveStoredFamiliaPhotos,
+} from '../utils/familiaManager';
+import {
   saveClubSettingsToCloud,
   saveSponsorsToCloud,
   saveStoreShirtsToCloud,
   saveMembersToCloud,
   saveTeamPhotosToCloud,
+  saveFamiliaPhotosToCloud,
   subscribeToClubSettings,
   subscribeToStoreShirts,
   subscribeToMembers,
@@ -79,11 +86,15 @@ interface AdminLogosModalProps {
   onUpdateShirts?: (shirts: ShirtItem[]) => void;
   teamPhotos?: TeamPhotoItem[];
   onUpdateTeamPhotos?: (photos: TeamPhotoItem[]) => void;
+  familiaPhotos?: FamiliaPhotoItem[];
+  onUpdateFamiliaPhotos?: (photos: FamiliaPhotoItem[]) => void;
+  heroBgPhotos?: string[];
+  onUpdateHeroBgPhotos?: (photos: string[]) => void;
   members?: MemberItem[];
   onUpdateMembers?: (members: MemberItem[]) => void;
   subCategories?: SubCategoryItem[];
   onUpdateSubCategories?: (categories: SubCategoryItem[]) => void;
-  initialTab?: 'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history';
+  initialTab?: 'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history' | 'familia';
   storeOrdersEnabled?: boolean;
   onToggleStoreOrders?: (enabled: boolean) => void;
 }
@@ -101,11 +112,15 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   onUpdateShirts,
   teamPhotos: propTeamPhotos,
   onUpdateTeamPhotos,
+  familiaPhotos: propFamiliaPhotos,
+  onUpdateFamiliaPhotos,
+  heroBgPhotos: propHeroBgPhotos,
+  onUpdateHeroBgPhotos,
   members: propMembers,
   onUpdateMembers,
   subCategories: propSubCategories,
   onUpdateSubCategories,
-  initialTab = 'store',
+  initialTab = 'familia',
   storeOrdersEnabled = true,
   onToggleStoreOrders,
 }) => {
@@ -114,13 +129,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history'>(
-    (initialTab as any) === 'team_photos' ? 'store' : (initialTab || 'store')
+  const [activeTab, setActiveTab] = useState<'escudo_jpx' | 'sponsors' | 'store' | 'members' | 'history' | 'familia'>(
+    (initialTab as any) === 'team_photos' || (initialTab as any) === 'store' ? 'familia' : (initialTab || 'familia')
   );
 
   useEffect(() => {
     if (initialTab) {
-      setActiveTab((initialTab as any) === 'team_photos' ? 'store' : initialTab);
+      setActiveTab((initialTab as any) === 'team_photos' || (initialTab as any) === 'store' ? 'familia' : initialTab);
     }
   }, [initialTab]);
 
@@ -160,6 +175,29 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     if (propMembers) setLocalMembers(propMembers);
   }, [propMembers]);
 
+  // Lista de fotos da Família Poeirão (#FAMÍLIAPOEIRÃO)
+  const [localFamiliaPhotos, setLocalFamiliaPhotos] = useState<FamiliaPhotoItem[]>(getStoredFamiliaPhotos);
+  const familiaPhotos = propFamiliaPhotos || localFamiliaPhotos;
+
+  useEffect(() => {
+    if (propFamiliaPhotos) setLocalFamiliaPhotos(propFamiliaPhotos);
+  }, [propFamiliaPhotos]);
+
+  // Lista de fotos de fundo do Hero (3 fotos rotativas)
+  const [localHeroBgPhotos, setLocalHeroBgPhotos] = useState<string[]>(() => {
+    try {
+      const s = localStorage.getItem('poeirao_hero_bg_photos_v1');
+      return s ? JSON.parse(s) : ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
+    } catch {
+      return ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
+    }
+  });
+  const heroBgPhotos = propHeroBgPhotos || localHeroBgPhotos;
+
+  useEffect(() => {
+    if (propHeroBgPhotos) setLocalHeroBgPhotos(propHeroBgPhotos);
+  }, [propHeroBgPhotos]);
+
   // Filtro e formulário de novo sócio
   const [memberSearch, setMemberSearch] = useState('');
   const [newMemName, setNewMemName] = useState('');
@@ -185,12 +223,18 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       jpxWhiteLogoImg
   );
 
+  const [logoSocioPreview, setLogoSocioPreview] = useState<string | null>(
+    () => localStorage.getItem('poeirao_asset_logo_socio')
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const targetTypeRef = useRef<'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category'>('escudo');
+  const targetTypeRef = useRef<'escudo' | 'logo_socio' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category' | 'familia_photo' | 'hero_bg'>('escudo');
   const targetSponsorIdRef = useRef<string>('');
   const targetShirtIdRef = useRef<string>('');
   const targetPhotoIdRef = useRef<string>('');
   const targetCategoryIdRef = useRef<string>('');
+  const targetFamiliaIdRef = useRef<string>('');
+  const targetHeroBgIdxRef = useRef<string>('0');
 
   useEffect(() => {
     if (isOpen) {
@@ -198,7 +242,13 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       setLocalShirts(getStoredShirts());
       setLocalTeamPhotos(getStoredTeamPhotos());
       setLocalCategories(getStoredSubCategories());
+      setLocalFamiliaPhotos(getStoredFamiliaPhotos());
+      try {
+        const s = localStorage.getItem('poeirao_hero_bg_photos_v1');
+        if (s) setLocalHeroBgPhotos(JSON.parse(s));
+      } catch {}
       setEscudoPreview(localStorage.getItem('poeirao_asset_escudo') || escudoOficialImg);
+      setLogoSocioPreview(localStorage.getItem('poeirao_asset_logo_socio'));
       setJpxFooterPreview(
         localStorage.getItem('poeirao_asset_jpx_footer') ||
         localStorage.getItem('poeirao_asset_jpx_white') ||
@@ -207,6 +257,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
       const unsubClub = subscribeToClubSettings((settings) => {
         if (settings.escudo) setEscudoPreview(settings.escudo);
+        if (settings.logoSocio !== undefined) setLogoSocioPreview(settings.logoSocio || null);
         if (settings.jpxFooter !== undefined) setJpxFooterPreview(settings.jpxFooter || jpxWhiteLogoImg);
       });
 
@@ -230,7 +281,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
   };
 
   const triggerUpload = (
-    type: 'escudo' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category',
+    type: 'escudo' | 'logo_socio' | 'sponsor' | 'jpx_footer' | 'shirt' | 'team_photo' | 'sub_category' | 'familia_photo' | 'hero_bg',
     id?: string
   ) => {
     targetTypeRef.current = type;
@@ -242,6 +293,10 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       targetPhotoIdRef.current = id || '';
     } else if (type === 'sub_category') {
       targetCategoryIdRef.current = id || '';
+    } else if (type === 'familia_photo') {
+      targetFamiliaIdRef.current = id || '';
+    } else if (type === 'hero_bg') {
+      targetHeroBgIdxRef.current = id || '0';
     }
     fileInputRef.current?.click();
   };
@@ -255,8 +310,10 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       const isPhoto =
         targetTypeRef.current === 'shirt' ||
         targetTypeRef.current === 'team_photo' ||
-        targetTypeRef.current === 'sub_category';
-      const dataUrl = await compressImage(file, isPhoto ? 700 : 500, isPhoto ? 'image/jpeg' : 'auto');
+        targetTypeRef.current === 'sub_category' ||
+        targetTypeRef.current === 'familia_photo' ||
+        targetTypeRef.current === 'hero_bg';
+      const dataUrl = await compressImage(file, isPhoto ? 800 : 500, isPhoto ? 'image/jpeg' : 'auto');
       if (!dataUrl) {
         throw new Error('Falha ao converter imagem');
       }
@@ -277,6 +334,17 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
 
         setSuccessMessage('Escudo oficial atualizado e sincronizado em todos os aparelhos!');
         setTimeout(() => setSuccessMessage(null), 3000);
+      } else if (targetTypeRef.current === 'logo_socio') {
+        localStorage.setItem('poeirao_asset_logo_socio', dataUrl);
+        setLogoSocioPreview(dataUrl);
+        window.dispatchEvent(new Event('asset-updated'));
+        window.dispatchEvent(new CustomEvent('logo-socio-updated', { detail: dataUrl }));
+
+        // Salva na nuvem para sincronizar com todos os aparelhos
+        await saveClubSettingsToCloud({ logoSocio: dataUrl });
+
+        setSuccessMessage('Logo Oficial do Sócio Poeirão atualizada e sincronizada em todos os aparelhos!');
+        setTimeout(() => setSuccessMessage(null), 3000);
       } else if (targetTypeRef.current === 'jpx_footer') {
         localStorage.setItem('poeirao_asset_jpx_footer', dataUrl);
         localStorage.setItem('poeirao_asset_jpx_white', dataUrl);
@@ -295,6 +363,31 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         }).catch(() => {});
 
         setSuccessMessage('Logo da JPX Studio atualizada e sincronizada em todos os aparelhos!');
+        setTimeout(() => setSuccessMessage(null), 3500);
+      } else if (targetTypeRef.current === 'familia_photo') {
+        const id = targetFamiliaIdRef.current;
+        const updated = familiaPhotos.map((fp) => (fp.id === id ? { ...fp, imageSrc: dataUrl } : fp));
+        setLocalFamiliaPhotos(updated);
+        saveStoredFamiliaPhotos(updated);
+        if (onUpdateFamiliaPhotos) {
+          onUpdateFamiliaPhotos(updated);
+        } else {
+          await saveFamiliaPhotosToCloud(updated);
+        }
+        setSuccessMessage('Foto da #FamíliaPoeirão atualizada com sucesso!');
+        setTimeout(() => setSuccessMessage(null), 3500);
+      } else if (targetTypeRef.current === 'hero_bg') {
+        const idx = parseInt(targetHeroBgIdxRef.current || '0', 10);
+        const updated = [...heroBgPhotos];
+        updated[idx] = dataUrl;
+        setLocalHeroBgPhotos(updated);
+        try {
+          localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(updated));
+        } catch {}
+        if (onUpdateHeroBgPhotos) {
+          onUpdateHeroBgPhotos(updated);
+        }
+        setSuccessMessage(`Foto de fundo #${idx + 1} do Banner Principal atualizada com sucesso!`);
         setTimeout(() => setSuccessMessage(null), 3500);
       } else if (targetTypeRef.current === 'shirt') {
         const id = targetShirtIdRef.current;
@@ -409,6 +502,85 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     window.dispatchEvent(new CustomEvent('jpx-logo-updated', { detail: jpxWhiteLogoImg }));
     await saveClubSettingsToCloud({ jpxFooter: '' });
     setSuccessMessage('Logo da JPX Studio restaurada para o padrão oficial.');
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleResetLogoSocio = async () => {
+    localStorage.removeItem('poeirao_asset_logo_socio');
+    setLogoSocioPreview(null);
+    window.dispatchEvent(new Event('asset-updated'));
+    window.dispatchEvent(new CustomEvent('logo-socio-updated', { detail: null }));
+    await saveClubSettingsToCloud({ logoSocio: '' });
+    setSuccessMessage('Logo do Sócio restaurada para a tipografia oficial padrão!');
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleUpdateFamiliaTitle = (id: string, title: string) => {
+    const updated = familiaPhotos.map((fp) => (fp.id === id ? { ...fp, title } : fp));
+    setLocalFamiliaPhotos(updated);
+    saveStoredFamiliaPhotos(updated);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
+  };
+
+  const handleUpdateFamiliaSubtitle = (id: string, subtitle: string) => {
+    const updated = familiaPhotos.map((fp) => (fp.id === id ? { ...fp, subtitle } : fp));
+    setLocalFamiliaPhotos(updated);
+    saveStoredFamiliaPhotos(updated);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
+  };
+
+  const handleRemoveFamiliaPhoto = (id: string) => {
+    const updated = familiaPhotos.map((fp) => (fp.id === id ? { ...fp, imageSrc: '' } : fp));
+    setLocalFamiliaPhotos(updated);
+    saveStoredFamiliaPhotos(updated);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
+    setSuccessMessage('Foto removida da galeria #FamíliaPoeirão.');
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleAddFamiliaPhoto = () => {
+    const newId = `fam_${Date.now()}`;
+    const newItem: FamiliaPhotoItem = {
+      id: newId,
+      title: 'Novo Momento da Torcida',
+      subtitle: 'Foto oficial da #FamíliaPoeirão',
+      imageSrc: '',
+    };
+    const updated = [...familiaPhotos, newItem];
+    setLocalFamiliaPhotos(updated);
+    saveStoredFamiliaPhotos(updated);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
+    setSuccessMessage('Novo card adicionado! Agora clique em "Subir Imagem".');
+    setTimeout(() => setSuccessMessage(null), 3500);
+  };
+
+  const handleDeleteFamiliaItem = (id: string) => {
+    const updated = familiaPhotos.filter((fp) => fp.id !== id);
+    setLocalFamiliaPhotos(updated);
+    saveStoredFamiliaPhotos(updated);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
+    setSuccessMessage('Card removido da galeria #FamíliaPoeirão.');
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
+  const handleResetFamiliaPhotos = () => {
+    setLocalFamiliaPhotos(INITIAL_FAMILIA_PHOTOS);
+    saveStoredFamiliaPhotos(INITIAL_FAMILIA_PHOTOS);
+    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(INITIAL_FAMILIA_PHOTOS);
+    setSuccessMessage('Galeria #FamíliaPoeirão restaurada para os padrões originais!');
+    setTimeout(() => setSuccessMessage(null), 3500);
+  };
+
+  const handleResetHeroBg = (idx: number) => {
+    const defaultBgs = ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
+    const updated = [...heroBgPhotos];
+    updated[idx] = defaultBgs[idx] || '/foto-time-1.png';
+    setLocalHeroBgPhotos(updated);
+    try {
+      localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(updated));
+    } catch {}
+    if (onUpdateHeroBgPhotos) onUpdateHeroBgPhotos(updated);
+    setSuccessMessage(`Foto de fundo #${idx + 1} restaurada para o padrão!`);
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
@@ -927,50 +1099,50 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
               </div>
 
               {/* BARRA DE ABAS */}
-              <div className="mt-5 flex gap-2 border-b border-slate-800 pb-1">
+              <div className="mt-5 flex gap-2 border-b border-slate-800 pb-1 overflow-x-auto custom-scrollbar">
                 <button
                   type="button"
-                  onClick={() => setActiveTab('store')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
-                    activeTab === 'store'
+                  onClick={() => setActiveTab('familia')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all whitespace-nowrap ${
+                    activeTab === 'familia'
                       ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                       : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  <Shirt className="w-4 h-4" />
-                  <span>👕 Loja Poeirão ({shirts.length})</span>
+                  <Camera className="w-4 h-4" />
+                  <span>📸 #FamíliaPoeirão ({familiaPhotos.length})</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('escudo_jpx')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all whitespace-nowrap ${
                     activeTab === 'escudo_jpx'
                       ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                       : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
                   <Shield className="w-4 h-4" />
-                  <span>🛡️ Escudo & Rodapé</span>
+                  <span>🛡️ Escudo & Logo do Sócio</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('sponsors')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all whitespace-nowrap ${
                     activeTab === 'sponsors'
                       ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                       : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
                   <Handshake className="w-4 h-4" />
-                  <span>🤝 25 Patrocinadores ({countWithLogo})</span>
+                  <span>🤝 Parceiros Poeirão ({countWithLogo})</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab('members')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all whitespace-nowrap ${
                     activeTab === 'members'
                       ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                       : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
@@ -983,14 +1155,14 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab('history')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase transition-all whitespace-nowrap ${
                     activeTab === 'history'
                       ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                       : 'bg-slate-850 text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>📜 Gerenciar Categorias (Admin) ({categories.length})</span>
+                  <span>📜 Categorias ({categories.length})</span>
                 </button>
               </div>
 
@@ -1007,9 +1179,220 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
             <div className="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
 
               {/* ================================================================= */}
-              {/* ABA 1: GERENCIAR LOJA POEIRÃO & FOTOS DO TIME (LOOKBOOK)          */}
+              {/* ABA 1: GERENCIAR #FAMÍLIAPOEIRÃO (IMAGEM 7) & 3 FOTOS DO TOPO    */}
               {/* ================================================================= */}
-              {activeTab === 'store' && (
+              {activeTab === 'familia' && (
+                <div className="space-y-8">
+                  {/* SEÇÃO 1: GALERIA #FAMÍLIAPOEIRÃO EDITÁVEL (IMAGEM 7) */}
+                  <div className="bg-gradient-to-b from-[#11192b] to-[#0a0f1b] border-2 border-red-900/50 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                      <div>
+                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-900/40 px-3 py-1 rounded-full mb-1.5">
+                          <Camera className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Imagem 7 • #FamíliaPoeirão</span>
+                        </div>
+                        <h4 className="text-base sm:text-lg font-black text-white uppercase tracking-tight flex items-center gap-2">
+                          📸 Galeria de Fotos #FamíliaPoeirão
+                        </h4>
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          Altere, suba novas fotos ou edite as legendas da galeria de torcedores e momentos especiais. Sincroniza em tempo real.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={handleAddFamiliaPhoto}
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase px-3.5 py-2 rounded-xl shadow-md transition cursor-pointer"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Adicionar Foto</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleResetFamiliaPhotos}
+                          className="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl border border-slate-700 transition cursor-pointer"
+                          title="Restaurar fotos originais"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>Restaurar Padrão</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* GRADE DE FOTOS DA #FAMÍLIAPOEIRÃO */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {familiaPhotos.map((item, idx) => (
+                        <div
+                          key={item.id}
+                          className="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 shadow-md hover:border-red-900/60 transition"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-2 mb-2.5">
+                              <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2 py-0.5 rounded-md">
+                                Foto #{idx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteFamiliaItem(item.id)}
+                                className="text-[10px] font-bold text-red-400/80 hover:text-red-300 hover:underline cursor-pointer"
+                                title="Excluir este card da galeria"
+                              >
+                                Excluir Card
+                              </button>
+                            </div>
+
+                            {/* PREVIEW DA FOTO */}
+                            <div className="relative w-full h-44 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center mb-3 group">
+                              {item.imageSrc ? (
+                                <img
+                                  src={item.imageSrc}
+                                  alt={item.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              ) : (
+                                <div className="text-center p-3 text-slate-500">
+                                  <Camera className="w-8 h-8 mx-auto text-slate-600 mb-1" />
+                                  <span className="text-[10px] block">Sem imagem configurada</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* BOTÕES DE UPLOAD / REMOÇÃO DA FOTO */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <button
+                                type="button"
+                                onClick={() => triggerUpload('familia_photo', item.id)}
+                                disabled={isProcessing}
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg shadow-sm transition cursor-pointer flex-1 justify-center"
+                              >
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>{item.imageSrc ? 'Trocar Foto' : 'Subir Imagem'}</span>
+                              </button>
+
+                              {item.imageSrc && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFamiliaPhoto(item.id)}
+                                  className="text-xs text-slate-400 hover:text-red-400 px-2 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition"
+                                >
+                                  Remover
+                                </button>
+                              )}
+                            </div>
+
+                            {/* CAMPOS DE EDIÇÃO: TÍTULO E SUBTÍTULO */}
+                            <div className="space-y-2">
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                  Título do Momento:
+                                </label>
+                                <input
+                                  type="text"
+                                  value={item.title}
+                                  onChange={(e) => handleUpdateFamiliaTitle(item.id, e.target.value)}
+                                  placeholder="Ex: Kits & Brindes Exclusivos"
+                                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-red-500"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                                  Subtítulo / Descrição:
+                                </label>
+                                <input
+                                  type="text"
+                                  value={item.subtitle || ''}
+                                  onChange={(e) => handleUpdateFamiliaSubtitle(item.id, e.target.value)}
+                                  placeholder="Ex: Presentes especiais para os sócios torcedores"
+                                  className="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-red-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* SEÇÃO 2: 3 FOTOS DE FUNDO ROTATIVAS DO TOPO (HERO) */}
+                  <div className="bg-gradient-to-b from-[#11192b] to-[#0a0f1b] border-2 border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                      <div>
+                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-900/40 px-3 py-1 rounded-full mb-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-red-400" />
+                          <span>Fundo do Topo • 3 Fotos Rotativas</span>
+                        </div>
+                        <h4 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
+                          🖼️ 3 Fotos de Fundo do Banner Principal
+                        </h4>
+                        <p className="text-xs text-slate-300 mt-0.5">
+                          Estas 3 fotos alternam suavemente (crossfade) atrás dos textos das Imagens 1 e 2 no topo da página.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {heroBgPhotos.map((src, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-3.5 shadow-md"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="text-[10px] font-black uppercase text-amber-400 bg-amber-950/60 border border-amber-900/40 px-2 py-0.5 rounded-md">
+                                Fundo #{idx + 1}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-bold">
+                                Hero Slide {idx + 1}
+                              </span>
+                            </div>
+
+                            <div className="relative w-full h-36 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden mb-3">
+                              <img
+                                src={src}
+                                alt={`Fundo ${idx + 1}`}
+                                className="w-full h-full object-cover filter brightness-75"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.src = '/foto-time-1.png';
+                                }}
+                              />
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => triggerUpload('hero_bg', String(idx))}
+                                disabled={isProcessing}
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg shadow-sm transition cursor-pointer flex-1 justify-center"
+                              >
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>Trocar Imagem</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleResetHeroBg(idx)}
+                                className="text-xs text-slate-400 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700 transition cursor-pointer"
+                                title="Voltar para a foto inicial"
+                              >
+                                <RotateCcw className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* ABA DEPRECIADA DE LOJA (DESATIVADA CONFORME SOLICITAÇÃO)          */}
+              {/* ================================================================= */}
+              {false && (
                 <div className="space-y-8">
                   {/* SEÇÃO 1: FOTOS OFICIAIS DO TIME & ENSAIO LOOKBOOK (IMAGENS 1, 2 E 3) */}
                   <div className="bg-gradient-to-b from-[#11192b] to-[#0a0f1b] border-2 border-red-900/50 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
@@ -1490,6 +1873,69 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                         </button>
                         <p className="text-[11px] text-slate-500 mt-2">
                           Recomendado: PNG com fundo transparente.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SEÇÃO DA LOGO OFICIAL DO SÓCIO POEIRÃO (TOPO - IMAGEM 3) */}
+                  <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-5">
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <div>
+                        <h4 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-amber-400" />
+                          Logo Oficial do Sócio Poeirão (Topo)
+                        </h4>
+                        <p className="text-xs text-slate-400 mt-1">
+                          Imagem da logo do sócio que aparece no topo do site (Imagem 3), logo na frente do escudo do time. Se não subir imagem, o site exibe o texto estilizado "SÓCIO POEIRÃO".
+                        </p>
+                      </div>
+                      <span className="text-[10px] font-black text-amber-400 bg-amber-950/60 border border-amber-800/40 px-2.5 py-1 rounded-full uppercase">
+                        Topo do Site
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-5">
+                      <div className="w-40 h-20 rounded-2xl bg-[#c8102e] border border-red-500/40 flex items-center justify-center p-3 shrink-0 shadow-md">
+                        {logoSocioPreview ? (
+                          <img src={logoSocioPreview} alt="Logo do Sócio Preview" className="max-h-full max-w-full object-contain" />
+                        ) : (
+                          <div className="flex flex-col text-left">
+                            <span className="text-[10px] font-black tracking-widest uppercase text-white/95 leading-none">
+                              SÓCIO
+                            </span>
+                            <span className="font-condensed font-black text-xl text-white tracking-wider leading-none mt-0.5">
+                              POEIRÃO
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => triggerUpload('logo_socio')}
+                            disabled={isProcessing}
+                            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-red-600/20 transition cursor-pointer"
+                          >
+                            <Upload className="w-4 h-4" />
+                            <span>{isProcessing ? 'Processando...' : logoSocioPreview ? 'Trocar Logo do Sócio' : 'Subir Imagem da Logo do Sócio'}</span>
+                          </button>
+
+                          {logoSocioPreview && (
+                            <button
+                              type="button"
+                              onClick={handleResetLogoSocio}
+                              className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white text-xs font-bold px-3 py-2.5 rounded-xl border border-slate-800 transition cursor-pointer"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5" />
+                              <span>Restaurar Texto Padrão</span>
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-2">
+                          Recomendado: PNG sem fundo com o texto ou emblema do Sócio Poeirão em branco.
                         </p>
                       </div>
                     </div>

@@ -17,7 +17,7 @@ export const SupportBanner: React.FC = () => {
           </div>
 
           {/* TÍTULO EXATO REQUISITADO */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-white font-condensed">
             Ficou com alguma dúvida? Fale conosco no WhatsApp!
           </h2>
           

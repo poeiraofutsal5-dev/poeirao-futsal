@@ -54,10 +54,10 @@ export interface ClubSettingsData {
 }
 
 /**
- * Escuta alterações no Escudo, Logo JPX e Status de Vendas da Loja em tempo real de qualquer dispositivo.
+ * Escuta alterações no Escudo, Logo JPX, Logo do Sócio e Status de Vendas em tempo real.
  */
 export function subscribeToClubSettings(
-  callback: (settings: { escudo?: string; jpxFooter?: string; storeOrdersEnabled?: boolean }) => void
+  callback: (settings: { escudo?: string; jpxFooter?: string; logoSocio?: string; storeOrdersEnabled?: boolean }) => void
 ) {
   try {
     const settingsRef = doc(db, 'settings', 'club');
@@ -69,6 +69,7 @@ export function subscribeToClubSettings(
           callback({
             escudo: data.escudo || undefined,
             jpxFooter: data.jpxFooter || undefined,
+            logoSocio: data.logoSocio || undefined,
             storeOrdersEnabled: data.storeOrdersEnabled !== undefined ? data.storeOrdersEnabled : true,
           });
         }
@@ -132,6 +133,7 @@ export function subscribeToSponsors(
 export async function saveClubSettingsToCloud(settings: {
   escudo?: string;
   jpxFooter?: string;
+  logoSocio?: string;
   storeOrdersEnabled?: boolean;
 }): Promise<void> {
   try {
@@ -141,6 +143,7 @@ export async function saveClubSettingsToCloud(settings: {
     };
     if (settings.escudo !== undefined) payload.escudo = settings.escudo;
     if (settings.jpxFooter !== undefined) payload.jpxFooter = settings.jpxFooter;
+    if (settings.logoSocio !== undefined) payload.logoSocio = settings.logoSocio;
     if (settings.storeOrdersEnabled !== undefined) payload.storeOrdersEnabled = settings.storeOrdersEnabled;
 
     await setDoc(settingsRef, payload, { merge: true });
@@ -279,7 +282,50 @@ export function subscribeToTeamPhotos(
 }
 
 /**
- * Salva as fotos oficiais do time na nuvem para refletir em todos os aparelhos.
+ * Escuta alterações nas fotos da galeria #FAMÍLIAPOEIRÃO em tempo real.
+ */
+export function subscribeToFamiliaPhotos(
+  callback: (photos: any[]) => void
+) {
+  try {
+    const famRef = doc(db, 'settings', 'familia_poeirao');
+    return onSnapshot(
+      famRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            callback(data.items);
+          }
+        }
+      },
+      (err) => {
+        console.warn('Aviso no listener de familia_poeirao do Firebase:', err);
+      }
+    );
+  } catch (e) {
+    console.error('Falha ao inicializar listener de familia_poeirao:', e);
+    return () => {};
+  }
+}
+
+/**
+ * Salva as fotos da galeria #FAMÍLIAPOEIRÃO na nuvem para refletir em todos os celulares.
+ */
+export async function saveFamiliaPhotosToCloud(photos: any[]): Promise<void> {
+  try {
+    const famRef = doc(db, 'settings', 'familia_poeirao');
+    await setDoc(famRef, {
+      items: photos,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('Erro ao salvar fotos da família Poeirão no Firebase:', err);
+  }
+}
+
+/**
+ * Salva as fotos do time na nuvem.
  */
 export async function saveTeamPhotosToCloud(photos: TeamPhotoItem[]): Promise<void> {
   try {
@@ -292,4 +338,6 @@ export async function saveTeamPhotosToCloud(photos: TeamPhotoItem[]): Promise<vo
     console.error('Erro ao salvar fotos do time no Firebase:', err);
   }
 }
+
+
 

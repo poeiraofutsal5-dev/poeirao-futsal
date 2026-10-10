@@ -1,176 +1,231 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SITE_CONFIG } from '../siteConfig';
 import { Crest } from './Crest';
-import { ArrowDown, ShieldCheck, Shirt, Users, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface HeroProps {
   editMode?: boolean;
   onNavigateToHistory?: () => void;
+  onNavigateToMemberPortal?: () => void;
+  onNavigateToPlans?: () => void;
+  backgroundPhotos?: string[];
 }
 
-export const Hero: React.FC<HeroProps> = ({ onNavigateToHistory }) => {
-  // Lista de imagens candidatas da torcida
-  const candidateImages = [
-    SITE_CONFIG.torcidaBannerUrl,
-    '/torcida.jpg',
-    '/torcida.jpeg',
-    '/torcida.png',
-    'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1920&q=80',
+export const Hero: React.FC<HeroProps> = ({
+  onNavigateToHistory,
+  onNavigateToMemberPortal,
+  onNavigateToPlans,
+  backgroundPhotos,
+}) => {
+  // 3 FOTOS DE FUNDO ROTATIVAS CONFORME SOLICITAÇÃO DO USUÁRIO
+  const defaultBgPhotos = [
+    '/foto-time-1.png',
+    '/foto-time-2.png',
+    '/foto-time-3.png',
   ];
 
-  const [currentCandidateIndex, setCurrentCandidateIndex] = useState(0);
-  const [bgFailed, setBgFailed] = useState(false);
+  const photos = backgroundPhotos && backgroundPhotos.length > 0 ? backgroundPhotos : defaultBgPhotos;
 
-  const handleImageError = () => {
-    if (currentCandidateIndex < candidateImages.length - 1) {
-      setCurrentCandidateIndex(prev => prev + 1);
+  const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
+
+  // Troca automática suave de fotos a cada 5.5 segundos
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentPhotoIdx((prev) => (prev + 1) % photos.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [photos.length]);
+
+  const handlePrevPhoto = () => {
+    setCurrentPhotoIdx((prev) => (prev - 1 + photos.length) % photos.length);
+  };
+
+  const handleNextPhoto = () => {
+    setCurrentPhotoIdx((prev) => (prev + 1) % photos.length);
+  };
+
+  const handleJoinClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateToPlans) {
+      onNavigateToPlans();
     } else {
-      setBgFailed(true);
+      const el = document.getElementById('planos');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const currentBannerImage = candidateImages[currentCandidateIndex];
+  const handlePartnersClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById('patrocinadores');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <section
-      id="inicio"
-      className="relative min-h-[90vh] lg:min-h-[92vh] flex items-center justify-center pt-24 pb-16 overflow-hidden bg-slate-950 text-white"
-    >
-      {/* 
-        =================================================================================
-        IMAGEM DE FUNDO DA TORCIDA DO POEIRÃO:
-        Carrega /IMG_1610.jpg ou /torcida.jpg com filtro escurecido para leitura ideal do texto
-        ================================================================================= 
-      */}
-      <div className="absolute inset-0 z-0">
-        {!bgFailed ? (
-          <img
-            src={currentBannerImage}
-            alt="Torcida Apaixonada do Poeirão Futebol Clube"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-center scale-105 transform brightness-[0.38] contrast-[1.12] saturate-[0.9] animate-in fade-in duration-700"
-            onError={handleImageError}
-          />
-        ) : (
-          // Fallback dinâmico estilizado de arena esportiva escura
-          <div className="w-full h-full bg-radial from-slate-900 via-neutral-950 to-black" />
-        )}
+    <section id="inicio" className="relative pt-[72px] sm:pt-[84px] bg-[#001426] text-white overflow-hidden">
+      {/* ========================================================================= */}
+      {/* 1. FUNDO COM AS 3 FOTOS ROTATIVAS COM CROSSFADE SUAVE                       */}
+      {/* ========================================================================= */}
+      <div className="relative min-h-[540px] sm:min-h-[580px] lg:min-h-[640px] flex items-center justify-center overflow-hidden">
+        {/* Camadas das 3 Fotos em Crossfade - Meio termo de opacidade equilibrada */}
+        {photos.map((src, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              currentPhotoIdx === idx ? 'opacity-80 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+            }`}
+          >
+            <img
+              src={src}
+              alt={`Poeirão F.C. Fundo ${idx + 1}`}
+              className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-105"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1600&q=80';
+              }}
+            />
+          </div>
+        ))}
 
-        {/* 
-          OVERLAY PROFISSIONAL ESCURECIDO (VINHETA E CONTRASTE):
-          Camadas de gradiente preto, leve toque rubro-negro e vinheta radial
-        */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-red-950/25 to-black/85" />
-        <div className="absolute inset-0 bg-radial from-transparent via-slate-950/40 to-slate-950/90" />
-        
-        {/* Padrão sutil geométrico de gramado / textura esportiva */}
-        <div 
-          className="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle at 25px 25px, white 2%, transparent 0%), radial-gradient(circle at 75px 75px, white 2%, transparent 0%)`,
-            backgroundSize: '100px 100px',
-          }}
-        />
+        {/* Overlay equilibrado (meio-termo entre antes e agora: foto visível sem competir com os textos) */}
+        <div className="absolute inset-0 bg-[#001020]/55 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#001426] via-transparent to-[#001426]/60 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001020]/60 via-transparent to-[#001020]/60 pointer-events-none" />
+
+        {/* SETAS DE NAVEGAÇÃO LATERAL (CIRCULARES COMO NO BAHIA) */}
+        <button
+          type="button"
+          onClick={handlePrevPhoto}
+          className="absolute left-2 sm:left-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
+          aria-label="Foto anterior"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleNextPhoto}
+          className="absolute right-2 sm:right-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
+          aria-label="Próxima foto"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* ========================================================================= */}
+        {/* 2. CONTEÚDO ESCRITO: SOMENTE AS INFORMAÇÕES DAS IMAGENS 1 E 2              */}
+        {/* ========================================================================= */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-8">
+            
+            {/* LADO ESQUERDO: EXATAMENTE CONFORME IMAGEM 1 (SEM CAIXA PESADA BLOQUEANDO O FUNDO) */}
+            <div className="lg:col-span-6 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
+              {/* Badge da Imagem 1 */}
+              <div className="inline-block text-xs sm:text-sm font-extrabold tracking-widest text-white uppercase mb-2 bg-[#c8102e] px-3.5 py-1.5 rounded-full border border-red-400/40 shadow-md">
+                ★ CAMISAS OFICIAIS & VANTAGENS EXCLUSIVAS
+              </div>
+
+              {/* Título Gigante da Imagem 1 */}
+              <h1 className="font-condensed font-black text-4xl sm:text-6xl xl:text-7xl leading-[0.92] text-[#ffd100] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] tracking-tight uppercase mt-2">
+                CHEGOU O <br />
+                <span className="text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+                  SÓCIO POEIRÃO
+                </span>
+              </h1>
+
+              {/* Subtítulo da Imagem 1 */}
+              <p className="mt-4 text-xs sm:text-sm md:text-base text-slate-200 max-w-lg font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Assine agora, garanta acesso com a sua Carteirinha Virtual Oficial e apoie o crescimento do futebol do Poeirão F.C.
+              </p>
+
+              {/* Botões de Ação */}
+              <div className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3.5">
+                <a
+                  href="#planos"
+                  onClick={handleJoinClick}
+                  className="inline-flex items-center justify-center gap-2 bg-[#c8102e] hover:bg-[#a50d24] active:bg-[#850b1d] text-white font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-7 rounded-full shadow-xl shadow-red-900/40 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-red-500/40"
+                >
+                  <span>SEJA SÓCIO AGORA</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="#patrocinadores"
+                  onClick={handlePartnersClick}
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold text-xs sm:text-sm uppercase tracking-wider py-3.5 px-6 rounded-full backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+                >
+                  <span>CONHECER PARCEIROS</span>
+                </a>
+              </div>
+            </div>
+
+            {/* CENTRO: ESCUDO TRICOLOR DISCRETO COM GLOW */}
+            <div className="hidden lg:flex lg:col-span-1 items-center justify-center">
+              <div className="w-px h-64 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+            </div>
+
+            {/* LADO DIREITO: EXATAMENTE CONFORME IMAGEM 2 */}
+            <div className="lg:col-span-5 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
+              {/* Título Gigante da Imagem 2 */}
+              <h2 className="font-condensed font-black text-3xl sm:text-5xl xl:text-6xl leading-[0.95] text-[#ffd100] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] tracking-tight uppercase">
+                O MAIOR CLUBE <br />
+                <span className="text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+                  DO FUTEBOL AMADOR
+                </span> <br />
+                <span className="text-[#ffd100]">
+                  DA REGIÃO!
+                </span>
+              </h2>
+
+              {/* CARD DE INFORMAÇÕES OFICIAIS DO CLUBE DA IMAGEM 2 */}
+              <div className="mt-6 p-4 sm:p-5 bg-slate-950/80 border border-white/20 rounded-2xl backdrop-blur-md w-full max-w-md text-left shadow-2xl">
+                <div className="flex items-center gap-3.5 mb-3 pb-3 border-b border-white/15">
+                  <div className="p-1 rounded-xl bg-white/10 shrink-0 border border-white/20">
+                    <Crest className="h-9 w-auto" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black tracking-widest uppercase text-amber-300 block">
+                      CANAL OFICIAL DO SÓCIO
+                    </span>
+                    <span className="text-xs sm:text-sm font-mono font-bold text-white tracking-wide">
+                      socio.poeiraofc.com.br
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-xs text-slate-300 font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">WhatsApp:</span>
+                    <span className="text-white font-bold">{SITE_CONFIG.whatsapp.numeroFormatado}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-red-400 font-bold">Clube:</span>
+                    <span className="text-slate-200">Poeirão F.C. · Fundado em 1998</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* PONTOS DE PAGINAÇÃO DAS 3 FOTOS (ESTILO PÍLULA IDÊNTICO À IMAGEM 4) */}
+        <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/60 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md shadow-lg">
+          {photos.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setCurrentPhotoIdx(idx)}
+              className={`transition-all rounded-full cursor-pointer ${
+                currentPhotoIdx === idx
+                  ? 'w-7 h-2.5 bg-[#c8102e] ring-2 ring-white/40'
+                  : 'w-2.5 h-2.5 bg-slate-400/60 hover:bg-white'
+              }`}
+              aria-label={`Ir para foto de fundo ${idx + 1}`}
+              title={`Foto ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
-
-      {/* CONTEÚDO PRINCIPAL DO HERO */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-        {/* ESCUDO DO CLUBE NO CENTRO DO HERO */}
-        <div className="mb-6 flex flex-col items-center">
-          <div className="relative group">
-            <div className="absolute -inset-6 bg-red-600/25 rounded-full blur-2xl group-hover:bg-red-600/40 transition-all duration-500" />
-            <div className="relative">
-              <Crest className="h-28 w-auto sm:h-36 md:h-40 drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)] filter transition-transform duration-300 group-hover:scale-105" />
-            </div>
-          </div>
-
-          <div className="mt-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-red-400">
-            <span>Poeirão Futebol Clube</span>
-            <span aria-hidden="true">·</span>
-            <span>Orgulho Tricolor</span>
-          </div>
-        </div>
-
-        {/* TÍTULO PRINCIPAL EM CAIXA ALTA (EXATAMENTE COMO REQUISITADO) */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight max-w-4xl drop-shadow-md">
-          SEJA SÓCIO POEIRÃO, <br className="hidden sm:inline" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-rose-300">
-            VOCÊ FAZ NOSSA EQUIPE GANHAR!
-          </span>
-        </h1>
-
-        {/* SUBTÍTULO COM CHAMADA PARA AÇÃO (CTA) */}
-        <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-200 max-w-2xl font-normal leading-relaxed drop-shadow">
-          Apoie diretamente o crescimento do nosso clube, garanta descontos exclusivos em camisas oficiais e faça parte dessa história que dinheiro nenhum compra.
-        </p>
-
-        {/* BOTÕES PRINCIPAIS: SEJA SÓCIO, PARCEIROS E HISTÓRIA DO POEIRÃO */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
-          <a
-            href="#planos"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-extrabold text-base sm:text-lg uppercase tracking-wider px-8 py-4 rounded-xl shadow-lg shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-0.5 transition-all duration-200"
-          >
-            <span>Seja Sócio Agora</span>
-            <ArrowDown className="w-5 h-5 animate-bounce" />
-          </a>
-
-          <a
-            href="#patrocinadores"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 active:bg-white/30 text-white border border-white/20 font-bold text-base px-6 py-4 rounded-xl backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5"
-          >
-            <span>Conhecer Nossos Parceiros</span>
-          </a>
-
-          <button
-            type="button"
-            onClick={() => {
-              if (onNavigateToHistory) {
-                onNavigateToHistory();
-              } else {
-                window.location.hash = '#historia';
-              }
-            }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-slate-900/90 hover:bg-slate-800 active:bg-slate-950 text-white border border-slate-700/80 hover:border-red-500/60 font-bold text-base px-6 py-4 rounded-xl shadow-lg backdrop-blur-sm transition-all duration-200 cursor-pointer group hover:-translate-y-0.5"
-          >
-            <Sparkles className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform" />
-            <span>História do Poeirão</span>
-          </button>
-        </div>
-
-        {/* BARRA DE DESTAQUES RÁPIDOS (ESTATÍSTICAS / VALORES) */}
-        <div className="mt-14 w-full grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-white/15 max-w-4xl text-left">
-          <div className="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-xs">
-            <div className="p-2.5 rounded-lg bg-red-600/20 text-red-400">
-              <Shirt className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs uppercase text-slate-400 font-bold tracking-wider">Descontos em Camisas</p>
-              <p className="text-sm font-semibold text-white">Preço Especial no Manto Oficial</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-xs">
-            <div className="p-2.5 rounded-lg bg-amber-500/20 text-amber-400">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs uppercase text-slate-400 font-bold tracking-wider">Exclusividade</p>
-              <p className="text-sm font-semibold text-white">Faça parte dessa história</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-xs">
-            <div className="p-2.5 rounded-lg bg-white/20 text-white">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs uppercase text-slate-400 font-bold tracking-wider">Apoio Real</p>
-              <p className="text-sm font-semibold text-white">100% investido no Futebol do PFC</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* NOTA: A PARTE DE BAIXO (IMAGEM 3 - PRÓXIMO JOGO / CHECK-IN) FOI REMOVIDA CONFORME SOLICITADO */}
     </section>
   );
 };

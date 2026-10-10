@@ -24,7 +24,7 @@ export const StoreSection: React.FC<StoreSectionProps> = ({ onNavigateToStore })
                 Coleção Oficial 2026 • Linha do Torcedor
               </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight font-condensed">
                 Vista a Camisa Oficial do <span className="text-red-500">Poeirão F.C.</span>
               </h2>
 

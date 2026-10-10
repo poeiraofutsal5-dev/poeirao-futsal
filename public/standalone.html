@@ -55,11 +55,7 @@
                 História do Poeirão
               </button>
             </li>
-            <li>
-              <button type="button" id="nav-btn-store" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
-                Loja Poeirão
-              </button>
-            </li>
+
             <li>
               <button type="button" id="nav-btn-sponsors" class="text-sm font-semibold text-slate-700 hover:text-red-600 transition-colors py-1 cursor-pointer">
                 Patrocinadores
@@ -103,7 +99,7 @@
           <button type="button" id="m-btn-inicio" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Início</button>
           <button type="button" id="m-btn-planos" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Planos</button>
           <button type="button" id="m-btn-historia" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">História do Poeirão</button>
-          <button type="button" id="m-btn-store" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Loja Poeirão</button>
+
           <button type="button" id="m-btn-sponsors" class="text-left font-semibold text-slate-800 hover:text-red-600 py-1.5">Patrocinadores</button>
           <button type="button" id="m-btn-socio" class="text-left font-bold text-red-600 py-1.5 flex items-center justify-between">
             <span>💳 Área do Sócio (Carteirinha)</span>
@@ -2912,17 +2908,19 @@
         renderVirtualCard(logged);
 
         // Preenche info
-        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+' };
-        const discountTexts = { prata: '10% de desconto', ouro: '30% de desconto', patrocinador: 'Logo Oficial no Site & Redes' };
+        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+', patrocinador_gold: 'PATROCINADOR GOLD+' };
+        const discountTexts = { prata: '10% de desconto', ouro: '30% de desconto', patrocinador: 'Logo Oficial no Site & Redes', patrocinador_gold: 'Logo, Redes & Camisa Oficial' };
         const pixLinks = {
           prata: 'https://buy.stripe.com/fZu7sD1OK20Y9IRfcRfrW03',
           ouro: 'https://buy.stripe.com/dRm7sDdxs6he5sBc0FfrW02',
-          patrocinador: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a'
+          patrocinador: 'https://buy.stripe.com/fZu7sD2SO9tqbQZ5ChfrW0a',
+          patrocinador_gold: 'https://buy.stripe.com/6oUbIT650fRO1cle8NfrW0b'
         };
         const cardLinks = {
           prata: 'https://buy.stripe.com/6oU28j2SOeNK6wFc0FfrW04',
           ouro: 'https://buy.stripe.com/4gMcMXfFA20Yg7ffcRfrW07',
-          patrocinador: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09'
+          patrocinador: 'https://buy.stripe.com/aFa00bgJE6he1cl8OtfrW09',
+          patrocinador_gold: ''
         };
 
         document.getElementById('card-plan-name').textContent = planTitles[logged.plan] || 'SÓCIO TORCEDOR';
@@ -2932,7 +2930,14 @@
         document.getElementById('card-status-badge').className = logged.status === 'active' ? 'font-bold text-emerald-600' : 'font-bold text-amber-600';
         document.getElementById('card-discount-text').textContent = discountTexts[logged.plan] || 'Desconto Exclusivo';
         if (document.getElementById('card-pix-link')) document.getElementById('card-pix-link').href = pixLinks[logged.plan] || '#';
-        if (document.getElementById('card-stripe-link')) document.getElementById('card-stripe-link').href = cardLinks[logged.plan] || '#';
+        if (document.getElementById('card-stripe-link')) {
+          if (cardLinks[logged.plan]) {
+            document.getElementById('card-stripe-link').href = cardLinks[logged.plan];
+            document.getElementById('card-stripe-link').style.display = '';
+          } else {
+            document.getElementById('card-stripe-link').style.display = 'none';
+          }
+        }
       }
     }
 
@@ -2941,9 +2946,10 @@
       const planGradients = {
         prata: 'from-slate-900 via-slate-800 to-zinc-900 border-slate-400',
         ouro: 'from-amber-900 via-amber-700 to-yellow-800 border-amber-300',
-        patrocinador: 'from-slate-950 via-cyan-950 to-blue-950 border-cyan-400'
+        patrocinador: 'from-slate-950 via-cyan-950 to-blue-950 border-cyan-400',
+        patrocinador_gold: 'from-amber-950 via-yellow-900 to-zinc-950 border-amber-400'
       };
-      const planBadges = { prata: 'PRATA+', ouro: 'OURO+ POPULAR', patrocinador: '💎 CORPORATIVO' };
+      const planBadges = { prata: 'PRATA+', ouro: 'OURO+ POPULAR', patrocinador: '💎 CORPORATIVO', patrocinador_gold: '👑 GOLD+ CORPORATIVO' };
 
       const escudoSrc = document.getElementById('nav-escudo').src || './escudo-oficial.png';
 
@@ -3111,6 +3117,10 @@
           bgGrad.addColorStop(0, '#021024');
           bgGrad.addColorStop(0.5, '#083344');
           bgGrad.addColorStop(1, '#0f172a');
+        } else if (member.plan === 'patrocinador_gold') {
+          bgGrad.addColorStop(0, '#2d1802');
+          bgGrad.addColorStop(0.5, '#78350f');
+          bgGrad.addColorStop(1, '#18181b');
         } else {
           bgGrad.addColorStop(0, '#0a0f1d');
           bgGrad.addColorStop(0.5, '#1e293b');
@@ -3131,7 +3141,7 @@
         ctx.fillRect(cardPadding, cardPadding, cardW, cardH);
 
         // Borda
-        ctx.strokeStyle = member.plan === 'ouro' ? 'rgba(251, 191, 36, 0.75)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.75)' : 'rgba(148, 163, 184, 0.65)';
+        ctx.strokeStyle = member.plan === 'ouro' ? 'rgba(251, 191, 36, 0.75)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.75)' : member.plan === 'patrocinador_gold' ? 'rgba(251, 191, 36, 0.9)' : 'rgba(148, 163, 184, 0.65)';
         ctx.lineWidth = 5;
         roundRect(ctx, cardPadding + 3, cardPadding + 3, cardW - 6, cardH - 6, cardRadius - 2);
         ctx.stroke();
@@ -3207,7 +3217,7 @@
         ctx.textAlign = 'left';
         ctx.fillText('MATRÍCULA OFICIAL', leftX, midY);
 
-        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+' };
+        const planTitles = { prata: 'SÓCIO PRATA+', ouro: 'SÓCIO OURO+', patrocinador: 'PATROCINADOR+', patrocinador_gold: 'PATROCINADOR GOLD+' };
         const planNameStr = `★ ${planTitles[member.plan] || 'SÓCIO TORCEDOR'}`;
         ctx.font = '900 19px "Plus Jakarta Sans", sans-serif';
         const badgeW = ctx.measureText(planNameStr).width + 36;
@@ -3215,9 +3225,9 @@
         const badgeY = midY - 24;
 
         roundRect(ctx, badgeX, badgeY, badgeW, 36, 18);
-        ctx.fillStyle = member.plan === 'ouro' ? 'rgba(251, 191, 36, 0.95)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.95)' : 'rgba(226, 232, 240, 0.95)';
+        ctx.fillStyle = member.plan === 'ouro' || member.plan === 'patrocinador_gold' ? 'rgba(251, 191, 36, 0.95)' : member.plan === 'patrocinador' ? 'rgba(56, 189, 248, 0.95)' : 'rgba(226, 232, 240, 0.95)';
         ctx.fill();
-        ctx.fillStyle = member.plan === 'ouro' ? '#451a03' : member.plan === 'patrocinador' ? '#082f49' : '#0f172a';
+        ctx.fillStyle = member.plan === 'ouro' || member.plan === 'patrocinador_gold' ? '#451a03' : member.plan === 'patrocinador' ? '#082f49' : '#0f172a';
         ctx.textAlign = 'center';
         ctx.fillText(planNameStr, badgeX + badgeW / 2, badgeY + 25);
 
