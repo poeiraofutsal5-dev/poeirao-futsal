@@ -30,6 +30,12 @@ function assetUploadPlugin() {
                   targetFiles.push('public/patrocinador-proton-contabeis.png', 'src/assets/patrocinador-proton-contabeis.png');
                 } else if (assetKey === 'nato') {
                   targetFiles.push('public/patrocinador-nato-gym.png', 'src/assets/patrocinador-nato-gym.png');
+                } else if (assetKey === 'hero_bg_0') {
+                  targetFiles.push('public/foto-time-1.png');
+                } else if (assetKey === 'hero_bg_1') {
+                  targetFiles.push('public/foto-time-2.png');
+                } else if (assetKey === 'hero_bg_2') {
+                  targetFiles.push('public/foto-time-3.png');
                 } else if (assetKey.startsWith('slot_')) {
                   const dir = path.resolve(__dirname, 'public/sponsors');
                   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

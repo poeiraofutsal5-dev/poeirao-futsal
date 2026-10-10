@@ -28,6 +28,13 @@ export const Hero: React.FC<HeroProps> = ({
 
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
+  // Garante que o índice esteja sempre dentro dos limites das fotos
+  useEffect(() => {
+    if (currentPhotoIdx >= photos.length) {
+      setCurrentPhotoIdx(0);
+    }
+  }, [photos.length, currentPhotoIdx]);
+
   // Troca automática suave de fotos a cada 5.5 segundos
   useEffect(() => {
     const timer = setInterval(() => {
@@ -67,24 +74,27 @@ export const Hero: React.FC<HeroProps> = ({
       {/* ========================================================================= */}
       <div className="relative min-h-[540px] sm:min-h-[580px] lg:min-h-[640px] flex items-center justify-center overflow-hidden">
         {/* Camadas das 3 Fotos em Crossfade - Meio termo de opacidade equilibrada */}
-        {photos.map((src, idx) => (
-          <div
-            key={idx}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              currentPhotoIdx === idx ? 'opacity-80 scale-100' : 'opacity-0 scale-105 pointer-events-none'
-            }`}
-          >
-            <img
-              src={src}
-              alt={`Poeirão F.C. Fundo ${idx + 1}`}
-              className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-105"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1600&q=80';
-              }}
-            />
-          </div>
-        ))}
+        {photos.map((src, idx) => {
+          const imgSrc = src || defaultBgPhotos[idx] || '/foto-time-1.png';
+          return (
+            <div
+              key={idx}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                currentPhotoIdx === idx ? 'opacity-80 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+              }`}
+            >
+              <img
+                src={imgSrc}
+                alt={`Poeirão F.C. Fundo ${idx + 1}`}
+                className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-105"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/foto-time-1.png';
+                }}
+              />
+            </div>
+          );
+        })}
 
         {/* Overlay equilibrado (meio-termo entre antes e agora: foto visível sem competir com os textos) */}
         <div className="absolute inset-0 bg-[#001020]/55 pointer-events-none" />

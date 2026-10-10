@@ -121,12 +121,35 @@
         }
       },
       "required": ["id", "matricula", "name", "phone", "plan", "status"]
+    },
+    "HeroBackgrounds": {
+      "title": "HeroBackgrounds",
+      "description": "3 rotating background photos for the hero banner synchronized across all devices",
+      "type": "object",
+      "properties": {
+        "photos": {
+          "type": "array",
+          "description": "Array of 3 background photo image URLs or dataUrls",
+          "items": {
+            "type": "string"
+          }
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        }
+      },
+      "required": ["photos"]
     }
   },
   "firestore": {
     "/settings/club": {
       "schema": "ClubSettings",
       "description": "Global club visual settings and crest"
+    },
+    "/settings/hero_backgrounds": {
+      "schema": "HeroBackgrounds",
+      "description": "3 rotating background photos for hero banner"
     },
     "/settings/sponsors_list": {
       "schema": "Sponsor",

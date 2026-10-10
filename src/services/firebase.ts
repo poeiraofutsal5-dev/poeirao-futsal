@@ -339,5 +339,49 @@ export async function saveTeamPhotosToCloud(photos: TeamPhotoItem[]): Promise<vo
   }
 }
 
+/**
+ * Escuta alterações nas 3 Fotos de Fundo do Banner Principal (Hero) em tempo real de qualquer dispositivo (PC, celular, tablet).
+ */
+export function subscribeToHeroBgPhotos(
+  callback: (photos: string[]) => void
+) {
+  try {
+    const heroRef = doc(db, 'settings', 'hero_backgrounds');
+    return onSnapshot(
+      heroRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (Array.isArray(data.photos) && data.photos.length > 0) {
+            callback(data.photos);
+          }
+        }
+      },
+      (err) => {
+        console.warn('Aviso no listener de hero_backgrounds do Firebase:', err);
+      }
+    );
+  } catch (e) {
+    console.error('Falha ao inicializar listener de hero_backgrounds:', e);
+    return () => {};
+  }
+}
 
-
+/**
+ * Salva as 3 fotos de fundo do Banner Principal na nuvem para refletir em tempo real em todos os celulares e computadores.
+ */
+export async function saveHeroBgPhotosToCloud(photos: string[]): Promise<void> {
+  try {
+    const heroRef = doc(db, 'settings', 'hero_backgrounds');
+    await setDoc(
+      heroRef,
+      {
+        photos,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } catch (err) {
+    console.error('Erro ao salvar fotos de fundo do Hero no Firebase:', err);
+  }
+}

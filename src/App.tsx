@@ -8,7 +8,7 @@ import { HistoryPage } from './components/HistoryPage';
 import { Sponsors } from './components/Sponsors';
 import { Footer } from './components/Footer';
 import { AdminLogosModal } from './components/AdminLogosModal';
-import { getStoredSponsors, SponsorItem } from './utils/sponsorsManager';
+import { getStoredSponsors, saveStoredSponsors, SponsorItem } from './utils/sponsorsManager';
 import {
   getStoredMembers,
   saveStoredMembers,
@@ -31,9 +31,12 @@ import {
   subscribeToSponsors,
   subscribeToMembers,
   subscribeToFamiliaPhotos,
+  subscribeToHeroBgPhotos,
+  saveSponsorsToCloud,
   saveMembersToCloud,
   saveClubSettingsToCloud,
   saveFamiliaPhotosToCloud,
+  saveHeroBgPhotosToCloud,
 } from './services/firebase';
 
 export default function App() {
@@ -149,6 +152,41 @@ export default function App() {
       } catch {}
     });
 
+    // 6. Sincroniza as 3 fotos de fundo do Banner Principal (Hero) em tempo real entre PC e celular
+    const unsubHeroBg = subscribeToHeroBgPhotos((cloudPhotos) => {
+      if (Array.isArray(cloudPhotos) && cloudPhotos.length > 0) {
+        setHeroBgPhotos(cloudPhotos);
+        try {
+          localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(cloudPhotos));
+        } catch {}
+      }
+    });
+
+    // Auto-sincronização do PC para a nuvem: se este aparelho já possui fotos salvas
+    // no localStorage (como o PC do usuário), enviamos para a nuvem para que o celular receba de imediato!
+    try {
+      const localHeroRaw = localStorage.getItem('poeirao_hero_bg_photos_v1');
+      if (localHeroRaw) {
+        const localHero = JSON.parse(localHeroRaw);
+        if (Array.isArray(localHero) && localHero.length > 0) {
+          saveHeroBgPhotosToCloud(localHero);
+        }
+      }
+    } catch {}
+
+    // Auto-sincronização de patrocinadores locais para a nuvem:
+    // Se o usuário adicionou ou alterou patrocinadores neste navegador (ex: Opera),
+    // enviamos para o Firebase para que Brave, celulares e outros navegadores recebam instantaneamente!
+    try {
+      const localSponsors = getStoredSponsors();
+      const hasCustom = localSponsors.some(
+        (s) => s.id.startsWith('slot_') && (s.logoSrc || (s.name && !s.name.startsWith('Patrocinador #')))
+      );
+      if (hasCustom) {
+        saveSponsorsToCloud(localSponsors);
+      }
+    } catch {}
+
     return () => {
       window.removeEventListener('hashchange', handleHash);
       unsubSponsors();
@@ -156,6 +194,7 @@ export default function App() {
       unsubFamilia();
       unsubMembers();
       unsubHistory();
+      unsubHeroBg();
     };
   }, []);
 
@@ -200,17 +239,30 @@ export default function App() {
     await saveMembersToCloud(updated);
   };
 
+  const handleUpdateSponsors = async (updatedSponsors: SponsorItem[]) => {
+    setSponsors(updatedSponsors);
+    saveStoredSponsors(updatedSponsors);
+    await saveSponsorsToCloud(updatedSponsors);
+  };
+
+  const handleUpdateMembers = async (updatedMembers: MemberItem[]) => {
+    setMembers(updatedMembers);
+    saveStoredMembers(updatedMembers);
+    await saveMembersToCloud(updatedMembers);
+  };
+
   const handleUpdateFamiliaPhotos = async (updatedPhotos: FamiliaPhotoItem[]) => {
     setFamiliaPhotos(updatedPhotos);
     saveStoredFamiliaPhotos(updatedPhotos);
     await saveFamiliaPhotosToCloud(updatedPhotos);
   };
 
-  const handleUpdateHeroBgPhotos = (updatedPhotos: string[]) => {
+  const handleUpdateHeroBgPhotos = async (updatedPhotos: string[]) => {
     setHeroBgPhotos(updatedPhotos);
     try {
       localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(updatedPhotos));
     } catch {}
+    await saveHeroBgPhotosToCloud(updatedPhotos);
   };
 
   const handleUpdateSubCategories = async (updatedCategories: SubCategoryItem[]) => {
@@ -303,13 +355,13 @@ export default function App() {
         isAuthenticated={isAuthenticated}
         onAuthenticate={(auth) => setIsAuthenticated(auth)}
         sponsors={sponsors}
-        onUpdateSponsors={(updatedSponsors) => setSponsors(updatedSponsors)}
+        onUpdateSponsors={handleUpdateSponsors}
         familiaPhotos={familiaPhotos}
         onUpdateFamiliaPhotos={handleUpdateFamiliaPhotos}
         heroBgPhotos={heroBgPhotos}
         onUpdateHeroBgPhotos={handleUpdateHeroBgPhotos}
         members={members}
-        onUpdateMembers={(updatedMembers) => setMembers(updatedMembers)}
+        onUpdateMembers={handleUpdateMembers}
         subCategories={subCategories}
         onUpdateSubCategories={handleUpdateSubCategories}
         initialTab={adminInitialTab}

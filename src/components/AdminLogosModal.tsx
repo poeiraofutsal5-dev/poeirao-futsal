@@ -69,10 +69,12 @@ import {
   saveMembersToCloud,
   saveTeamPhotosToCloud,
   saveFamiliaPhotosToCloud,
+  saveHeroBgPhotosToCloud,
   subscribeToClubSettings,
   subscribeToStoreShirts,
   subscribeToMembers,
   subscribeToTeamPhotos,
+  subscribeToHeroBgPhotos,
 } from '../services/firebase';
 
 interface AdminLogosModalProps {
@@ -261,8 +263,15 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         if (settings.jpxFooter !== undefined) setJpxFooterPreview(settings.jpxFooter || jpxWhiteLogoImg);
       });
 
+      const unsubHeroBg = subscribeToHeroBgPhotos((cloudPhotos) => {
+        if (Array.isArray(cloudPhotos) && cloudPhotos.length > 0) {
+          setLocalHeroBgPhotos(cloudPhotos);
+        }
+      });
+
       return () => {
         unsubClub();
+        unsubHeroBg();
       };
     }
   }, [isOpen]);
@@ -387,7 +396,16 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         if (onUpdateHeroBgPhotos) {
           onUpdateHeroBgPhotos(updated);
         }
-        setSuccessMessage(`Foto de fundo #${idx + 1} do Banner Principal atualizada com sucesso!`);
+        await saveHeroBgPhotosToCloud(updated);
+
+        // Atualiza também os arquivos locais no servidor
+        fetch('/api/upload-asset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ assetKey: `hero_bg_${idx}`, dataUrl }),
+        }).catch(() => {});
+
+        setSuccessMessage(`Foto de fundo #${idx + 1} do Banner Principal atualizada e sincronizada com todos os celulares e computadores!`);
         setTimeout(() => setSuccessMessage(null), 3500);
       } else if (targetTypeRef.current === 'shirt') {
         const id = targetShirtIdRef.current;
@@ -448,9 +466,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
         saveStoredSponsors(updated);
         if (onUpdateSponsors) {
           onUpdateSponsors(updated);
-        } else {
-          await saveSponsorsToCloud(updated);
         }
+        await saveSponsorsToCloud(updated);
 
         await fetch('/api/upload-asset', {
           method: 'POST',
@@ -571,7 +588,7 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     setTimeout(() => setSuccessMessage(null), 3500);
   };
 
-  const handleResetHeroBg = (idx: number) => {
+  const handleResetHeroBg = async (idx: number) => {
     const defaultBgs = ['/foto-time-1.png', '/foto-time-2.png', '/foto-time-3.png'];
     const updated = [...heroBgPhotos];
     updated[idx] = defaultBgs[idx] || '/foto-time-1.png';
@@ -580,7 +597,8 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
       localStorage.setItem('poeirao_hero_bg_photos_v1', JSON.stringify(updated));
     } catch {}
     if (onUpdateHeroBgPhotos) onUpdateHeroBgPhotos(updated);
-    setSuccessMessage(`Foto de fundo #${idx + 1} restaurada para o padrão!`);
+    await saveHeroBgPhotosToCloud(updated);
+    setSuccessMessage(`Foto de fundo #${idx + 1} restaurada e sincronizada em todos os aparelhos!`);
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
