@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getFirestore,
   doc,
+  getDoc,
   getDocFromServer,
   onSnapshot,
   setDoc,
@@ -347,6 +348,28 @@ export function subscribeToHeroBgPhotos(
 ) {
   try {
     const heroRef = doc(db, 'settings', 'hero_backgrounds');
+    const clubRef = doc(db, 'settings', 'club');
+
+    // Leitura inicial imediata para resposta instantânea no mobile
+    getDoc(heroRef).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (Array.isArray(data.photos) && data.photos.length > 0) {
+          callback(data.photos);
+          return;
+        }
+      }
+      // Fallback no doc club
+      getDoc(clubRef).then((cSnap) => {
+        if (cSnap.exists()) {
+          const cData = cSnap.data();
+          if (Array.isArray(cData.heroBgPhotos) && cData.heroBgPhotos.length > 0) {
+            callback(cData.heroBgPhotos);
+          }
+        }
+      }).catch(() => {});
+    }).catch(() => {});
+
     return onSnapshot(
       heroRef,
       (snapshot) => {
@@ -373,10 +396,23 @@ export function subscribeToHeroBgPhotos(
 export async function saveHeroBgPhotosToCloud(photos: string[]): Promise<void> {
   try {
     const heroRef = doc(db, 'settings', 'hero_backgrounds');
+    const clubRef = doc(db, 'settings', 'club');
+    
+    // Grava no documento dedicado de hero_backgrounds
     await setDoc(
       heroRef,
       {
         photos,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    // Grava também no documento geral club para garantir máxima redundância
+    await setDoc(
+      clubRef,
+      {
+        heroBgPhotos: photos,
         updatedAt: serverTimestamp(),
       },
       { merge: true }

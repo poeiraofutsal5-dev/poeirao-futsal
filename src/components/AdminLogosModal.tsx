@@ -566,9 +566,18 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
     const updated = [...familiaPhotos, newItem];
     setLocalFamiliaPhotos(updated);
     saveStoredFamiliaPhotos(updated);
-    if (onUpdateFamiliaPhotos) onUpdateFamiliaPhotos(updated);
-    setSuccessMessage('Novo card adicionado! Agora clique em "Subir Imagem".');
+    if (onUpdateFamiliaPhotos) {
+      onUpdateFamiliaPhotos(updated);
+    } else {
+      saveFamiliaPhotosToCloud(updated);
+    }
+    setSuccessMessage('Novo card criado! Selecione a foto para enviar.');
     setTimeout(() => setSuccessMessage(null), 3500);
+
+    // Abre o seletor de imagens automaticamente
+    setTimeout(() => {
+      triggerUpload('familia_photo', newId);
+    }, 120);
   };
 
   const handleDeleteFamiliaItem = (id: string) => {
@@ -1221,10 +1230,10 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                         <button
                           type="button"
                           onClick={handleAddFamiliaPhoto}
-                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase px-3.5 py-2 rounded-xl shadow-md transition cursor-pointer"
+                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase px-4 py-2.5 rounded-xl shadow-md transition cursor-pointer"
                         >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Adicionar Foto</span>
+                          <Plus className="w-4 h-4" />
+                          <span>+ Adicionar Foto (Ilimitado)</span>
                         </button>
 
                         <button
@@ -1331,6 +1340,27 @@ export const AdminLogosModal: React.FC<AdminLogosModalProps> = ({
                           </div>
                         </div>
                       ))}
+
+                      {/* CARD INTERATIVO PARA ADICIONAR MAIS FOTO NA GRADE */}
+                      <div
+                        onClick={handleAddFamiliaPhoto}
+                        className="bg-slate-950/40 border-2 border-dashed border-emerald-500/40 hover:border-emerald-500 rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer group transition-all duration-200 hover:bg-slate-900/60 min-h-[300px]"
+                      >
+                        <div className="w-14 h-14 rounded-full bg-emerald-600/20 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-all shadow-md group-hover:scale-110">
+                          <Plus className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-black text-white uppercase group-hover:text-emerald-400 transition-colors">
+                            + Adicionar Mais Foto
+                          </h5>
+                          <p className="text-xs text-slate-400 mt-1 max-w-[220px]">
+                            Quantidade ilimitada! Clique para cadastrar um novo momento da torcida.
+                          </p>
+                        </div>
+                        <span className="text-[11px] font-black uppercase text-emerald-400 bg-emerald-950/80 border border-emerald-900/60 px-3.5 py-1 rounded-full">
+                          Adicionar (#{familiaPhotos.length + 1})
+                        </span>
+                      </div>
                     </div>
                   </div>
 

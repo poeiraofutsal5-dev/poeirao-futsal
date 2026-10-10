@@ -61,6 +61,16 @@ export const Hero: React.FC<HeroProps> = ({
     }
   };
 
+  const handleHistoryClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateToHistory) {
+      onNavigateToHistory();
+    } else {
+      window.location.hash = '#historia';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handlePartnersClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById('patrocinadores');
@@ -68,25 +78,26 @@ export const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <section id="inicio" className="relative pt-[72px] sm:pt-[84px] bg-[#001426] text-white overflow-hidden">
+    <section id="inicio" className="relative pt-[64px] sm:pt-[76px] lg:pt-[84px] bg-[#001426] text-white overflow-hidden">
       {/* ========================================================================= */}
       {/* 1. FUNDO COM AS 3 FOTOS ROTATIVAS COM CROSSFADE SUAVE                       */}
       {/* ========================================================================= */}
-      <div className="relative min-h-[540px] sm:min-h-[580px] lg:min-h-[640px] flex items-center justify-center overflow-hidden">
-        {/* Camadas das 3 Fotos em Crossfade - Meio termo de opacidade equilibrada */}
+      {/* Altura adaptada: no celular fica compacta e equilibrada (estilo Palmeiras), e no PC mantém a altura completa */}
+      <div className="relative min-h-[290px] sm:min-h-[420px] lg:min-h-[640px] flex items-center justify-center overflow-hidden">
+        {/* Camadas das 3 Fotos em Crossfade - Equilibradas e bem visíveis tanto no PC quanto no celular */}
         {photos.map((src, idx) => {
           const imgSrc = src || defaultBgPhotos[idx] || '/foto-time-1.png';
           return (
             <div
               key={idx}
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                currentPhotoIdx === idx ? 'opacity-80 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+                currentPhotoIdx === idx ? 'opacity-90 scale-100' : 'opacity-0 scale-105 pointer-events-none'
               }`}
             >
               <img
                 src={imgSrc}
                 alt={`Poeirão F.C. Fundo ${idx + 1}`}
-                className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-105"
+                className="w-full h-full object-cover object-center filter brightness-[0.72] contrast-105"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = '/foto-time-1.png';
@@ -96,62 +107,73 @@ export const Hero: React.FC<HeroProps> = ({
           );
         })}
 
-        {/* Overlay equilibrado (meio-termo entre antes e agora: foto visível sem competir com os textos) */}
-        <div className="absolute inset-0 bg-[#001020]/55 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#001426] via-transparent to-[#001426]/60 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001020]/60 via-transparent to-[#001020]/60 pointer-events-none" />
+        {/* Overlay equilibrado (foto bem evidente e nítida sem prejudicar a leitura dos textos) */}
+        <div className="absolute inset-0 bg-[#001020]/45 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#001426] via-transparent to-[#001426]/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001020]/50 via-transparent to-[#001020]/50 pointer-events-none" />
 
-        {/* SETAS DE NAVEGAÇÃO LATERAL (CIRCULARES COMO NO BAHIA) */}
+        {/* SETAS DE NAVEGAÇÃO LATERAL (OCULTAS NO CELULAR POIS MUDAM AUTOMATICAMENTE, ATIVAS NO DESKTOP) */}
         <button
           type="button"
           onClick={handlePrevPhoto}
-          className="absolute left-2 sm:left-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
+          className="hidden sm:flex absolute left-1.5 sm:left-3 lg:left-5 z-20 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
           aria-label="Foto anterior"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
         </button>
 
         <button
           type="button"
           onClick={handleNextPhoto}
-          className="absolute right-2 sm:right-5 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
+          className="hidden sm:flex absolute right-1.5 sm:right-3 lg:right-5 z-20 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-black/60 hover:bg-black/90 text-white items-center justify-center backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xl"
           aria-label="Próxima foto"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
         </button>
 
         {/* ========================================================================= */}
-        {/* 2. CONTEÚDO ESCRITO: SOMENTE AS INFORMAÇÕES DAS IMAGENS 1 E 2              */}
+        {/* 2. CONTEÚDO ESCRITO: ENXUTO E EQUILIBRADO NO CELULAR (ESTILO PALMEIRAS)     */}
         {/* ========================================================================= */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-8">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-7 sm:py-10 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-8">
             
-            {/* LADO ESQUERDO: EXATAMENTE CONFORME IMAGEM 1 (SEM CAIXA PESADA BLOQUEANDO O FUNDO) */}
+            {/* LADO ESQUERDO: BANNER PRINCIPAL COM FOCO NO SÓCIO */}
             <div className="lg:col-span-6 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
-              {/* Badge da Imagem 1 */}
-              <div className="inline-block text-xs sm:text-sm font-extrabold tracking-widest text-white uppercase mb-2 bg-[#c8102e] px-3.5 py-1.5 rounded-full border border-red-400/40 shadow-md">
+              {/* Badge */}
+              <div className="inline-block text-[10px] sm:text-xs md:text-sm font-extrabold tracking-widest text-white uppercase mb-1.5 sm:mb-2 bg-[#c8102e] px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-red-400/40 shadow-md">
                 ★ CAMISAS OFICIAIS & VANTAGENS EXCLUSIVAS
               </div>
 
-              {/* Título Gigante da Imagem 1 */}
-              <h1 className="font-condensed font-black text-4xl sm:text-6xl xl:text-7xl leading-[0.92] text-[#ffd100] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] tracking-tight uppercase mt-2">
+              {/* Título */}
+              <h1 className="font-condensed font-black text-3xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[0.95] text-[#ffd100] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] tracking-tight uppercase mt-1 sm:mt-2">
                 CHEGOU O <br />
                 <span className="text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                   SÓCIO POEIRÃO
                 </span>
               </h1>
 
-              {/* Subtítulo da Imagem 1 */}
-              <p className="mt-4 text-xs sm:text-sm md:text-base text-slate-200 max-w-lg font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+              {/* Subtítulo: mais direto e equilibrado no mobile */}
+              <p className="mt-2 sm:mt-4 text-[11px] sm:text-sm md:text-base text-slate-200 max-w-lg font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] line-clamp-2 sm:line-clamp-none">
                 Assine agora, garanta acesso com a sua Carteirinha Virtual Oficial e apoie o crescimento do futebol do Poeirão F.C.
               </p>
 
               {/* Botões de Ação */}
-              <div className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3.5">
+              <div className="mt-4 sm:mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5">
+                {/* CELULAR: BOTÃO 'CONHEÇA NOSSA HISTÓRIA' */}
+                <button
+                  type="button"
+                  onClick={handleHistoryClick}
+                  className="sm:hidden inline-flex items-center justify-center gap-1.5 bg-[#c8102e] hover:bg-[#a50d24] active:bg-[#850b1d] text-white font-black text-[11px] uppercase tracking-wider py-2.5 px-5 rounded-full shadow-xl shadow-red-900/40 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-red-500/40"
+                >
+                  <span>CONHEÇA NOSSA HISTÓRIA</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+
+                {/* COMPUTADOR: MANTÉM 'SEJA SÓCIO AGORA' EXATAMENTE COMO ESTAVA */}
                 <a
                   href="#planos"
                   onClick={handleJoinClick}
-                  className="inline-flex items-center justify-center gap-2 bg-[#c8102e] hover:bg-[#a50d24] active:bg-[#850b1d] text-white font-black text-xs sm:text-sm uppercase tracking-wider py-3.5 px-7 rounded-full shadow-xl shadow-red-900/40 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-red-500/40"
+                  className="hidden sm:inline-flex items-center justify-center gap-2 bg-[#c8102e] hover:bg-[#a50d24] active:bg-[#850b1d] text-white font-black text-sm uppercase tracking-wider py-3.5 px-7 rounded-full shadow-xl shadow-red-900/40 transition-all hover:scale-105 active:scale-95 cursor-pointer border border-red-500/40"
                 >
                   <span>SEJA SÓCIO AGORA</span>
                   <ArrowRight className="w-4 h-4" />
@@ -160,7 +182,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <a
                   href="#patrocinadores"
                   onClick={handlePartnersClick}
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold text-xs sm:text-sm uppercase tracking-wider py-3.5 px-6 rounded-full backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+                  className="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-bold text-[11px] sm:text-sm uppercase tracking-wider py-2.5 px-4 sm:py-3.5 sm:px-6 rounded-full backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
                 >
                   <span>CONHECER PARCEIROS</span>
                 </a>
@@ -172,8 +194,8 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="w-px h-64 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
             </div>
 
-            {/* LADO DIREITO: EXATAMENTE CONFORME IMAGEM 2 */}
-            <div className="lg:col-span-5 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
+            {/* LADO DIREITO: EXCLUSIVO DESKTOP (NO CELULAR FICA OCULTO PARA MANTER O BANNER ENXUTO E COMPACTO COMO O PALMEIRAS) */}
+            <div className="hidden lg:flex lg:col-span-5 text-center lg:text-left flex-col items-center lg:items-start justify-center">
               {/* Título Gigante da Imagem 2 */}
               <h2 className="font-condensed font-black text-3xl sm:text-5xl xl:text-6xl leading-[0.95] text-[#ffd100] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] tracking-tight uppercase">
                 O MAIOR CLUBE <br />
@@ -217,8 +239,8 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
         </div>
 
-        {/* PONTOS DE PAGINAÇÃO DAS 3 FOTOS (ESTILO PÍLULA IDÊNTICO À IMAGEM 4) */}
-        <div className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/60 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md shadow-lg">
+        {/* PONTOS DE PAGINAÇÃO DAS 3 FOTOS (ESTILO PÍLULA) - OCULTOS NO CELULAR, ATIVOS NO DESKTOP */}
+        <div className="hidden sm:flex absolute bottom-2 sm:bottom-4 lg:bottom-7 left-1/2 -translate-x-1/2 z-20 items-center gap-1.5 sm:gap-2 bg-black/60 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-white/15 backdrop-blur-md shadow-lg">
           {photos.map((_, idx) => (
             <button
               key={idx}
@@ -226,8 +248,8 @@ export const Hero: React.FC<HeroProps> = ({
               onClick={() => setCurrentPhotoIdx(idx)}
               className={`transition-all rounded-full cursor-pointer ${
                 currentPhotoIdx === idx
-                  ? 'w-7 h-2.5 bg-[#c8102e] ring-2 ring-white/40'
-                  : 'w-2.5 h-2.5 bg-slate-400/60 hover:bg-white'
+                  ? 'w-5 sm:w-7 h-2 sm:h-2.5 bg-[#c8102e] ring-2 ring-white/40'
+                  : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-slate-400/60 hover:bg-white'
               }`}
               aria-label={`Ir para foto de fundo ${idx + 1}`}
               title={`Foto ${idx + 1}`}

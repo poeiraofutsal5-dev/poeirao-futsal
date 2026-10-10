@@ -162,18 +162,6 @@ export default function App() {
       }
     });
 
-    // Auto-sincronização do PC para a nuvem: se este aparelho já possui fotos salvas
-    // no localStorage (como o PC do usuário), enviamos para a nuvem para que o celular receba de imediato!
-    try {
-      const localHeroRaw = localStorage.getItem('poeirao_hero_bg_photos_v1');
-      if (localHeroRaw) {
-        const localHero = JSON.parse(localHeroRaw);
-        if (Array.isArray(localHero) && localHero.length > 0) {
-          saveHeroBgPhotosToCloud(localHero);
-        }
-      }
-    } catch {}
-
     // Auto-sincronização de patrocinadores locais para a nuvem:
     // Se o usuário adicionou ou alterou patrocinadores neste navegador (ex: Opera),
     // enviamos para o Firebase para que Brave, celulares e outros navegadores recebam instantaneamente!
