@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Crest } from './Crest';
 import { SITE_CONFIG } from '../siteConfig';
-import { Menu, X, Lock, LogIn, KeyRound, MessageCircle, User } from 'lucide-react';
-import { PasswordRecoveryModal } from './PasswordRecoveryModal';
+import { Menu, X, Lock, LogIn, MessageCircle, User } from 'lucide-react';
 import { FaqModal } from './FaqModal';
 import { MemberItem } from '../utils/membersManager';
 
@@ -29,7 +28,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
   const [logoSocio, setLogoSocio] = useState<string | null>(() => {
     try {
@@ -139,20 +137,9 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               {/* DIREITA DESKTOP: DOIS NÍVEIS (BOTÕES DE AÇÃO NO TOPO + LINKS DE MENU EMBAIXO) */}
               <div className="hidden lg:flex flex-col items-end gap-1.5">
-                {/* LINHA 1: 3 BOTÕES DE AÇÃO IDÊNTICOS AO BAHIA (RECUPERAR SENHA, QUERO ME ASSOCIAR, ENTRAR) */}
+                {/* LINHA 1: BOTÕES DE AÇÃO (QUERO ME ASSOCIAR, ENTRAR, CADEADO) */}
                 <div className="flex items-center gap-2.5">
-                  {/* BOTÃO 1: RECUPERAR SENHA (AZUL ROYAL) */}
-                  <button
-                    type="button"
-                    onClick={() => setIsPasswordModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 bg-[#0070d2] hover:bg-[#005fb3] active:bg-[#005299] text-white text-[11px] font-black uppercase tracking-wider py-1.5 px-3.5 rounded-full shadow-md transition-all hover:scale-[1.02] active:scale-98 cursor-pointer border border-blue-400/30"
-                    title="Recuperar senha de acesso"
-                  >
-                    <KeyRound className="w-3.5 h-3.5 text-white" />
-                    <span>Recuperar Senha</span>
-                  </button>
-
-                  {/* BOTÃO 2: QUERO ME ASSOCIAR (AZUL ROYAL) */}
+                  {/* BOTÃO 1: QUERO ME ASSOCIAR (AZUL ROYAL) */}
                   <button
                     type="button"
                     onClick={handleJoinClick}
@@ -161,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span>Quero me associar</span>
                   </button>
 
-                  {/* BOTÃO 3: ENTRAR (VERMELHO COM BORDA BRANCA) */}
+                  {/* BOTÃO 2: ENTRAR (VERMELHO COM BORDA BRANCA) */}
                   <button
                     type="button"
                     onClick={handleLoginClick}
@@ -290,12 +277,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     type="button"
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      setIsPasswordModalOpen(true);
+                      handleJoinClick();
                     }}
-                    className="flex items-center justify-center gap-1.5 bg-[#0070d2] text-white text-xs font-black uppercase py-2.5 px-3 rounded-xl shadow"
+                    className="flex items-center justify-center gap-1.5 bg-[#0070d2] text-white text-xs font-black uppercase py-2.5 px-3 rounded-xl shadow cursor-pointer"
                   >
-                    <KeyRound className="w-3.5 h-3.5" />
-                    <span>Recuperar Senha</span>
+                    <span>Quero me associar</span>
                   </button>
 
                   <button
@@ -304,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setMobileMenuOpen(false);
                       handleLoginClick();
                     }}
-                    className="flex items-center justify-center gap-1.5 bg-white text-[#c8102e] text-xs font-black uppercase py-2.5 px-3 rounded-xl shadow"
+                    className="flex items-center justify-center gap-1.5 bg-white text-[#c8102e] text-xs font-black uppercase py-2.5 px-3 rounded-xl shadow cursor-pointer"
                   >
                     <LogIn className="w-3.5 h-3.5" />
                     <span>Entrar no Sócio</span>
@@ -397,13 +383,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </nav>
       </header>
-
-      {/* MODAL RECUPERAÇÃO DE SENHA */}
-      <PasswordRecoveryModal
-        isOpen={isPasswordModalOpen}
-        onClose={() => setIsPasswordModalOpen(false)}
-        members={members}
-      />
 
       {/* MODAL DE DÚVIDAS / FAQ */}
       <FaqModal
